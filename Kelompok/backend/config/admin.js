@@ -1,5 +1,5 @@
 module.exports = ({ env }) => ({
   auth: {
-    secret: env('ADMIN_JWT_SECRET', 'aa8717ae9280dc7058e8cb0415c52283'),
+    secret: env('ADMIN_JWT_SECRET', 'f65a19d491fa483e36b0022fd4768725'),
   },
 });
