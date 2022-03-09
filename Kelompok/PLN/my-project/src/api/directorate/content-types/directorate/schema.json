@@ -1,0 +1,18 @@
+{
+  "kind": "collectionType",
+  "collectionName": "directorates",
+  "info": {
+    "singularName": "directorate",
+    "pluralName": "directorates",
+    "displayName": "Directorate"
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "title": {
+      "type": "string"
+    }
+  }
+}

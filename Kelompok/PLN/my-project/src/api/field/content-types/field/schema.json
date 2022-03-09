@@ -1,0 +1,18 @@
+{
+  "kind": "collectionType",
+  "collectionName": "fields",
+  "info": {
+    "singularName": "field",
+    "pluralName": "fields",
+    "displayName": "field"
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "title": {
+      "type": "string"
+    }
+  }
+}
