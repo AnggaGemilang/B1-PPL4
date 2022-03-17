@@ -4,20 +4,15 @@
   "info": {
     "singularName": "level",
     "pluralName": "levels",
-    "displayName": "Level"
+    "displayName": "Level",
+    "description": ""
   },
   "options": {
     "draftAndPublish": true
   },
   "pluginOptions": {},
   "attributes": {
-    "name": {
-      "type": "string"
-    },
-    "codeName": {
-      "type": "string"
-    },
-    "category": {
+    "level_name": {
       "type": "string"
     }
   }

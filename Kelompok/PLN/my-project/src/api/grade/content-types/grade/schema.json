@@ -12,10 +12,7 @@
   },
   "pluginOptions": {},
   "attributes": {
-    "name": {
-      "type": "string"
-    },
-    "codeName": {
+    "grade_name": {
       "type": "string"
     }
   }

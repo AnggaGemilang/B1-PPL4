@@ -4,15 +4,22 @@
   "info": {
     "singularName": "unit",
     "pluralName": "units",
-    "displayName": "Unit"
+    "displayName": "Unit",
+    "description": ""
   },
   "options": {
     "draftAndPublish": true
   },
   "pluginOptions": {},
   "attributes": {
-    "name": {
+    "unit_name": {
       "type": "string"
+    },
+    "employees": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::employee.employee",
+      "mappedBy": "unit"
     }
   }
 }

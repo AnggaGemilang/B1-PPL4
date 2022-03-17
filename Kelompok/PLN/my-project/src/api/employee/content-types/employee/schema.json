@@ -12,34 +12,34 @@
   },
   "pluginOptions": {},
   "attributes": {
-    "nip": {
+    "NIP": {
       "type": "string",
       "unique": true,
       "required": true
     },
-    "name": {
+    "Name": {
       "type": "string"
     },
-    "gender": {
+    "Gender": {
       "type": "enumeration",
       "enum": [
         "Male",
         "Female"
       ]
     },
-    "birthDate": {
+    "BirthDate": {
       "type": "date"
     },
-    "birthPlace": {
+    "BirthPlace": {
       "type": "string"
     },
-    "phoneNumber": {
+    "PhoneNumber": {
       "type": "string"
     },
-    "email": {
+    "Email": {
       "type": "string"
     },
-    "religion": {
+    "Religion": {
       "type": "enumeration",
       "enum": [
         "Islam",
@@ -50,7 +50,7 @@
         "Konghucu"
       ]
     },
-    "photo": {
+    "Photo": {
       "type": "media",
       "multiple": false,
       "required": false,
@@ -60,6 +60,24 @@
         "videos",
         "audios"
       ]
+    },
+    "examiner": {
+      "type": "relation",
+      "relation": "oneToOne",
+      "target": "api::examiner.examiner",
+      "inversedBy": "employee"
+    },
+    "registrant": {
+      "type": "relation",
+      "relation": "oneToOne",
+      "target": "api::registrant.registrant",
+      "inversedBy": "employee"
+    },
+    "unit": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::unit.unit",
+      "inversedBy": "employees"
     }
   }
 }

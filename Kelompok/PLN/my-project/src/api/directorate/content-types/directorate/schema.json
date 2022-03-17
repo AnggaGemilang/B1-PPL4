@@ -4,14 +4,15 @@
   "info": {
     "singularName": "directorate",
     "pluralName": "directorates",
-    "displayName": "Directorate"
+    "displayName": "Directorate",
+    "description": ""
   },
   "options": {
     "draftAndPublish": true
   },
   "pluginOptions": {},
   "attributes": {
-    "title": {
+    "directorate_name": {
       "type": "string"
     }
   }

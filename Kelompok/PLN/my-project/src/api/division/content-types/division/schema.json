@@ -4,14 +4,15 @@
   "info": {
     "singularName": "division",
     "pluralName": "divisions",
-    "displayName": "Division"
+    "displayName": "Division",
+    "description": ""
   },
   "options": {
     "draftAndPublish": true
   },
   "pluginOptions": {},
   "attributes": {
-    "title": {
+    "division_name": {
       "type": "string"
     }
   }
