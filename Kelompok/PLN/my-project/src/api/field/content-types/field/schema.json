@@ -14,6 +14,18 @@
   "attributes": {
     "field_name": {
       "type": "string"
+    },
+    "division": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::division.division",
+      "inversedBy": "fields"
+    },
+    "sub_fields": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::sub-field.sub-field",
+      "mappedBy": "field"
     }
   }
 }

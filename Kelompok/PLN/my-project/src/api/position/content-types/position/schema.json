@@ -14,6 +14,18 @@
   "attributes": {
     "position_name": {
       "type": "string"
+    },
+    "units": {
+      "type": "relation",
+      "relation": "manyToMany",
+      "target": "api::unit.unit",
+      "inversedBy": "positions"
+    },
+    "directorates": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::directorate.directorate",
+      "mappedBy": "position"
     }
   }
 }

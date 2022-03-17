@@ -14,6 +14,18 @@
   "attributes": {
     "directorate_name": {
       "type": "string"
+    },
+    "divisions": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::division.division",
+      "mappedBy": "directorate"
+    },
+    "position": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::position.position",
+      "inversedBy": "directorates"
     }
   }
 }

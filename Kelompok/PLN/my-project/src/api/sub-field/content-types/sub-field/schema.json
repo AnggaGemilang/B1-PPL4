@@ -14,6 +14,12 @@
   "attributes": {
     "subfield_name": {
       "type": "string"
+    },
+    "field": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::field.field",
+      "inversedBy": "sub_fields"
     }
   }
 }

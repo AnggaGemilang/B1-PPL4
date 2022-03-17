@@ -78,6 +78,18 @@
       "relation": "manyToOne",
       "target": "api::unit.unit",
       "inversedBy": "employees"
+    },
+    "level": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::level.level",
+      "inversedBy": "employees"
+    },
+    "grade": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::grade.grade",
+      "inversedBy": "employees"
     }
   }
 }

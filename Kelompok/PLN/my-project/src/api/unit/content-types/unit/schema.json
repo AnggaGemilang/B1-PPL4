@@ -20,6 +20,12 @@
       "relation": "oneToMany",
       "target": "api::employee.employee",
       "mappedBy": "unit"
+    },
+    "positions": {
+      "type": "relation",
+      "relation": "manyToMany",
+      "target": "api::position.position",
+      "inversedBy": "units"
     }
   }
 }

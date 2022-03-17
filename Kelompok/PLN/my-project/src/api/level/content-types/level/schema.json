@@ -14,6 +14,12 @@
   "attributes": {
     "level_name": {
       "type": "string"
+    },
+    "employees": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::employee.employee",
+      "mappedBy": "level"
     }
   }
 }
