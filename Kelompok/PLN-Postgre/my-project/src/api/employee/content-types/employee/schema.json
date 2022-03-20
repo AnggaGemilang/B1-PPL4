@@ -1,0 +1,95 @@
+{
+  "kind": "collectionType",
+  "collectionName": "employees",
+  "info": {
+    "singularName": "employee",
+    "pluralName": "employees",
+    "displayName": "Employee",
+    "description": ""
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "NIP": {
+      "type": "string",
+      "unique": true,
+      "required": true
+    },
+    "Name": {
+      "type": "string"
+    },
+    "Gender": {
+      "type": "enumeration",
+      "enum": [
+        "Male",
+        "Female"
+      ]
+    },
+    "BirthDate": {
+      "type": "date"
+    },
+    "BirthPlace": {
+      "type": "string"
+    },
+    "PhoneNumber": {
+      "type": "string"
+    },
+    "Email": {
+      "type": "string"
+    },
+    "Religion": {
+      "type": "enumeration",
+      "enum": [
+        "Islam",
+        "Kristen",
+        "Katolik",
+        "Buddha",
+        "Hindu",
+        "Konghucu"
+      ]
+    },
+    "Photo": {
+      "type": "media",
+      "multiple": false,
+      "required": false,
+      "allowedTypes": [
+        "images",
+        "files",
+        "videos",
+        "audios"
+      ]
+    },
+    "examiner": {
+      "type": "relation",
+      "relation": "oneToOne",
+      "target": "api::examiner.examiner",
+      "inversedBy": "employee"
+    },
+    "registrant": {
+      "type": "relation",
+      "relation": "oneToOne",
+      "target": "api::registrant.registrant",
+      "inversedBy": "employee"
+    },
+    "unit": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::unit.unit",
+      "inversedBy": "employees"
+    },
+    "level": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::level.level",
+      "inversedBy": "employees"
+    },
+    "grade": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::grade.grade",
+      "inversedBy": "employees"
+    }
+  }
+}
