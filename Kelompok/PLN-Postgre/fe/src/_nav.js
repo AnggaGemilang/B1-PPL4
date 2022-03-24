@@ -11,6 +11,7 @@ import {
   cilPuzzle,
   cilSpeedometer,
   cilStar,
+  cilGroup,
 } from '@coreui/icons'
 import { CNavGroup, CNavItem, CNavTitle } from '@coreui/react'
 
@@ -113,47 +114,69 @@ const _nav = [
       {
         component: CNavItem,
         name: 'Employee',
-        to: '/base/accordion',
+        to: '/admin/employee',
       },
       {
         component: CNavItem,
         name: 'Directorate',
-        to: '/base/breadcrumbs',
+        to: '/admin/directorate',
       },
       {
         component: CNavItem,
         name: 'Division',
-        to: '/base/carousels',
+        to: '/admin/division',
       },
       {
         component: CNavItem,
         name: 'Field',
-        to: '/base/collapses',
+        to: '/admin/field',
       },
       {
         component: CNavItem,
         name: 'Sub Field',
-        to: '/base/collapses',
+        to: '/admin/subfield',
       },
       {
         component: CNavItem,
         name: 'Grade',
-        to: '/base/list-groups',
+        to: '/admin/grade',
       },
       {
         component: CNavItem,
         name: 'Level',
-        to: '/base/navs',
+        to: '/admin/level',
       },
       {
         component: CNavItem,
         name: 'Position',
-        to: '/base/paginations',
+        to: '/admin/position',
       },
       {
         component: CNavItem,
         name: 'Unit',
-        to: '/base/placeholders',
+        to: '/admin/unit',
+      },
+      {
+        component: CNavItem,
+        name: 'Team',
+        to: '/admin/teams',
+      },
+    ],
+  },
+  {
+    component: CNavTitle,
+    name: 'Kelola Data',
+  },
+  {
+    component: CNavGroup,
+    name: 'Teams',
+    to: '/base',
+    icon: <CIcon icon={cilGroup} customClassName="nav-icon" />,
+    items: [
+      {
+        component: CNavItem,
+        name: 'Tambah Team',
+        to: '/base/breadcrumbs',
       },
     ],
   },

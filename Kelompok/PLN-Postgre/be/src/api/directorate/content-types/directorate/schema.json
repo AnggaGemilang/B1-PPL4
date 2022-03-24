@@ -26,6 +26,9 @@
       "relation": "manyToOne",
       "target": "api::position.position",
       "inversedBy": "directorates"
+    },
+    "address": {
+      "type": "text"
     }
   }
 }
