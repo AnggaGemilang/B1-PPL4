@@ -4,7 +4,8 @@
   "info": {
     "singularName": "registrant",
     "pluralName": "registrants",
-    "displayName": "Registrant"
+    "displayName": "Registrant",
+    "description": ""
   },
   "options": {
     "draftAndPublish": true
@@ -16,6 +17,15 @@
       "relation": "oneToOne",
       "target": "api::employee.employee",
       "mappedBy": "registrant"
+    },
+    "score": {
+      "type": "integer"
+    },
+    "examiner": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::examiner.examiner",
+      "inversedBy": "registrants"
     }
   }
 }

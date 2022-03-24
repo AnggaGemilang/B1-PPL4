@@ -21,11 +21,11 @@
       "target": "api::division.division",
       "mappedBy": "directorate"
     },
-    "position": {
+    "positions": {
       "type": "relation",
-      "relation": "manyToOne",
+      "relation": "oneToMany",
       "target": "api::position.position",
-      "inversedBy": "directorates"
+      "mappedBy": "directorate"
     }
   }
 }

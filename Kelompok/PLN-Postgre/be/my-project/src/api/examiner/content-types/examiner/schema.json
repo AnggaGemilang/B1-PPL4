@@ -16,6 +16,12 @@
       "relation": "oneToOne",
       "target": "api::employee.employee",
       "mappedBy": "examiner"
+    },
+    "registrants": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::registrant.registrant",
+      "mappedBy": "examiner"
     }
   }
 }
