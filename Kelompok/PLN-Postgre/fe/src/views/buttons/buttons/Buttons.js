@@ -161,15 +161,15 @@ const Buttons = () => {
                       'light',
                       'dark',
                     ].map((color, index) => (
-                      <CButton
-                        color={color}
-                        variant="outline"
-                        key={index}
-                        active={state === 'active'}
-                        disabled={state === 'disabled'}
-                      >
-                        {color.charAt(0).toUpperCase() + color.slice(1)}
-                      </CButton>
+                        <CButton
+                          color={color}
+                          variant="outline"
+                          key={index}
+                          active={state === 'active'}
+                          disabled={state === 'disabled'}
+                        >
+                          {color.charAt(0).toUpperCase() + color.slice(1)}
+                        </CButton>
                     ))}
                   </CCol>
                 </CRow>

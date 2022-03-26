@@ -12,9 +12,10 @@ import {
   CTableHead,
   CTableHeaderCell,
   CTableRow,
+  CForm,
+  CFormInput,
 } from '@coreui/react'
 import UnitAPI from '../../../config/admin/UnitAPI'
-import { DocsCallout, DocsExample } from 'src/components'
 
 export class Unit extends Component {
   constructor(props) {
@@ -50,20 +51,30 @@ export class Unit extends Component {
     return (
       <CRow>
         <CCol xs={12}>
-          <DocsCallout name="Table" href="components/table" />
-        </CCol>
-        <CCol xs={12}>
           <CCard className="mb-4">
             <CCardHeader>
-              <strong>React Table</strong> <small>Striped rows</small>
+              <strong>Data Unit</strong>
             </CCardHeader>
-            <CCardBody>
-              <p className="text-medium-emphasis small">
-                Use <code>striped</code> property to add zebra-striping to any table row within the{' '}
-                <code>&lt;CTableBody&gt;</code>.
-              </p>
-              <DocsExample href="components/table#striped-rows">
-                <CTable striped>
+            <CCardBody className='mt-3'>
+              <CRow>
+                <CCol xs={10}>
+                  <CForm>
+                      <CFormInput
+                        type="text"
+                        id="exampleFormControlInput1"
+                        placeholder="Masukkan Kata Kunci Pencarian . . ."
+                      />
+                  </CForm>
+                </CCol>
+                <CCol>
+                  <CButton
+                    color='primary'
+                    variant="outline" >
+                      Tambah Unit
+                  </CButton>
+                </CCol>
+              </CRow>
+                <CTable striped className='mt-3'>
                   <CTableHead>
                     <CTableRow>
                       <CTableHeaderCell scope="col">No</CTableHeaderCell>
@@ -76,7 +87,7 @@ export class Unit extends Component {
                     </CTableRow>
                   </CTableHead>
                   <CTableBody>
-                    { this.state.units.map(team =>
+                    {/* { this.state.units.map(team =>
                       <CTableRow key={team.id}>
                         <CTableHeaderCell scope="row">{ this.state.urutan ++ }</CTableHeaderCell>
                         <CTableDataCell>{team.attributes.name}</CTableDataCell>
@@ -93,10 +104,9 @@ export class Unit extends Component {
                           Delete</CButton>
                         </CTableDataCell>
                       </CTableRow>
-                    )}
+                    )} */}
                   </CTableBody>
                 </CTable>
-              </DocsExample>
             </CCardBody>
           </CCard>
         </CCol>

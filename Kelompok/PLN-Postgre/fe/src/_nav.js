@@ -21,10 +21,6 @@ const _nav = [
     name: 'Dashboard',
     to: '/dashboard',
     icon: <CIcon icon={cilSpeedometer} customClassName="nav-icon" />,
-    badge: {
-      color: 'info',
-      text: 'NEW',
-    },
   },
   {
     component: CNavTitle,
@@ -39,12 +35,12 @@ const _nav = [
       {
         component: CNavItem,
         name: 'Data Peserta',
-        to: '/base/accordion',
+        to: '/datapeserta',
       },
       {
         component: CNavItem,
         name: 'Data Penguji',
-        to: '/base/breadcrumbs',
+        to: '/datapenguji',
       },
     ],
   },
@@ -57,17 +53,12 @@ const _nav = [
       {
         component: CNavItem,
         name: 'Pendaftaran',
-        to: '/base/accordion',
+        to: '/fitandproper/pendaftaran',
       },
       {
         component: CNavItem,
         name: 'Penilaian',
-        to: '/base/breadcrumbs',
-      },
-      {
-        component: CNavItem,
-        name: 'Pencarian',
-        to: '/base/breadcrumbs',
+        to: '/fitandproper/penilaian',
       },
     ],
   },
@@ -80,24 +71,46 @@ const _nav = [
       {
         component: CNavItem,
         name: 'Pendaftaran',
-        to: '/base/accordion',
+        to: '/wawancara/pendaftaran',
       },
       {
         component: CNavItem,
         name: 'Penilaian',
-        to: '/base/breadcrumbs',
+        to: '/wawancara/penilaian',
+      },
+    ],
+  },
+  {
+    component: CNavGroup,
+    name: 'Report',
+    to: '/base',
+    icon: <CIcon icon={cilPuzzle} customClassName="nav-icon" />,
+    items: [
+      {
+        component: CNavItem,
+        name: 'Rekap Fit & Proper',
+        to: '/fitandproper',
+      },
+      {
+        component: CNavItem,
+        name: 'Cetak Fit & Proper',
+        to: '/fitandproper/penilaian',
+      },
+      {
+        component: CNavItem,
+        name: 'Rekap Wawancara',
+        to: '/fitandproper',
+      },
+      {
+        component: CNavItem,
+        name: 'Cetak Wawancara',
+        to: '/fitandproper/penilaian',
       },
     ],
   },
   {
     component: CNavItem,
-    name: 'Report',
-    to: '/theme/colors',
-    icon: <CIcon icon={cilDrop} customClassName="nav-icon" />,
-  },
-  {
-    component: CNavItem,
-    name: 'Administrasi Users',
+    name: 'Administrasi User',
     to: '/theme/colors',
     icon: <CIcon icon={cilDrop} customClassName="nav-icon" />,
   },
@@ -155,28 +168,6 @@ const _nav = [
         component: CNavItem,
         name: 'Unit',
         to: '/admin/unit',
-      },
-      {
-        component: CNavItem,
-        name: 'Team',
-        to: '/admin/teams',
-      },
-    ],
-  },
-  {
-    component: CNavTitle,
-    name: 'Kelola Data',
-  },
-  {
-    component: CNavGroup,
-    name: 'Teams',
-    to: '/base',
-    icon: <CIcon icon={cilGroup} customClassName="nav-icon" />,
-    items: [
-      {
-        component: CNavItem,
-        name: 'Tambah Team',
-        to: '/base/breadcrumbs',
       },
     ],
   },

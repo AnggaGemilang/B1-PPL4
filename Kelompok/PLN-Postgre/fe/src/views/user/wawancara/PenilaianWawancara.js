@@ -15,9 +15,10 @@ import {
   CForm,
   CFormInput,
 } from '@coreui/react'
-import DivisionAPI from '../../../config/admin/DivisionAPI'
+import DirectorateAPI from '../../../config/admin/DirectorateAPI'
+import { Link } from 'react-router-dom'
 
-export class Directorate extends Component {
+export class PenilaianWawancara extends Component {
   constructor(props) {
     super(props)
     this.state = {
@@ -31,7 +32,7 @@ export class Directorate extends Component {
   }
 
   getData(){
-    DivisionAPI.get().then((res) => {
+    DirectorateAPI.get().then((res) => {
       console.log(res.data)
       this.setState({
         directorates: res.data
@@ -39,7 +40,7 @@ export class Directorate extends Component {
     })
   }
   deleteData(id){
-    DivisionAPI.delete(id).then((res) => {
+    DirectorateAPI.delete(id).then((res) => {
       this.setState({
         Response: res.data.id
       })
@@ -53,7 +54,7 @@ export class Directorate extends Component {
         <CCol xs={12}>
           <CCard className="mb-4">
             <CCardHeader>
-              <strong>Data Divisi</strong>
+              <strong>Data Penguji</strong>
             </CCardHeader>
             <CCardBody className='mt-3'>
               <CRow>
@@ -67,12 +68,14 @@ export class Directorate extends Component {
                   </CForm>
                 </CCol>
                 <CCol>
-                  <CButton
-                    color='primary'
-                    style={{width:'100%'}}
-                    variant="outline" >
-                      Tambah Divisi
-                  </CButton>
+                  <Link to={'/tambahpenguji'}>
+                    <CButton
+                      color='primary'
+                      style={{width:'100%'}}
+                      variant="outline" >
+                        Tambah Penguji
+                    </CButton>
+                  </Link>
                 </CCol>
               </CRow>
                 <CTable striped className='mt-3'>
@@ -116,4 +119,4 @@ export class Directorate extends Component {
   }
 }
 
-export default Directorate
+export default PenilaianWawancara
