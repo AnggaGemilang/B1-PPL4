@@ -1,0 +1,141 @@
+{
+  "kind": "collectionType",
+  "collectionName": "scores",
+  "info": {
+    "singularName": "score",
+    "pluralName": "scores",
+    "displayName": "Score",
+    "description": ""
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "enthusiasthic": {
+      "type": "float",
+      "unique": true,
+      "default": 0,
+      "required": true,
+      "max": 100
+    },
+    "keandalan_sistem": {
+      "type": "integer",
+      "required": true,
+      "max": 100,
+      "min": 0,
+      "default": 0
+    },
+    "kecepatan_recovery": {
+      "type": "integer",
+      "required": true,
+      "default": 0,
+      "max": 100,
+      "min": 0
+    },
+    "manajemen_aset": {
+      "type": "integer",
+      "default": 0,
+      "required": true,
+      "max": 100,
+      "min": 0
+    },
+    "strategi_breakthrough": {
+      "type": "integer",
+      "default": 0,
+      "required": true,
+      "max": 100,
+      "min": 0
+    },
+    "internal_readliness": {
+      "type": "integer",
+      "default": 0,
+      "required": true,
+      "max": 100,
+      "min": 0
+    },
+    "external_readliness": {
+      "type": "integer",
+      "default": 0,
+      "required": true,
+      "max": 100,
+      "min": 0
+    },
+    "pemasaran_niaga": {
+      "type": "integer",
+      "default": 0,
+      "required": true,
+      "max": 100,
+      "min": 0
+    },
+    "keteknisan": {
+      "type": "integer",
+      "default": 0,
+      "required": true,
+      "max": 100,
+      "min": 0
+    },
+    "kjl": {
+      "type": "integer",
+      "default": 0,
+      "required": true,
+      "max": 100,
+      "min": 0
+    },
+    "kontribusi_kpi": {
+      "type": "integer",
+      "default": 0,
+      "required": true,
+      "max": 100,
+      "min": 0
+    },
+    "creative": {
+      "type": "integer",
+      "default": 0,
+      "required": true,
+      "min": 0,
+      "max": 100
+    },
+    "building_business": {
+      "type": "integer",
+      "default": 0,
+      "required": true,
+      "max": 100,
+      "min": 0
+    },
+    "strategic_orientation": {
+      "type": "integer",
+      "default": 0,
+      "required": true,
+      "max": 100,
+      "min": 0
+    },
+    "customer_focus": {
+      "type": "integer",
+      "required": true,
+      "default": 0,
+      "max": 100,
+      "min": 0
+    },
+    "empowering": {
+      "type": "integer",
+      "required": true,
+      "default": 0,
+      "max": 100,
+      "min": 0
+    },
+    "visionary_leadership": {
+      "type": "integer",
+      "default": 0,
+      "required": true,
+      "max": 100,
+      "min": 0
+    },
+    "registrant": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::registrant.registrant",
+      "inversedBy": "scores"
+    }
+  }
+}
