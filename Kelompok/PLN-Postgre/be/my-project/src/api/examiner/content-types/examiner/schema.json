@@ -17,11 +17,17 @@
       "target": "api::employee.employee",
       "mappedBy": "examiner"
     },
+    "scores": {
+      "type": "relation",
+      "relation": "manyToMany",
+      "target": "api::score.score",
+      "inversedBy": "examiners"
+    },
     "registrants": {
       "type": "relation",
-      "relation": "oneToMany",
+      "relation": "manyToMany",
       "target": "api::registrant.registrant",
-      "mappedBy": "examiner"
+      "inversedBy": "examiners"
     }
   }
 }
