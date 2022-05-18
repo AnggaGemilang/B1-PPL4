@@ -80,24 +80,17 @@ export class Field extends Component {
                     <CTableRow>
                       <CTableHeaderCell scope="col">No</CTableHeaderCell>
                       <CTableHeaderCell scope="col">Name</CTableHeaderCell>
-                      <CTableHeaderCell scope="col">Description</CTableHeaderCell>
-                      <CTableHeaderCell scope="col">Place and Date Birth</CTableHeaderCell>
-                      <CTableHeaderCell scope="col">Position</CTableHeaderCell>
-                      <CTableHeaderCell scope="col">Photo</CTableHeaderCell>
-                      <CTableHeaderCell scope="col">Action</CTableHeaderCell>
+                      <CTableHeaderCell scope="col">Divisi</CTableHeaderCell>
+                      <CTableHeaderCell scope="col">Sub Field</CTableHeaderCell>
                     </CTableRow>
                   </CTableHead>
                   <CTableBody>
-                    {/* { this.state.fields.map(team =>
+                    {  this.state.fields.map(team =>
                       <CTableRow key={team.id}>
                         <CTableHeaderCell scope="row">{ this.state.urutan ++ }</CTableHeaderCell>
-                        <CTableDataCell>{team.attributes.name}</CTableDataCell>
-                        <CTableDataCell>{((team.attributes.description).length <= 25) ? team.attributes.description : team.attributes.description.substring(0, 25) + "...."}</CTableDataCell>
-                        <CTableDataCell>{team.attributes.placeBirth}, {team.attributes.dateBirth}</CTableDataCell>
-                        <CTableDataCell>{team.attributes.position.data.attributes.title}</CTableDataCell>
-                        <CTableDataCell>
-                          <img src={"http://localhost:1337" + team.attributes.photo.data.attributes.formats.thumbnail.url} alt="user icon" />
-                        </CTableDataCell>
+                        <CTableDataCell>{team.attributes.field_name}</CTableDataCell>
+                        <CTableDataCell>{team.attributes.division.data.attributes.division_name}</CTableDataCell>
+                        <CTableDataCell>{team.attributes.division.data.attributes.sub_fields.data.attributes.subfield_name}</CTableDataCell>
                         <CTableDataCell>
                           <CButton color={'warning'} variant="outline">
                           Edit</CButton>
@@ -105,7 +98,7 @@ export class Field extends Component {
                           Delete</CButton>
                         </CTableDataCell>
                       </CTableRow>
-                    )} */}
+                    )}
                   </CTableBody>
                 </CTable>
             </CCardBody>

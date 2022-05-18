@@ -17,7 +17,6 @@ import {
   CFormLabel,
   CForm,
 } from '@coreui/react'
-import { DocsCallout, DocsExample } from 'src/components'
 import { Link } from 'react-router-dom'
 
 
@@ -26,12 +25,7 @@ const Tables = () => {
     <CRow>
       <CCol xs={12}>
         <Link to={'/dashboard'}>
-            <CButton
-              color='dark'
-              style={{width:'10%'}}
-              variant="outline" >
-              Kembali
-            </CButton>
+        <CButton className='text-white mb-3' color='info'>Kembali</CButton>
         </Link>
         <CCard className="mb-4">
         <CCardHeader>
