@@ -15,6 +15,7 @@ import {
   CForm,
   CFormInput,
 } from '@coreui/react'
+import { Link } from 'react-router-dom'
 import PositionAPI from '../../../config/admin/PositionAPI'
 
 export class Position extends Component {
@@ -67,12 +68,14 @@ export class Position extends Component {
                   </CForm>
                 </CCol>
                 <CCol>
-                  <CButton
-                    color='primary'
-                    style={{width:'100%'}}
-                    variant="outline" >
-                      Tambah Jabatan
-                  </CButton>
+                  <Link to={'/admin/position/tambah'}>
+                    <CButton
+                      color='primary'
+                      style={{width:'100%'}}
+                      variant="outline" >
+                        Tambah Jabatan
+                    </CButton>
+                  </Link>
                 </CCol>
               </CRow>
                 <CTable striped className='mt-3'>

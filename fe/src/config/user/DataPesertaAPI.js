@@ -1,7 +1,8 @@
 import api from '../index'
 
 export default {
-  get: () => api.get('/registrants?populate[1]=employee.grade&populate[2]=employee.level&populate[3]=employee.Photo').then((res) => res.data),
+  get: () => api.get('/registrants?populate[1]=employee.grade&populate[2]=employee.level&populate[3]=employee.Photo&populate[4]=employee.position').then((res) => res.data),
+  find: (query) => api.get(`/employees?filters[NIP][$eq]=${query}`).then((res) => res.data),
   add: () => api.get('/registrants?populate=*').then((res) => res.data),
   delete: () => api.get('/registrants?populate=*').then((res) => res.data),
   edit: () => api.get('/registrants?populate=*').then((res) => res.data),

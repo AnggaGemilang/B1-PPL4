@@ -15,6 +15,7 @@ import {
   CForm,
   CFormInput,
 } from '@coreui/react'
+import { Link } from 'react-router-dom'
 import LevelAPI from '../../../config/admin/LevelAPI'
 
 export class Level extends Component {
@@ -67,12 +68,14 @@ export class Level extends Component {
                   </CForm>
                 </CCol>
                 <CCol>
-                  <CButton
-                    color='primary'
-                    style={{width:'100%'}}
-                    variant="outline" >
-                      Tambah Jenjang
-                  </CButton>
+                  <Link to={'/admin/level/tambah'}>
+                    <CButton
+                      color='primary'
+                      style={{width:'100%'}}
+                      variant="outline" >
+                        Tambah Jenjang
+                    </CButton>
+                  </Link>
                 </CCol>
               </CRow>
                 <CTable striped className='mt-3'>

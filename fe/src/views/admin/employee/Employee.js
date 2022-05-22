@@ -15,6 +15,7 @@ import {
   CForm,
   CFormInput,
 } from '@coreui/react'
+import { Link } from 'react-router-dom'
 import EmployeeAPI from '../../../config/admin/EmployeeAPI'
 
 export class Employee extends Component {
@@ -38,6 +39,7 @@ export class Employee extends Component {
       })
     })
   }
+
   deleteData(id){
     EmployeeAPI.delete(id).then((res) => {
       this.setState({
@@ -47,6 +49,7 @@ export class Employee extends Component {
       this.getData()
     })
   }
+
   render(){
     return (
       <CRow>
@@ -67,12 +70,14 @@ export class Employee extends Component {
                   </CForm>
                 </CCol>
                 <CCol>
-                  <CButton
-                    color='primary'
-                    style={{width:'100%'}}
-                    variant="outline" >
-                      Tambah Karyawan
-                  </CButton>
+                  <Link to={'/admin/employee/tambah'}>
+                    <CButton
+                      color='primary'
+                      style={{width:'100%'}}
+                      variant="outline" >
+                        Tambah Karyawan
+                    </CButton>
+                  </Link>
                 </CCol>
               </CRow>
                 <CTable striped className='mt-3'>
@@ -80,32 +85,38 @@ export class Employee extends Component {
                     <CTableRow>
                       <CTableHeaderCell scope="col">No</CTableHeaderCell>
                       <CTableHeaderCell scope="col">Name</CTableHeaderCell>
-                      <CTableHeaderCell scope="col">Description</CTableHeaderCell>
+                      <CTableHeaderCell scope="col">Gender</CTableHeaderCell>
+                      <CTableHeaderCell scope="col">Religion</CTableHeaderCell>
                       <CTableHeaderCell scope="col">Place and Date Birth</CTableHeaderCell>
-                      <CTableHeaderCell scope="col">Position</CTableHeaderCell>
+                      <CTableHeaderCell scope="col">Email</CTableHeaderCell>
+                      <CTableHeaderCell scope="col">Phone Number</CTableHeaderCell>
                       <CTableHeaderCell scope="col">Photo</CTableHeaderCell>
                       <CTableHeaderCell scope="col">Action</CTableHeaderCell>
                     </CTableRow>
                   </CTableHead>
                   <CTableBody>
-                    {/* { this.state.employees.map(team =>
-                      <CTableRow key={team.id}>
+                    { this.state.employees.map(employee =>
+                      <CTableRow key={employee.id}>
                         <CTableHeaderCell scope="row">{ this.state.urutan ++ }</CTableHeaderCell>
-                        <CTableDataCell>{team.attributes.name}</CTableDataCell>
-                        <CTableDataCell>{((team.attributes.description).length <= 25) ? team.attributes.description : team.attributes.description.substring(0, 25) + "...."}</CTableDataCell>
-                        <CTableDataCell>{team.attributes.placeBirth}, {team.attributes.dateBirth}</CTableDataCell>
-                        <CTableDataCell>{team.attributes.position.data.attributes.title}</CTableDataCell>
+                        <CTableDataCell>{employee.attributes.Name}</CTableDataCell>
+                        <CTableDataCell>{employee.attributes.Gender}</CTableDataCell>
+                        <CTableDataCell>{employee.attributes.Religion}</CTableDataCell>
+                        <CTableDataCell>{employee.attributes.BirthPlace}, {employee.attributes.BirthDate}</CTableDataCell>
+                        <CTableDataCell>{employee.attributes.Email}</CTableDataCell>
+                        <CTableDataCell>{employee.attributes.PhoneNumber}</CTableDataCell>
                         <CTableDataCell>
-                          <img src={"http://localhost:1337" + team.attributes.photo.data.attributes.formats.thumbnail.url} alt="user icon" />
+                          {
+                            employee.attributes.Photo.data != null ?
+                              <img src={"https://e624-140-0-220-95.ap.ngrok.io" + employee.attributes.Photo.data.attributes.formats.thumbnail.url} alt="Photo" />  :
+                              <h3>-</h3>
+                          }
                         </CTableDataCell>
                         <CTableDataCell>
-                          <CButton color={'warning'} variant="outline">
-                          Edit</CButton>
-                          <CButton color={'danger'} variant="outline">
-                          Delete</CButton>
+                          <CButton color={'warning'} variant="outline">Edit</CButton>
+                          <CButton color={'danger'} variant="outline">Delete</CButton>
                         </CTableDataCell>
                       </CTableRow>
-                    )} */}
+                    )}
                   </CTableBody>
                 </CTable>
             </CCardBody>

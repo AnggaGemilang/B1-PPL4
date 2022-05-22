@@ -41,6 +41,7 @@ export class DataPeserta extends Component {
       console.log(this.state.registrants)
     })
   }
+
   deleteData(id){
     DataPesertaAPI.delete(id).then((res) => {
       this.setState({
@@ -50,6 +51,7 @@ export class DataPeserta extends Component {
       this.getData()
     })
   }
+
   render(){
     return (
       <CRow>
@@ -87,32 +89,19 @@ export class DataPeserta extends Component {
                       <CTableHeaderCell scope="col">Foto</CTableHeaderCell>
                       <CTableHeaderCell scope="col">Nama</CTableHeaderCell>
                       <CTableHeaderCell scope="col">NIP</CTableHeaderCell>
-                      <CTableHeaderCell scope="col">Jabatan</CTableHeaderCell>
-                      <CTableHeaderCell scope="col">Grade</CTableHeaderCell>
-                      <CTableHeaderCell scope="col">Jenjang</CTableHeaderCell>
                       <CTableHeaderCell scope="col">Action</CTableHeaderCell>
                     </CTableRow>
                   </CTableHead>
                   <CTableBody>
                     { this.state.registrants.map(registrant =>
                       <CTableRow key={registrant.id}>
-                        <CTableHeaderCell scope="row">{ this.state.urutan ++ }</CTableHeaderCell>
+                        <CTableHeaderCell scope="row">{ this.state.urutan++ }</CTableHeaderCell>
                         <CTableDataCell>
-                          <img src={"http://localhost:1337" + registrant.attributes.employee.data.attributes.Photo.data.attributes.formats.thumbnail.url} alt="user icon" />
+                          <img src={"https://e624-140-0-220-95.ap.ngrok.io" + registrant.attributes.employee.data.attributes.Photo.data.attributes.formats.thumbnail.url} alt="Photo" />
                         </CTableDataCell>
                         <CTableDataCell>{registrant.attributes.employee.data.attributes.Name}</CTableDataCell>
                         <CTableDataCell>{registrant.attributes.employee.data.attributes.NIP}</CTableDataCell>
-                        <CTableDataCell>{registrant.attributes.employee.data.attributes.Position}</CTableDataCell>
-                        <CTableDataCell>{registrant.attributes.employee.data.attributes.grade.data.attributes.grade_name}</CTableDataCell>
-                        <CTableDataCell>{registrant.attributes.employee.data.attributes.level.data.attributes.level_name}</CTableDataCell>
                         <CTableDataCell>
-                          <Link to={'/tambahpeserta/edit'}>
-                            <CButton
-                              color='warning'
-                              variant="outline"  >
-                                Edit
-                            </CButton>
-                          </Link>
                           <Link to={'/tambahpeserta'}>
                             <CButton
                               color='danger'

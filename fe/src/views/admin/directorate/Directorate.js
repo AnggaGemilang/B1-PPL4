@@ -15,13 +15,14 @@ import {
   CForm,
   CFormInput,
 } from '@coreui/react'
+import { Link } from 'react-router-dom'
 import DirectorateAPI from '../../../config/admin/DirectorateAPI'
 
 export class Directorate extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      teams: [],
+      directorates: [],
       urutan : 1,
     }
   }
@@ -67,45 +68,35 @@ export class Directorate extends Component {
                   </CForm>
                 </CCol>
                 <CCol>
-                  <CButton
-                    color='primary'
-                    style={{width:'100%'}}
-                    variant="outline" >
-                      Tambah Direktorat
-                  </CButton>
+                  <Link to={'/admin/directorate/tambah'}>
+                    <CButton
+                      color='primary'
+                      style={{width:'100%'}}
+                      variant="outline" >
+                        Tambah Direktorat
+                    </CButton>
+                  </Link>
                 </CCol>
               </CRow>
-                <CTable striped className='mt-3'>
+                <CTable striped className='mt-3 text-align-center'>
                   <CTableHead>
                     <CTableRow>
                       <CTableHeaderCell scope="col">No</CTableHeaderCell>
                       <CTableHeaderCell scope="col">Name</CTableHeaderCell>
-                      <CTableHeaderCell scope="col">Description</CTableHeaderCell>
-                      <CTableHeaderCell scope="col">Place and Date Birth</CTableHeaderCell>
-                      <CTableHeaderCell scope="col">Position</CTableHeaderCell>
-                      <CTableHeaderCell scope="col">Photo</CTableHeaderCell>
                       <CTableHeaderCell scope="col">Action</CTableHeaderCell>
                     </CTableRow>
                   </CTableHead>
                   <CTableBody>
-                    {/* { this.state.teams.map(team =>
-                      <CTableRow key={team.id}>
+                    { this.state.directorates.map(directorate =>
+                      <CTableRow key={directorate.id}>
                         <CTableHeaderCell scope="row">{ this.state.urutan ++ }</CTableHeaderCell>
-                        <CTableDataCell>{team.attributes.name}</CTableDataCell>
-                        <CTableDataCell>{((team.attributes.description).length <= 25) ? team.attributes.description : team.attributes.description.substring(0, 25) + "...."}</CTableDataCell>
-                        <CTableDataCell>{team.attributes.placeBirth}, {team.attributes.dateBirth}</CTableDataCell>
-                        <CTableDataCell>{team.attributes.position.data.attributes.title}</CTableDataCell>
+                        <CTableDataCell>{directorate.attributes.directorate_name}</CTableDataCell>
                         <CTableDataCell>
-                          <img src={"http://localhost:1337" + team.attributes.photo.data.attributes.formats.thumbnail.url} alt="user icon" />
-                        </CTableDataCell>
-                        <CTableDataCell>
-                          <CButton color={'warning'} variant="outline">
-                          Edit</CButton>
-                          <CButton color={'danger'} variant="outline">
-                          Delete</CButton>
+                          <CButton color={'warning'} variant="outline">Edit</CButton>
+                          <CButton color={'danger'} variant="outline" style={{marginLeft: '10px'}}>Delete</CButton>
                         </CTableDataCell>
                       </CTableRow>
-                    )} */}
+                    )}
                   </CTableBody>
                 </CTable>
             </CCardBody>

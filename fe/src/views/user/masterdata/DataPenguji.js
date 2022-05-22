@@ -39,6 +39,7 @@ export class DataPenguji extends Component {
       })
     })
   }
+  
   deleteData(id){
     DataPengujiAPI.delete(id).then((res) => {
       this.setState({
@@ -85,9 +86,6 @@ export class DataPenguji extends Component {
                       <CTableHeaderCell scope="col">Foto</CTableHeaderCell>
                       <CTableHeaderCell scope="col">Nama</CTableHeaderCell>
                       <CTableHeaderCell scope="col">NIP</CTableHeaderCell>
-                      <CTableHeaderCell scope="col">Jabatan</CTableHeaderCell>
-                      <CTableHeaderCell scope="col">Grade</CTableHeaderCell>
-                      <CTableHeaderCell scope="col">Jenjang</CTableHeaderCell>
                       <CTableHeaderCell scope="col">Action</CTableHeaderCell>
                     </CTableRow>
                   </CTableHead>
@@ -96,26 +94,13 @@ export class DataPenguji extends Component {
                       <CTableRow key={examiner.id}>
                         <CTableHeaderCell scope="row">{ this.state.urutan ++ }</CTableHeaderCell>
                         <CTableDataCell>
-                          <img src={"http://localhost:1337" + examiner.attributes.employee.data.attributes.Photo.data.attributes.formats.thumbnail.url} alt="user icon" />
+                          <img src={"https://d316-140-0-220-95.ap.ngrok.io" + examiner.attributes.employee.data.attributes.Photo.data.attributes.formats.thumbnail.url} alt="Photo" />
                         </CTableDataCell>
                         <CTableDataCell>{examiner.attributes.employee.data.attributes.Name}</CTableDataCell>
                         <CTableDataCell>{examiner.attributes.employee.data.attributes.NIP}</CTableDataCell>
-                        <CTableDataCell>{examiner.attributes.employee.data.attributes.Position}</CTableDataCell>
-                        <CTableDataCell>{examiner.attributes.employee.data.attributes.grade.data.attributes.grade_name}</CTableDataCell>
-                        <CTableDataCell>{examiner.attributes.employee.data.attributes.level.data.attributes.level_name}</CTableDataCell>
                         <CTableDataCell>
-                          <Link to={'/tambahpeserta/edit'}>
-                            <CButton
-                              color='warning'
-                              variant="outline"  >
-                                Edit
-                            </CButton>
-                          </Link>
                           <Link to={'/tambahpeserta'}>
-                            <CButton
-                              color='danger'
-                              variant="outline" 
-                              style={{marginLeft: '10px'}} >
+                            <CButton color='danger' variant="outline">
                                 Hapus
                             </CButton>
                           </Link>
