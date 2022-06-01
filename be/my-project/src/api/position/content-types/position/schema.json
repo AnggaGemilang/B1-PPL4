@@ -1,0 +1,31 @@
+{
+  "kind": "collectionType",
+  "collectionName": "positions",
+  "info": {
+    "singularName": "position",
+    "pluralName": "positions",
+    "displayName": "Position",
+    "description": ""
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "position_name": {
+      "type": "string"
+    },
+    "units": {
+      "type": "relation",
+      "relation": "manyToMany",
+      "target": "api::unit.unit",
+      "inversedBy": "positions"
+    },
+    "directorate": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::directorate.directorate",
+      "inversedBy": "positions"
+    }
+  }
+}

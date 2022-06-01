@@ -1,0 +1,31 @@
+{
+  "kind": "collectionType",
+  "collectionName": "directorates",
+  "info": {
+    "singularName": "directorate",
+    "pluralName": "directorates",
+    "displayName": "Directorate",
+    "description": ""
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "directorate_name": {
+      "type": "string"
+    },
+    "divisions": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::division.division",
+      "mappedBy": "directorate"
+    },
+    "positions": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::position.position",
+      "mappedBy": "directorate"
+    }
+  }
+}
