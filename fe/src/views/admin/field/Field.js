@@ -16,6 +16,7 @@ import {
   CFormInput,
 } from '@coreui/react'
 import FieldAPI from '../../../config/admin/FieldAPI'
+import { Link } from 'react-router-dom'
 
 export class Field extends Component {
   constructor(props) {
@@ -67,12 +68,14 @@ export class Field extends Component {
                   </CForm>
                 </CCol>
                 <CCol>
-                  <CButton
-                    color='primary'
-                    style={{width:'100%'}}
-                    variant="outline" >
-                      Tambah Bidang
-                  </CButton>
+                  <Link to={'/admin/field/tambah'}>
+                      <CButton
+                        color='primary'
+                        style={{width:'100%'}}
+                        variant="outline" >
+                          Tambah Bidang
+                      </CButton>
+                    </Link>
                 </CCol>
               </CRow>
                 <CTable striped className='mt-3'>
@@ -82,6 +85,7 @@ export class Field extends Component {
                       <CTableHeaderCell scope="col">Name</CTableHeaderCell>
                       <CTableHeaderCell scope="col">Divisi</CTableHeaderCell>
                       <CTableHeaderCell scope="col">Sub Field</CTableHeaderCell>
+                      <CTableHeaderCell scope="col">Aksi</CTableHeaderCell>
                     </CTableRow>
                   </CTableHead>
                   <CTableBody>
@@ -90,7 +94,7 @@ export class Field extends Component {
                         <CTableHeaderCell scope="row">{ this.state.urutan ++ }</CTableHeaderCell>
                         <CTableDataCell>{team.attributes.field_name}</CTableDataCell>
                         <CTableDataCell>{team.attributes.division.data.attributes.division_name}</CTableDataCell>
-                        <CTableDataCell>{team.attributes.division.data.attributes.sub_fields.data.attributes.subfield_name}</CTableDataCell>
+                        <CTableDataCell>{team.attributes.sub_fields.data[0].attributes.subfield_name}</CTableDataCell>
                         <CTableDataCell>
                           <CButton color={'warning'} variant="outline">
                           Edit</CButton>

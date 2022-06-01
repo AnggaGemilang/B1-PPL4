@@ -16,12 +16,13 @@ import {
   CFormInput,
 } from '@coreui/react'
 import DivisionAPI from '../../../config/admin/DivisionAPI'
+import { Link } from 'react-router-dom'
 
-export class Directorate extends Component {
+export class Division extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      teams: [],
+      divisi: [],
       urutan : 1,
     }
   }
@@ -34,7 +35,7 @@ export class Directorate extends Component {
     DivisionAPI.get().then((res) => {
       console.log(res.data)
       this.setState({
-        directorates: res.data
+        divisi: res.data
       })
     })
   }
@@ -67,12 +68,14 @@ export class Directorate extends Component {
                   </CForm>
                 </CCol>
                 <CCol>
-                  <CButton
-                    color='primary'
-                    style={{width:'100%'}}
-                    variant="outline" >
-                      Tambah Divisi
-                  </CButton>
+                  <Link to={'/admin/division/tambah'}>
+                    <CButton
+                      color='primary'
+                      style={{width:'100%'}}
+                      variant="outline" >
+                        Tambah Divisi
+                    </CButton>
+                  </Link>
                 </CCol>
               </CRow>
                 <CTable striped className='mt-3'>
@@ -82,15 +85,16 @@ export class Directorate extends Component {
                       <CTableHeaderCell scope="col">Name</CTableHeaderCell>
                       <CTableHeaderCell scope="col">Fields</CTableHeaderCell>
                       <CTableHeaderCell scope="col">Directorate</CTableHeaderCell>
+                      <CTableHeaderCell scope="col">Aksi</CTableHeaderCell>
                     </CTableRow>
                   </CTableHead>
                   <CTableBody>
-                    {  this.state.teams.map(team =>
+                    {  this.state.divisi.map(team =>
                       <CTableRow key={team.id}>
                         <CTableHeaderCell scope="row">{this.state.urutan ++}</CTableHeaderCell>
                         <CTableDataCell>{team.attributes.division_name}</CTableDataCell>
-                        <CTableDataCell>{team.attributes.fields.data.attributes.field_name}</CTableDataCell>
-                        <CTableDataCell>{team.attributes.fields.data.attributes.directorate.data.attributes.directorate_name}</CTableDataCell>
+                        <CTableDataCell>{team.attributes.fields.data[0].attributes.field_name}</CTableDataCell>
+                        <CTableDataCell>{team.attributes.directorate.data.attributes.directorate_name}</CTableDataCell>
                         <CTableDataCell>
                           <CButton color={'warning'} variant="outline">
                           Edit</CButton>
@@ -109,4 +113,4 @@ export class Directorate extends Component {
   }
 }
 
-export default Directorate
+export default Division

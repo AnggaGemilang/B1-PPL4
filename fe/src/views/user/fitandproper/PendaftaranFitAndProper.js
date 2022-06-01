@@ -52,7 +52,7 @@ const PendaftaranFitAndProper = () => {
             <CInputGroup>
               <CFormLabel htmlFor="input" className="col-sm-2 col-form-label">Nama</CFormLabel>
                 <div className="col-sm-5">
-                  <CFormInput type="input" id="Nama" placeholder='Masukkan Nama Peserta' />
+                  <CFormInput type="input" id="Nama" placeholder='Masukkan Nama Peserta' disabled />
                 </div>
             </CInputGroup>
           </CRow>
@@ -60,7 +60,7 @@ const PendaftaranFitAndProper = () => {
             <CInputGroup>
               <CFormLabel htmlFor="input" className="col-sm-2 col-form-label">Jabatan</CFormLabel>
                 <div className="col-sm-5">
-                  <CFormInput type="input" id="NIP" placeholder='Masukkan Jabatan Peserta'/>
+                  <CFormInput type="input" id="NIP" placeholder='Masukkan Jabatan Peserta' disabled />
                 </div>
             </CInputGroup>
           </CRow>
@@ -68,7 +68,7 @@ const PendaftaranFitAndProper = () => {
             <CInputGroup>
               <CFormLabel htmlFor="input" className="col-sm-2 col-form-label">Grade</CFormLabel>
                 <div className="col-sm-5">
-                  <CFormInput type="input" id="NIP" placeholder='Masukkan Grade Peserta'/>
+                  <CFormInput type="input" id="NIP" placeholder='Masukkan Grade Peserta'disabled />
                 </div>
               </CInputGroup>
           </CRow>

@@ -27,18 +27,10 @@ const TambahField = () => {
               <CForm>
                 <CRow className="mb-3">
                   <CFormLabel htmlFor="inputEmail3" className="col-sm-2 col-form-label" placeholder='Masukkan NIK'>
-                    NIK
+                    Nama Field
                   </CFormLabel>
                   <CCol sm={10}>
-                    <CFormInput type="email" id="inputEmail3" />
-                  </CCol>
-                </CRow>
-                <CRow className="mb-3">
-                  <CFormLabel htmlFor="inputPassword3" className="col-sm-2 col-form-label" >
-                    Nama
-                  </CFormLabel>
-                  <CCol sm={10}>
-                    <CFormInput type="password" id="inputPassword3" placeholder='Nama Pegawai Akan Muncul Disini' disabled />
+                    <CFormInput type="email" id="inputEmail3" placeholder='Nama Field'  />
                   </CCol>
                 </CRow>
                 <CButton type="submit" style={{width:'100%'}}>Submit</CButton>

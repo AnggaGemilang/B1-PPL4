@@ -114,12 +114,6 @@ const _nav = [
     ],
   },
   {
-    component: CNavItem,
-    name: 'Administrasi User',
-    to: '/theme/colors',
-    icon: <CIcon icon={cilDrop} customClassName="nav-icon" />,
-  },
-  {
     component: CNavTitle,
     name: 'Master Admin',
   },
@@ -175,6 +169,18 @@ const _nav = [
         to: '/admin/unit',
       },
     ],
+  },
+  {
+    component: CNavItem,
+    name: 'Administrasi User',
+    to: '/theme/colors',
+    icon: <CIcon icon={cilDrop} customClassName="nav-icon" />,
+  },
+  {
+    component: CNavItem,
+    name: 'Penilaian Fit Proper',
+    to: '/theme/colors',
+    icon: <CIcon icon={cilDrop} customClassName="nav-icon" />,
   },
 ]
 
