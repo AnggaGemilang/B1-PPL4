@@ -163,12 +163,17 @@ const _nav = [
         name: 'Unit',
         to: '/admin/unit',
       },
+      {
+        component: CNavItem,
+        name: 'Criteria',
+        to: '/admin/criteria',
+      },
     ],
   },
   {
     component: CNavItem,
     name: 'Administrasi User',
-    to: '/theme/colors',
+    to: '/admin/administrasi',
     icon: <CIcon icon={cilDrop} customClassName="nav-icon" />,
   },
   {

@@ -78,7 +78,7 @@ export class Grade extends Component {
                   </Link>
                 </CCol>
               </CRow>
-                <CTable striped className='mt-3'>
+                <CTable striped className='mt-3 text-center'>
                   <CTableHead>
                     <CTableRow>
                       <CTableHeaderCell scope="col">No</CTableHeaderCell>

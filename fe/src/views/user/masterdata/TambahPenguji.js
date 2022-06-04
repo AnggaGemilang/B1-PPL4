@@ -26,11 +26,9 @@ export class TambahPenguji extends Component {
   }
 
   handlechange = (event) => {
-    
     const newData = { ...this.state.data, nip_value: event.target.value };
     this.setState({ newData });
-    
-    DataPengujiAPI.find(newData.nip_value).then(
+      DataPengujiAPI.findEmployee(newData.nip_value).then(
       (res) => {
         if(res.data.length == 1){
           this.setState({
@@ -41,8 +39,6 @@ export class TambahPenguji extends Component {
             nama_karyawan: '',
           });
         }
-
-        console.log(res);
       },
       (err) => {
         console.log("err", err)

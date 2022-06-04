@@ -10,6 +10,8 @@ import {
   CFormLabel,
   CRow,
 } from '@coreui/react'
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import DataPesertaAPI from '../../../config/user/DataPesertaAPI'
 
 export class TambahPeserta extends Component {
@@ -21,17 +23,17 @@ export class TambahPeserta extends Component {
       },
       nama_karyawan: '',
     };
-    this.handlechange= this.handlechange.bind(this);    
+    this.handlechange = this.handlechange.bind(this);    
   }
 
   handlechange = (event) => {
-    
     const newData = { ...this.state.data, nip_value: event.target.value };
     this.setState({ newData });
     
-    DataPesertaAPI.find(newData.nip_value).then(
+    DataPesertaAPI.findByNIP(newData.nip_value).then(
       (res) => {
         if(res.data.length == 1){
+          toast("Wow so easy!")
           this.setState({
             nama_karyawan: res.data[0].attributes.Name
           });
@@ -50,15 +52,21 @@ export class TambahPeserta extends Component {
 
   postData = (event) => {
     event.preventDefault();
-    var nip_value = this.state.data.nip_value;
-    DataPengujiAPI.find(nip_value).then(
-      (res) => {
-        console.log("res post",res);
-      },
-      (err) => {
-        console.log("err", err);
+    if(this.state.nama_karyawan.length > 0){
+      const data = {
+        NIP: this.state.nip_value
       }
-    );    
+      DataPesertaAPI.add(data).then(
+        (res) => {
+          console.log("SUCCESSSSSSS",res);
+        },
+        (err) => {
+          console.log("err", err);
+        }
+      );    
+    } else {
+      
+    }
   }
 
   render(){

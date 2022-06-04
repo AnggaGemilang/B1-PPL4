@@ -1,6 +1,7 @@
 import React from 'react'
 
 const Dashboard = React.lazy(() => import('./views/dashboard/Dashboard'))
+const Login = React.lazy(() => import('./views/login/Login'))
 const Colors = React.lazy(() => import('./views/theme/colors/Colors'))
 const Typography = React.lazy(() => import('./views/theme/typography/Typography'))
 
@@ -23,6 +24,9 @@ const Subfield = React.lazy(() => import('./views/admin/subfield/Subfield'))
 const TambahSubfield = React.lazy(() => import('./views/admin/subfield/TambahSubfield'))
 const Unit = React.lazy(() => import('./views/admin/unit/Unit'))
 const TambahUnit = React.lazy(() => import('./views/admin/unit/TambahUnit'))
+const Criteria = React.lazy(() => import('./views/admin/criteria/Criteria'))
+const TambahCriteria = React.lazy(() => import('./views/admin/criteria/TambahCriteria'))
+const Administrasi = React.lazy(() => import('./views/admin/administrasi/Administrasi'))
 
 // User master data
 const DataPenguji = React.lazy(() => import('./views/user/masterdata/DataPenguji'))
@@ -49,6 +53,7 @@ const CetakWawancara = React.lazy(() => import('./views/user/report/CetakReportW
 
 const routes = [
   { path: '/', exact: true, name: 'Home' },
+  { path: '/login', name: 'Login', element: Login },
   { path: '/admin/unit', name: 'Unit', element: Unit },
   { path: '/admin/unit/tambah', name: 'Tambah Unit', element: TambahUnit },
   { path: '/admin/directorate', name: 'Directorate', element: Directorate },
@@ -67,6 +72,9 @@ const routes = [
   { path: '/admin/position/tambah', name: 'Tambah Position', element: TambahPosition },
   { path: '/admin/subfield', name: 'Subfield', element: Subfield },
   { path: '/admin/subfield/tambah', name: 'Tambah Subfield', element: TambahSubfield },
+  { path: '/admin/criteria', name: 'Criteria', element: Criteria },
+  { path: '/admin/criteria/tambah', name: 'Tambah Criteria', element: TambahCriteria },
+  { path: '/admin/administrasi', name: 'Administrasi User', element: Administrasi },
 
   { path: '/datapenguji', name: 'Penguji', element: DataPenguji },
   { path: '/tambahpenguji', name: 'Tambah Penguji', element: TambahPenguji },

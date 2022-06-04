@@ -78,7 +78,7 @@ export class Directorate extends Component {
                   </Link>
                 </CCol>
               </CRow>
-                <CTable striped className='mt-3 text-align-center'>
+                <CTable striped className='mt-3 text-center'>
                   <CTableHead>
                     <CTableRow>
                       <CTableHeaderCell scope="col">No</CTableHeaderCell>

@@ -16,13 +16,13 @@ import {
   CFormInput,
 } from '@coreui/react'
 import { Link } from 'react-router-dom'
-import SubFieldAPI from '../../../config/admin/SubFieldAPI'
+import CriteriaAPI from '../../../config/admin/CriteriaAPI'
 
-export class Subfield extends Component {
+export class Criteria extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      subfields: [],
+      criterias: [],
       urutan : 1,
     }
   }
@@ -32,15 +32,15 @@ export class Subfield extends Component {
   }
 
   getData(){
-    SubFieldAPI.get().then((res) => {
+    CriteriaAPI.get().then((res) => {
       console.log(res.data)
       this.setState({
-        subfields: res.data
+        criterias: res.data
       })
     })
   }
   deleteData(id){
-    SubFieldAPI.delete(id).then((res) => {
+    CriteriaAPI.delete(id).then((res) => {
       this.setState({
         Response: res.data.id
       })
@@ -54,7 +54,7 @@ export class Subfield extends Component {
         <CCol xs={12}>
           <CCard className="mb-4">
             <CCardHeader>
-              <strong>Data Sub Bidang</strong>
+              <strong>Data Criteria</strong>
             </CCardHeader>
             <CCardBody className='mt-3'>
               <CRow>
@@ -68,12 +68,12 @@ export class Subfield extends Component {
                   </CForm>
                 </CCol>
                 <CCol>
-                  <Link to={'/admin/subfield/tambah'}>
+                  <Link to={'/admin/criteria/tambah'}>
                     <CButton
                       color='primary'
                       style={{width:'100%'}}
                       variant="outline" >
-                        Tambah Sub Bidang
+                        Tambah Kriteria
                     </CButton>
                   </Link>
                 </CCol>
@@ -82,24 +82,22 @@ export class Subfield extends Component {
                   <CTableHead>
                     <CTableRow>
                       <CTableHeaderCell scope="col">No</CTableHeaderCell>
-                      <CTableHeaderCell scope="col">Name</CTableHeaderCell>
-                      <CTableHeaderCell scope="col">Bidang</CTableHeaderCell>
-                      <CTableHeaderCell scope="col">Action</CTableHeaderCell>
+                      <CTableHeaderCell scope="col">Nama Kriteria</CTableHeaderCell>
+                      <CTableHeaderCell scope="col">Bobot</CTableHeaderCell>
+                      <CTableHeaderCell scope="col">Penggunaan</CTableHeaderCell>
+                      <CTableHeaderCell scope="col">Aksi</CTableHeaderCell>
                     </CTableRow>
                   </CTableHead>
                   <CTableBody>
-                    { this.state.subfields.map(team =>
-                      <CTableRow key={team.id}>
+                    { this.state.criterias.map(criteria =>
+                      <CTableRow key={criteria.id}>
                         <CTableHeaderCell scope="row">{ this.state.urutan ++ }</CTableHeaderCell>
-                        <CTableDataCell>{team.attributes.subfield_name}</CTableDataCell>
-                        <CTableDataCell>{team.attributes.field.data.attributes.field_name}</CTableDataCell>
+                        <CTableDataCell>{criteria.attributes.criteria}</CTableDataCell>
+                        <CTableDataCell>{criteria.attributes.value}</CTableDataCell>
+                        <CTableDataCell>{criteria.attributes.usefor}</CTableDataCell>
                         <CTableDataCell>
-                          <CButton color={'warning'} variant="outline">
-                            Edit
-                          </CButton>
-                          <CButton color={'danger'} variant="outline" style={{marginLeft: '10px'}}>
-                            Delete
-                          </CButton>
+                          <CButton color={'warning'} variant="outline">Edit</CButton>
+                          <CButton color={'danger'} variant="outline" style={{marginLeft: '10px'}}>Delete</CButton>
                         </CTableDataCell>
                       </CTableRow>
                     )}
@@ -113,4 +111,4 @@ export class Subfield extends Component {
   }
 }
 
-export default Subfield
+export default Criteria

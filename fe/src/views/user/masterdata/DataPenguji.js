@@ -24,9 +24,37 @@ export class DataPenguji extends Component {
     this.state = {
       examiners: [],
       urutan : 1,
+      data: {
+        filter_query: '',        
+      }
     }
+    this.handlechange = this.handlechange.bind(this);
   }
   
+  handlechange = (event) => {
+    const newData = { ...this.state.data, filter_query: event.target.value };
+    this.setState({ newData });
+    
+    console.log(newData)
+
+    // DataPengujiAPI.findEmployeeName(newData.filter_query).then(
+    //   (res) => {
+    //     if(res.data.length != 0){
+    //       this.setState({
+    //         examiners: res.data
+    //       });
+    //     } else {
+    //       this.setState({
+    //         examiners: {}
+    //       });          
+    //     }
+    //   },
+    //   (err) => {
+    //     console.log("err", err)
+    //   }
+    // );
+  };
+
   componentDidMount(){
     this.getData()
   }
@@ -49,6 +77,7 @@ export class DataPenguji extends Component {
       this.getData()
     })
   }
+
   render(){
     return (
       <CRow>
@@ -63,8 +92,10 @@ export class DataPenguji extends Component {
                   <CForm>
                       <CFormInput
                         type="text"
-                        id="exampleFormControlInput1"
+                        name='filter_query'
+                        id="filter_query"
                         placeholder="Masukkan Kata Kunci Pencarian . . ."
+                        onChange={this.handlechange}
                       />
                   </CForm>
                 </CCol>
@@ -79,7 +110,7 @@ export class DataPenguji extends Component {
                   </Link>
                 </CCol>
               </CRow>
-                <CTable striped className='mt-3'>
+                <CTable striped className='mt-3 text-center'>
                   <CTableHead>
                     <CTableRow>
                       <CTableHeaderCell scope="col">No</CTableHeaderCell>
@@ -94,7 +125,7 @@ export class DataPenguji extends Component {
                       <CTableRow key={examiner.id}>
                         <CTableHeaderCell scope="row">{ this.state.urutan ++ }</CTableHeaderCell>
                         <CTableDataCell>
-                          <img src={"https://d316-140-0-220-95.ap.ngrok.io" + examiner.attributes.employee.data.attributes.Photo.data.attributes.formats.thumbnail.url} alt="Photo" />
+                          <img src={"https://d77a-123-253-233-233.ap.ngrok.io" + examiner.attributes.employee.data.attributes.Photo.data.attributes.formats.thumbnail.url} alt="Photo" />
                         </CTableDataCell>
                         <CTableDataCell>{examiner.attributes.employee.data.attributes.Name}</CTableDataCell>
                         <CTableDataCell>{examiner.attributes.employee.data.attributes.NIP}</CTableDataCell>

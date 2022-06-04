@@ -7,7 +7,7 @@ import {
   CRow,
   CTable,
   CTableBody,
-  CButton,
+  CFormSelect,
   CTableDataCell,
   CTableHead,
   CTableHeaderCell,
@@ -15,8 +15,7 @@ import {
   CForm,
   CFormInput,
 } from '@coreui/react'
-import { Link } from 'react-router-dom'
-import EmployeeAPI from '../../../config/admin/EmployeeAPI'
+import AdministrasiUserAPI from '../../../config/admin/AdministrasiUserAPI'
 
 export class Employee extends Component {
   constructor(props) {
@@ -32,7 +31,7 @@ export class Employee extends Component {
   }
 
   getData(){
-    EmployeeAPI.get().then((res) => {
+    AdministrasiUserAPI.get().then((res) => {
       console.log(res.data)
       this.setState({
         employees: res.data
@@ -41,7 +40,7 @@ export class Employee extends Component {
   }
 
   deleteData(id){
-    EmployeeAPI.delete(id).then((res) => {
+    AdministrasiUserAPI.delete(id).then((res) => {
       this.setState({
         Response: res.data.id
       })
@@ -60,7 +59,7 @@ export class Employee extends Component {
             </CCardHeader>
             <CCardBody className='mt-3'>
               <CRow>
-                <CCol xs={9}>
+                <CCol xs={12}>
                   <CForm>
                       <CFormInput
                         type="text"
@@ -69,21 +68,12 @@ export class Employee extends Component {
                       />
                   </CForm>
                 </CCol>
-                <CCol>
-                  <Link to={'/admin/employee/tambah'}>
-                    <CButton
-                      color='primary'
-                      style={{width:'100%'}}
-                      variant="outline" >
-                        Tambah Karyawan
-                    </CButton>
-                  </Link>
-                </CCol>
               </CRow>
                 <CTable striped className='mt-3 text-center'>
                   <CTableHead>
                     <CTableRow>
                       <CTableHeaderCell scope="col">No</CTableHeaderCell>
+                      <CTableHeaderCell scope="col">NIP</CTableHeaderCell>
                       <CTableHeaderCell scope="col">Name</CTableHeaderCell>
                       <CTableHeaderCell scope="col">Gender</CTableHeaderCell>
                       <CTableHeaderCell scope="col">Religion</CTableHeaderCell>
@@ -98,6 +88,7 @@ export class Employee extends Component {
                     { this.state.employees.map(employee =>
                       <CTableRow key={employee.id}>
                         <CTableHeaderCell scope="row">{ this.state.urutan ++ }</CTableHeaderCell>
+                        <CTableDataCell>{employee.attributes.NIP}</CTableDataCell>
                         <CTableDataCell>{employee.attributes.Name}</CTableDataCell>
                         <CTableDataCell>{employee.attributes.Gender}</CTableDataCell>
                         <CTableDataCell>{employee.attributes.Religion}</CTableDataCell>
@@ -112,8 +103,11 @@ export class Employee extends Component {
                           }
                         </CTableDataCell>
                         <CTableDataCell>
-                          <CButton color={'warning'} variant="outline">Edit</CButton>
-                          <CButton color={'danger'} variant="outline">Delete</CButton>
+                          <CFormSelect size="md" className="mb-3" aria-label="Large select example">
+                            <option>Pilih Penggunaan</option>
+                            <option value="1">Am</option>
+                            <option value="2">Md</option>
+                          </CFormSelect>
                         </CTableDataCell>
                       </CTableRow>
                     )}
