@@ -10,53 +10,51 @@ import {
   CFormLabel,
   CRow,
 } from '@coreui/react'
-import { ToastContainer, toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
 import DataPesertaAPI from '../../../config/user/DataPesertaAPI'
 
 export class TambahPeserta extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      data: {
-        nip_value: "",
-      },
+      nip_value: "",
       nama_karyawan: '',
+      id_karyawan: 0
     };
     this.handlechange = this.handlechange.bind(this);    
   }
 
   handlechange = (event) => {
-    const newData = { ...this.state.data, nip_value: event.target.value };
-    this.setState({ newData });
-    
-    DataPesertaAPI.findByNIP(newData.nip_value).then(
-      (res) => {
-        if(res.data.length == 1){
-          toast("Wow so easy!")
-          this.setState({
-            nama_karyawan: res.data[0].attributes.Name
-          });
-        } else {
-          this.setState({
-            nama_karyawan: '',
-          });
+    this.setState({nip_value: event.target.value }, ()=>{
+      DataPesertaAPI.findEmployee(this.state.nip_value).then(
+        (res) => {
+          if(res.data.length == 1){
+            this.setState({
+              nama_karyawan: res.data[0].attributes.Name,
+              id_karyawan: res.data[0].id
+            });
+          } else {
+            this.setState({
+              nama_karyawan: '',
+              id: 0,
+            });
+          }
+        },
+        (err) => {
+          console.log("err", err)
         }
-        console.log(res)
-      },
-      (err) => {
-        console.log("err", err)
-      }
-    );
+      );
+    })
   };
 
   postData = (event) => {
     event.preventDefault();
     if(this.state.nama_karyawan.length > 0){
-      const data = {
-        NIP: this.state.nip_value
+      const body = {
+        data: {
+          employee: this.state.id_karyawan
+        }
       }
-      DataPesertaAPI.add(data).then(
+      DataPesertaAPI.add(body).then(
         (res) => {
           console.log("SUCCESSSSSSS",res);
         },
@@ -78,7 +76,7 @@ export class TambahPeserta extends Component {
               <strong>Tambah Peserta</strong>
             </CCardHeader>
             <CCardBody>
-                <CForm>
+                <CForm onSubmit={this.postData}>
                   <CRow className="mb-3">
                     <CFormLabel htmlFor="nip_value" className="col-sm-2 col-form-label" placeholder='Masukkan NIP . . .' >
                       NIP

@@ -15,13 +15,18 @@ import {
   CForm,
   CFormInput,
 } from '@coreui/react'
+import url from "../../../config/setting"
 import AdministrasiUserAPI from '../../../config/admin/AdministrasiUserAPI'
 
-export class Employee extends Component {
+export class Administrasi extends Component {
   constructor(props) {
     super(props)
     this.state = {
       employees: [],
+      role: "",
+      id: 0,
+      nip_value: "",
+      email: "",
       urutan : 1,
     }
   }
@@ -34,7 +39,8 @@ export class Employee extends Component {
     AdministrasiUserAPI.get().then((res) => {
       console.log(res.data)
       this.setState({
-        employees: res.data
+        employees: res.data,
+        urutan: 1,        
       })
     })
   }
@@ -57,7 +63,7 @@ export class Employee extends Component {
             <CCardHeader>
               <strong>Data Karyawan</strong>
             </CCardHeader>
-            <CCardBody className='mt-3'>
+            <CCardBody className='mt-3' style={{overflowX: "scroll"}}>
               <CRow>
                 <CCol xs={12}>
                   <CForm>
@@ -73,6 +79,7 @@ export class Employee extends Component {
                   <CTableHead>
                     <CTableRow>
                       <CTableHeaderCell scope="col">No</CTableHeaderCell>
+                      <CTableHeaderCell scope="col">Photo</CTableHeaderCell>
                       <CTableHeaderCell scope="col">NIP</CTableHeaderCell>
                       <CTableHeaderCell scope="col">Name</CTableHeaderCell>
                       <CTableHeaderCell scope="col">Gender</CTableHeaderCell>
@@ -80,7 +87,6 @@ export class Employee extends Component {
                       <CTableHeaderCell scope="col">Place and Date Birth</CTableHeaderCell>
                       <CTableHeaderCell scope="col">Email</CTableHeaderCell>
                       <CTableHeaderCell scope="col">Phone Number</CTableHeaderCell>
-                      <CTableHeaderCell scope="col">Photo</CTableHeaderCell>
                       <CTableHeaderCell scope="col">Action</CTableHeaderCell>
                     </CTableRow>
                   </CTableHead>
@@ -88,6 +94,13 @@ export class Employee extends Component {
                     { this.state.employees.map(employee =>
                       <CTableRow key={employee.id}>
                         <CTableHeaderCell scope="row">{ this.state.urutan ++ }</CTableHeaderCell>
+                        <CTableDataCell>
+                          {
+                            employee.attributes.Photo.data != null ?
+                              <img className='foto_karyawan' src={url + employee.attributes.Photo.data.attributes.formats.thumbnail.url} alt="Photo" />  :
+                              <h3>-</h3>
+                          }
+                        </CTableDataCell>
                         <CTableDataCell>{employee.attributes.NIP}</CTableDataCell>
                         <CTableDataCell>{employee.attributes.Name}</CTableDataCell>
                         <CTableDataCell>{employee.attributes.Gender}</CTableDataCell>
@@ -96,17 +109,70 @@ export class Employee extends Component {
                         <CTableDataCell>{employee.attributes.Email}</CTableDataCell>
                         <CTableDataCell>{employee.attributes.PhoneNumber}</CTableDataCell>
                         <CTableDataCell>
-                          {
-                            employee.attributes.Photo.data != null ?
-                              <img src={"https://e624-140-0-220-95.ap.ngrok.io" + employee.attributes.Photo.data.attributes.formats.thumbnail.url} alt="Photo" />  :
-                              <h3>-</h3>
-                          }
-                        </CTableDataCell>
-                        <CTableDataCell>
-                          <CFormSelect size="md" className="mb-3" aria-label="Large select example">
-                            <option>Pilih Penggunaan</option>
-                            <option value="1">Am</option>
-                            <option value="2">Md</option>
+                          <CFormSelect name='role' id='role' className="mb-3" aria-label="Large select example" 
+                            onChange={(e) => this.setState({ 
+                              id: employee.id,
+                              role: e.target.value, 
+                              nip_value: employee.attributes.NIP,
+                              password: employee.attributes.Email,
+                            }, () => {
+                              if(this.state.role == 999){
+                                AdministrasiUserAPI.find(this.state.nip_value).then(
+                                  (res) => {
+                                    if(res.data.length != 0){
+                                      const body = {
+                                        data: {
+                                          employee: this.state.id,
+                                          password: this.state.email,
+                                          role: this.state.role
+                                        }
+                                      }
+                                      AdministrasiUserAPI.delete(employee.attributes.account.data.id).then(
+                                        (res) => {
+                                          this.getData()
+                                      })
+                                      this.getData()
+                                    }
+                                  }
+                                )
+                              } else {
+                                AdministrasiUserAPI.find(this.state.nip_value).then(
+                                  (res) => {
+                                    if(res.data.length != 0){
+                                      const body = {
+                                        data: {
+                                          employee: this.state.id,
+                                          password: this.state.email,
+                                          role: this.state.role
+                                        }
+                                      }
+                                      AdministrasiUserAPI.edit(employee.attributes.account.data.id, body).then(
+                                        (res) => {
+                                          this.getData()
+                                      })
+                                      this.getData()
+                                    } else {
+                                      const body = {
+                                        data: {
+                                          employee: this.state.id,
+                                          password: this.state.email,
+                                          role: this.state.role
+                                        }
+                                      }
+                                      AdministrasiUserAPI.add(body).then(
+                                        (res) => {
+                                        this.getData()
+                                      })
+                                    }
+                                  }
+                                )                                
+                              }
+                            })}>
+                            <option value="999">Pilih Penggunaan</option>
+                            <option selected={employee.attributes.account.data != null && employee.attributes.account.data.attributes.role == 1} value="1">Administrator</option>
+                            <option selected={employee.attributes.account.data != null && employee.attributes.account.data.attributes.role == 2} value="2">HR Manager</option>
+                            <option selected={employee.attributes.account.data != null && employee.attributes.account.data.attributes.role == 3} value="3">HR Specialist</option>
+                            <option selected={employee.attributes.account.data != null && employee.attributes.account.data.attributes.role == 4} value="4">Penguji</option>
                           </CFormSelect>
                         </CTableDataCell>
                       </CTableRow>
@@ -121,4 +187,4 @@ export class Employee extends Component {
   }
 }
 
-export default Employee
+export default Administrasi

@@ -2,8 +2,8 @@ import api from '../index'
 
 export default {
   get: () => api.get('/criterias?populate=*').then((res) => res.data),
-  find: () => api.get('/criterias/filters[NIP][$eq]=').then((res) => res.data),
+  find: (query) => api.get(`/criterias?filters[criteria][$contains]=${query}`).then((res) => res.data),
   add: (data) => api.post('/criterias', data).then((res) => res.data),
-  delete: () => api.delete('/criterias?populate=*').then((res) => res.data),
-  edit: () => api.update('/criterias?populate=*').then((res) => res.data),
+  delete: (id) => api.delete(`/criterias/${id}`).then((res) => res.data),
+  edit: (id, data) => api.update(`/criterias/${id}`, data).then((res) => res.data),
 }

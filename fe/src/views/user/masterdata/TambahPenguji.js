@@ -17,47 +17,60 @@ export class TambahPenguji extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      data: {
-        nip_value: "",
-      },
+      nip_value: "",
+      id_karyawan: 0,
       nama_karyawan: "",
     };
     this.handlechange= this.handlechange.bind(this);    
   }
 
   handlechange = (event) => {
-    const newData = { ...this.state.data, nip_value: event.target.value };
-    this.setState({ newData });
-      DataPengujiAPI.findEmployee(newData.nip_value).then(
-      (res) => {
-        if(res.data.length == 1){
-          this.setState({
-            nama_karyawan: res.data[0].attributes.Name
-          });
-        } else {
-          this.setState({
-            nama_karyawan: '',
-          });
+    this.setState({ nip_value: event.target.value }, () => {
+      DataPengujiAPI.findEmployee(this.state.nip_value).then(
+        (res) => {
+          if(res.data.length == 1){
+            this.setState({
+              nama_karyawan: res.data[0].attributes.Name,
+              id_karyawan: res.data[0].id
+            });
+          } else {
+            this.setState({
+              nama_karyawan: '',
+              id: 0,
+            });
+          }
+        },
+        (err) => {
+          console.log("err", err)
         }
-      },
-      (err) => {
-        console.log("err", err)
-      }
-    );
+      )
+    })
   };
 
   postData = (event) => {
     event.preventDefault();
-    var nip_value = this.state.data.nip_value;
-
-    DataPengujiAPI.find(nip_value).then(
-      (res) => {
-        console.log("res post",res);
-      },
-      (err) => {
-        console.log("err", err);
+    if(this.state.nama_karyawan.length > 0){
+      const body = {
+        data: {
+          employee: this.state.id_karyawan
+        }
       }
-    );    
+      DataPengujiAPI.add(body).then(
+        (res) => {
+          localStorage.setItem('show', true);
+          localStorage.setItem('theme', 'primary');
+          localStorage.setItem('message', "Examiner has added successfully");
+          window.location = "http://localhost:3000/admin#/datapenguji";
+        },
+        (err) => {
+          localStorage.setItem('show', true);
+          localStorage.setItem('theme', 'danger');
+          localStorage.setItem('message', "Examiner has failed to added");
+        }
+      );    
+    } else {
+      
+    }
   }
 
   render(){
@@ -69,7 +82,7 @@ export class TambahPenguji extends Component {
               <strong>Tambah Penguji</strong>
             </CCardHeader>
             <CCardBody>
-                <CForm>
+                <CForm onSubmit={this.postData}>
                   <CRow className="mb-3">
                     <CFormLabel htmlFor="nip_value" className="col-sm-2 col-form-label" placeholder='Masukkan NIK'>
                       NIP

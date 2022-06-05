@@ -16,31 +16,29 @@ export class TambahDirectorate extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      data: {
-        directorate_name: "asdasd",
-      }
-    };
+      directorate_name: '',
+    }
     this.handlechange= this.handlechange.bind(this);    
   }
 
-  handlechange = (event) => {
-    const newData = { ...this.state.data, title: event.target.value };
-    this.setState({ newData });
-    console.log(newData);
+  handlechange = (e) => {
+    this.setState({directorate_name: e.target.value});
   };
 
   postData = (event) => {
-    event.preventDefault();
-    var name = this.state.data.directorate_name;
+    event.preventDefault()
 
-    const data = {
-      directorate_name: name,
+    var name = this.state.directorate_name
+
+    const body = {
+      data: {
+        directorate_name: name,
+      }
     };
 
-    DirectorateAPI.add(data).then(
+    DirectorateAPI.add(body).then(
       (res) => {
-        console.log("res post",res);
-        // window.location = '/#/admin/directorate';
+          window.location = "http://localhost:3000/admin#/directorate";
       },
       (err) => {
         console.log("err", err);

@@ -11,7 +11,6 @@ import {
   cilPuzzle,
   cilSpeedometer,
   cilStar,
-  cilGroup,
 } from '@coreui/icons'
 import { CNavGroup, CNavItem, CNavTitle } from '@coreui/react'
 
@@ -121,59 +120,59 @@ const _nav = [
       {
         component: CNavItem,
         name: 'Employee',
-        to: '/admin/employee',
+        to: 'employee',
       },
       {
         component: CNavItem,
         name: 'Directorate',
-        to: '/admin/directorate',
+        to: 'directorate',
       },
       {
         component: CNavItem,
         name: 'Division',
-        to: '/admin/division',
+        to: 'division',
       },
       {
         component: CNavItem,
         name: 'Field',
-        to: '/admin/field',
+        to: 'field',
       },
       {
         component: CNavItem,
         name: 'Sub Field',
-        to: '/admin/subfield',
+        to: 'subfield',
       },
       {
         component: CNavItem,
         name: 'Grade',
-        to: '/admin/grade',
+        to: 'grade',
       },
       {
         component: CNavItem,
         name: 'Level',
-        to: '/admin/level',
+        to: 'level',
       },
       {
         component: CNavItem,
         name: 'Position',
-        to: '/admin/position',
+        to: 'position',
       },
       {
         component: CNavItem,
         name: 'Unit',
-        to: '/admin/unit',
+        to: 'unit',
       },
       {
         component: CNavItem,
         name: 'Criteria',
-        to: '/admin/criteria',
+        to: 'criteria',
       },
     ],
   },
   {
     component: CNavItem,
     name: 'Administrasi User',
-    to: '/admin/administrasi',
+    to: '/administrasi',
     icon: <CIcon icon={cilDrop} customClassName="nav-icon" />,
   },
   {

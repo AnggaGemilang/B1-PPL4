@@ -12,9 +12,14 @@ import {
   CTableHead,
   CTableHeaderCell,
   CTableRow,
-  CForm,
   CFormInput,
+  CModal,
+  CModalBody,
+  CModalFooter,
+  CModalHeader,
+  CModalTitle,  
 } from '@coreui/react'
+import url from "../../../config/setting"
 import { Link } from 'react-router-dom'
 import EmployeeAPI from '../../../config/admin/EmployeeAPI'
 
@@ -24,9 +29,29 @@ export class Employee extends Component {
     this.state = {
       employees: [],
       urutan : 1,
+      filter_query: '',     
+      id: 0,
+      employee_name: '', 
     }
+    this.handlechange = this.handlechange.bind(this);
   }
   
+  handlechange = (event) => {
+    event.preventDefault()
+    this.setState({ filter_query: event.target.value, urutan: 1 }, () => {
+      EmployeeAPI.find(this.state.filter_query).then(
+        (res) => {
+          if(res.data.length != 0){
+            this.setState({
+              employees: res.data,
+              urutan: 1
+            });
+          }
+        }
+      )
+    });
+  };
+
   componentDidMount(){
     this.getData()
   }
@@ -35,17 +60,15 @@ export class Employee extends Component {
     EmployeeAPI.get().then((res) => {
       console.log(res.data)
       this.setState({
-        employees: res.data
+        employees: res.data,
+        urutan: 1
       })
     })
   }
 
-  deleteData(id){
-    EmployeeAPI.delete(id).then((res) => {
-      this.setState({
-        Response: res.data.id
-      })
-    }, () => {
+  deleteData(){
+    EmployeeAPI.delete(this.state.id).then((res) => {
+      this.setState({visible:false})
       this.getData()
     })
   }
@@ -58,19 +81,19 @@ export class Employee extends Component {
             <CCardHeader>
               <strong>Data Karyawan</strong>
             </CCardHeader>
-            <CCardBody className='mt-3'>
+            <CCardBody className='mt-3 w-100' style={{ overflowX: "auto"}}>
               <CRow>
                 <CCol xs={9}>
-                  <CForm>
-                      <CFormInput
-                        type="text"
-                        id="exampleFormControlInput1"
-                        placeholder="Masukkan Kata Kunci Pencarian . . ."
-                      />
-                  </CForm>
+                  <CFormInput
+                    type="text"
+                    name='filter_query'
+                    id="filter_query"
+                    placeholder="Masukkan Kata Kunci Pencarian . . ."
+                    onChange={this.handlechange}
+                  />
                 </CCol>
                 <CCol>
-                  <Link to={'/admin/employee/tambah'}>
+                  <Link to={'/employee/tambah'}>
                     <CButton
                       color='primary'
                       style={{width:'100%'}}
@@ -80,17 +103,19 @@ export class Employee extends Component {
                   </Link>
                 </CCol>
               </CRow>
+              <CRow className='pl-2 mr-5'>
                 <CTable striped className='mt-3 text-center'>
                   <CTableHead>
                     <CTableRow>
                       <CTableHeaderCell scope="col">No</CTableHeaderCell>
+                      <CTableHeaderCell scope="col">Photo</CTableHeaderCell>
+                      <CTableHeaderCell scope="col">NIP</CTableHeaderCell>
                       <CTableHeaderCell scope="col">Name</CTableHeaderCell>
                       <CTableHeaderCell scope="col">Gender</CTableHeaderCell>
                       <CTableHeaderCell scope="col">Religion</CTableHeaderCell>
                       <CTableHeaderCell scope="col">Place and Date Birth</CTableHeaderCell>
                       <CTableHeaderCell scope="col">Email</CTableHeaderCell>
                       <CTableHeaderCell scope="col">Phone Number</CTableHeaderCell>
-                      <CTableHeaderCell scope="col">Photo</CTableHeaderCell>
                       <CTableHeaderCell scope="col">Action</CTableHeaderCell>
                     </CTableRow>
                   </CTableHead>
@@ -98,6 +123,14 @@ export class Employee extends Component {
                     { this.state.employees.map(employee =>
                       <CTableRow key={employee.id}>
                         <CTableHeaderCell scope="row">{ this.state.urutan ++ }</CTableHeaderCell>
+                        <CTableDataCell>
+                          {
+                            employee.attributes.Photo.data != null ?
+                              <img className='foto_karyawan' src={url + employee.attributes.Photo.data.attributes.formats.thumbnail.url} alt="Photo" />  :
+                              <h3>-</h3>
+                          }
+                        </CTableDataCell>
+                        <CTableDataCell>{employee.attributes.NIP}</CTableDataCell>
                         <CTableDataCell>{employee.attributes.Name}</CTableDataCell>
                         <CTableDataCell>{employee.attributes.Gender}</CTableDataCell>
                         <CTableDataCell>{employee.attributes.Religion}</CTableDataCell>
@@ -105,20 +138,37 @@ export class Employee extends Component {
                         <CTableDataCell>{employee.attributes.Email}</CTableDataCell>
                         <CTableDataCell>{employee.attributes.PhoneNumber}</CTableDataCell>
                         <CTableDataCell>
-                          {
-                            employee.attributes.Photo.data != null ?
-                              <img src={"https://e624-140-0-220-95.ap.ngrok.io" + employee.attributes.Photo.data.attributes.formats.thumbnail.url} alt="Photo" />  :
-                              <h3>-</h3>
-                          }
-                        </CTableDataCell>
-                        <CTableDataCell>
                           <CButton color={'warning'} variant="outline">Edit</CButton>
-                          <CButton color={'danger'} variant="outline">Delete</CButton>
+                          <CButton 
+                            color={'danger'} 
+                            variant="outline" 
+                            style={{marginLeft: '10px'}}
+                            onClick={() => this.setState({ 
+                              visible: true, 
+                              id: employee.id, 
+                              employee_name: employee.attributes.Name, 
+                              urutan: 1 
+                            })}>Delete</CButton>
                         </CTableDataCell>
                       </CTableRow>
                     )}
                   </CTableBody>
                 </CTable>
+              </CRow>
+              <CModal backdrop="static" visible={this.state.visible} onClose={() => this.setState({ visible: false, urutan: 1 })}>
+                <CModalHeader>
+                  <CModalTitle>Are You Sure?</CModalTitle>
+                </CModalHeader>
+                <CModalBody>
+                  This will remove {this.state.employee_name} as registrant permanently
+                </CModalBody>
+                <CModalFooter>
+                  <CButton color="secondary" onClick={() => this.setState({ visible: false, urutan: 1 })}>
+                    Close
+                  </CButton>
+                  <CButton color="danger" onClick={() => this.deleteData()}>Delete</CButton>
+                </CModalFooter>
+              </CModal> 
             </CCardBody>
           </CCard>
         </CCol>

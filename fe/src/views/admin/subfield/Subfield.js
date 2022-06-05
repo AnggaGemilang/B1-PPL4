@@ -14,6 +14,11 @@ import {
   CTableRow,
   CForm,
   CFormInput,
+  CModal,
+  CModalBody,
+  CModalFooter,
+  CModalHeader,
+  CModalTitle,  
 } from '@coreui/react'
 import { Link } from 'react-router-dom'
 import SubFieldAPI from '../../../config/admin/SubFieldAPI'
@@ -24,9 +29,30 @@ export class Subfield extends Component {
     this.state = {
       subfields: [],
       urutan : 1,
+      filter_query: '',
+      visible: false,  
+      id: 0,
+      subfield_name: '' 
     }
+    this.handlechange = this.handlechange.bind(this);
   }
   
+  handlechange = (event) => {
+    event.preventDefault()
+    this.setState({ filter_query: event.target.value, urutan: 1 }, () => {
+      SubFieldAPI.find(this.state.filter_query).then(
+        (res) => {
+          if(res.data.length != 0){
+            this.setState({
+              subfields: res.data,
+              urutan: 1
+            });
+          }
+        }
+      )
+    });
+  };
+
   componentDidMount(){
     this.getData()
   }
@@ -35,19 +61,19 @@ export class Subfield extends Component {
     SubFieldAPI.get().then((res) => {
       console.log(res.data)
       this.setState({
-        subfields: res.data
+        subfields: res.data,
+        urutan: 1,
       })
     })
   }
-  deleteData(id){
-    SubFieldAPI.delete(id).then((res) => {
-      this.setState({
-        Response: res.data.id
-      })
-    }, () => {
+
+  deleteData(){
+    SubFieldAPI.delete(this.state.id).then((res) => {
+      this.setState({visible:false})
       this.getData()
     })
   }
+
   render(){
     return (
       <CRow>
@@ -59,16 +85,16 @@ export class Subfield extends Component {
             <CCardBody className='mt-3'>
               <CRow>
                 <CCol xs={9}>
-                  <CForm>
-                      <CFormInput
-                        type="text"
-                        id="exampleFormControlInput1"
-                        placeholder="Masukkan Kata Kunci Pencarian . . ."
-                      />
-                  </CForm>
+                  <CFormInput
+                    type="text"
+                    name='filter_query'
+                    id="filter_query"
+                    placeholder="Masukkan Kata Kunci Pencarian . . ."
+                    onChange={this.handlechange}
+                  />
                 </CCol>
                 <CCol>
-                  <Link to={'/admin/subfield/tambah'}>
+                  <Link to={'/subfield/tambah'}>
                     <CButton
                       color='primary'
                       style={{width:'100%'}}
@@ -88,23 +114,44 @@ export class Subfield extends Component {
                     </CTableRow>
                   </CTableHead>
                   <CTableBody>
-                    { this.state.subfields.map(team =>
-                      <CTableRow key={team.id}>
+                    { this.state.subfields.map(subfield =>
+                      <CTableRow key={subfield.id}>
                         <CTableHeaderCell scope="row">{ this.state.urutan ++ }</CTableHeaderCell>
-                        <CTableDataCell>{team.attributes.subfield_name}</CTableDataCell>
-                        <CTableDataCell>{team.attributes.field.data.attributes.field_name}</CTableDataCell>
+                        <CTableDataCell>{subfield.attributes.subfield_name}</CTableDataCell>
+                        <CTableDataCell>{subfield.attributes.field.data.attributes.field_name}</CTableDataCell>
                         <CTableDataCell>
                           <CButton color={'warning'} variant="outline">
                             Edit
                           </CButton>
-                          <CButton color={'danger'} variant="outline" style={{marginLeft: '10px'}}>
-                            Delete
-                          </CButton>
+                          <CButton 
+                            color={'danger'}
+                            variant="outline"
+                            style={{marginLeft: '10px'}}
+                            onClick={() => this.setState({ 
+                              visible: true, 
+                              id: subfield.id, 
+                              subfield_name: subfield.attributes.subfield_name, 
+                              urutan: 1 
+                            })}>Delete</CButton>
                         </CTableDataCell>
                       </CTableRow>
                     )}
                   </CTableBody>
                 </CTable>
+                <CModal backdrop="static" visible={this.state.visible} onClose={() => this.setState({ visible: false, urutan: 1 })}>
+                <CModalHeader>
+                  <CModalTitle>Are You Sure?</CModalTitle>
+                </CModalHeader>
+                <CModalBody>
+                  This will remove {this.state.subfield_name} as registrant permanently
+                </CModalBody>
+                <CModalFooter>
+                  <CButton color="secondary" onClick={() => this.setState({ visible: false, urutan: 1 })}>
+                    Close
+                  </CButton>
+                  <CButton color="danger" onClick={() => this.deleteData()}>Delete</CButton>
+                </CModalFooter>
+              </CModal>
             </CCardBody>
           </CCard>
         </CCol>
