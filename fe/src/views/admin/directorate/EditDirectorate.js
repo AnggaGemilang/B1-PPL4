@@ -18,6 +18,10 @@ const EditDirectorate = () => {
   const { id } = useParams();
   const [directorateName, setDirectorateName] = useState("")
 
+  if(localStorage.getItem("auth") == null){
+    window.location = "/#/login";
+  }
+
   useEffect(() => {
     DirectorateAPI.findById(id).then(
       (res) => {

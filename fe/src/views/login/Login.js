@@ -37,7 +37,9 @@ export class Login extends Component {
     event.preventDefault()
     LoginAPI.find(this.state.email, this.state.password).then((res) => {
       if(res.data.length != 0){
-        console.log("Login Berhasil")
+        console.log(res.data)
+        localStorage.setItem("auth", JSON.stringify(res.data[0]))
+        window.location = "/#/dashboard";
       } else {
         console.log("Login gagal")
       }
@@ -45,6 +47,11 @@ export class Login extends Component {
   }
 
   render(){
+
+    if(localStorage.getItem("auth") != null){
+      window.location = "/#/dashboard";
+    }
+
     return (
       <div className="bg-light min-vh-100 d-flex flex-row align-items-center">
         <CContainer>

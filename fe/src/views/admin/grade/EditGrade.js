@@ -33,6 +33,10 @@ const EditGrade = () => {
     );      
   }, [])
 
+  if(localStorage.getItem("auth") == null){
+    window.location = "/#/login";
+  }
+
   const postData = (event) => {
     event.preventDefault()
 

@@ -44,6 +44,10 @@ const EditEmployee = () => {
     getLevelData()
   }, [])  
 
+  if(localStorage.getItem("auth") == null){
+    window.location = "/#/login";
+  }
+
   const getEmployeeData = () => {
     EmployeeAPI.findById(id).then(
       (res) => {

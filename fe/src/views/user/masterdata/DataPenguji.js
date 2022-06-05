@@ -77,6 +77,11 @@ export class DataPenguji extends Component {
   }
 
   render(){
+
+    if(localStorage.getItem("auth") == null){
+      window.location = "/#/login";
+    }
+
     return (
       <CRow className='position-relative'>                      
         <CCol xs={12}>

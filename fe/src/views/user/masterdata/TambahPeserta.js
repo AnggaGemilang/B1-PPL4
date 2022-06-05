@@ -56,7 +56,7 @@ export class TambahPeserta extends Component {
       }
       DataPesertaAPI.add(body).then(
         (res) => {
-          console.log("SUCCESSSSSSS",res);
+          window.location = "/#/datapeserta";
         },
         (err) => {
           console.log("err", err);
@@ -68,6 +68,11 @@ export class TambahPeserta extends Component {
   }
 
   render(){
+
+    if(localStorage.getItem("auth") == null){
+      window.location = "/#/login";
+    }
+
     return (
       <CRow>
         <CCol xs={12}>

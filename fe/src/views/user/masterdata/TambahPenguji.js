@@ -57,15 +57,10 @@ export class TambahPenguji extends Component {
       }
       DataPengujiAPI.add(body).then(
         (res) => {
-          localStorage.setItem('show', true);
-          localStorage.setItem('theme', 'primary');
-          localStorage.setItem('message', "Examiner has added successfully");
-          window.location = "http://localhost:3000/admin#/datapenguji";
+          window.location = "/#/datapenguji";
         },
         (err) => {
-          localStorage.setItem('show', true);
-          localStorage.setItem('theme', 'danger');
-          localStorage.setItem('message', "Examiner has failed to added");
+
         }
       );    
     } else {
@@ -74,6 +69,11 @@ export class TambahPenguji extends Component {
   }
 
   render(){
+
+    if(localStorage.getItem("auth") == null){
+      window.location = "/#/login";
+    }
+
     return (
       <CRow>
         <CCol xs={12}>

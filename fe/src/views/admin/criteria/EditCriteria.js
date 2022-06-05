@@ -21,6 +21,10 @@ const EditCriteria = () => {
   const [valueData, setValue] = useState("")
   const [useForData, setUseFor] = useState("")
 
+  if(localStorage.getItem("auth") == null){
+    window.location = "/#/login";
+  }
+
   useEffect(() => {
     CriteriaAPI.findById(id).then((res) => {
       setCriteria(res.data[0].attributes.criteria)

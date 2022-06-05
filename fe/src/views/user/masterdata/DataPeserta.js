@@ -77,6 +77,11 @@ export class DataPeserta extends Component {
   }
 
   render(){
+
+    if(localStorage.getItem("auth") == null){
+      window.location = "/#/login";
+    }
+
     return (
       <CRow>
         <CCol xs={12}>

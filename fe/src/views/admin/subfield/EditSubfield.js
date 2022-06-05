@@ -33,6 +33,10 @@ const EditSubfield = () => {
     })    
   }, [])
 
+  if(localStorage.getItem("auth") == null){
+    window.location = "/#/login";
+  }
+
   const postData = (event) => {
     event.preventDefault();
     const body = {
