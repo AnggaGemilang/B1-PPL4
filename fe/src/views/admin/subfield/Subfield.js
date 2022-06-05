@@ -120,9 +120,12 @@ export class Subfield extends Component {
                         <CTableDataCell>{subfield.attributes.subfield_name}</CTableDataCell>
                         <CTableDataCell>{subfield.attributes.field.data.attributes.field_name}</CTableDataCell>
                         <CTableDataCell>
-                          <CButton color={'warning'} variant="outline">
-                            Edit
-                          </CButton>
+                          <Link 
+                            to={{
+                              pathname: `/subfield/edit/${subfield.id}`,
+                            }}>
+                            <CButton color={'warning'} variant="outline">Edit</CButton>
+                          </Link>
                           <CButton 
                             color={'danger'}
                             variant="outline"

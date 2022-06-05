@@ -117,7 +117,12 @@ export class Grade extends Component {
                         <CTableHeaderCell scope="row">{ this.state.urutan ++ }</CTableHeaderCell>
                         <CTableDataCell>{grade.attributes.grade_name}</CTableDataCell>
                         <CTableDataCell>
-                          <CButton color={'warning'} variant="outline">Edit</CButton>
+                          <Link 
+                            to={{
+                              pathname: `/grade/edit/${grade.id}`,
+                            }}>
+                            <CButton color={'warning'} variant="outline">Edit</CButton>
+                          </Link>
                           <CButton 
                             color={'danger'} 
                             variant="outline" 

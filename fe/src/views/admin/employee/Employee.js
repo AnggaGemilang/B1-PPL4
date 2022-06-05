@@ -138,7 +138,12 @@ export class Employee extends Component {
                         <CTableDataCell>{employee.attributes.Email}</CTableDataCell>
                         <CTableDataCell>{employee.attributes.PhoneNumber}</CTableDataCell>
                         <CTableDataCell>
-                          <CButton color={'warning'} variant="outline">Edit</CButton>
+                          <Link 
+                            to={{
+                              pathname: `/employee/edit/${employee.id}`,
+                            }}>
+                            <CButton color={'warning'} variant="outline">Edit</CButton>
+                          </Link>
                           <CButton 
                             color={'danger'} 
                             variant="outline" 

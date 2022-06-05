@@ -6,24 +6,34 @@ const Login = React.lazy(() => import('./views/login/Login'))
 // Admin
 const Directorate = React.lazy(() => import('./views/admin/directorate/Directorate'))
 const TambahDirectorate = React.lazy(() => import('./views/admin/directorate/TambahDirectorate'))
+const EditDirectorate = React.lazy(() => import('./views/admin/directorate/EditDirectorate'))
 const Division = React.lazy(() => import('./views/admin/division/Division'))
 const TambahDivision = React.lazy(() => import('./views/admin/division/TambahDivision'))
+const EditDivision = React.lazy(() => import('./views/admin/division/EditDivision'))
 const Employee = React.lazy(() => import('./views/admin/employee/Employee'))
 const TambahEmployee = React.lazy(() => import('./views/admin/employee/TambahEmployee'))
+const EditEmployee = React.lazy(() => import('./views/admin/employee/EditEmployee'))
 const Field = React.lazy(() => import('./views/admin/field/Field'))
 const TambahField = React.lazy(() => import('./views/admin/field/TambahField'))
+const EditField = React.lazy(() => import('./views/admin/field/EditField'))
 const Grade = React.lazy(() => import('./views/admin/grade/Grade'))
 const TambahGrade = React.lazy(() => import('./views/admin/grade/TambahGrade'))
+const EditGrade = React.lazy(() => import('./views/admin/grade/EditGrade'))
 const Level = React.lazy(() => import('./views/admin/level/Level'))
 const TambahLevel = React.lazy(() => import('./views/admin/level/TambahLevel'))
+const EditLevel = React.lazy(() => import('./views/admin/level/EditLevel'))
 const Position = React.lazy(() => import('./views/admin/position/Position'))
 const TambahPosition = React.lazy(() => import('./views/admin/position/TambahPosition'))
+const EditPosition = React.lazy(() => import('./views/admin/position/EditPosition'))
 const Subfield = React.lazy(() => import('./views/admin/subfield/Subfield'))
 const TambahSubfield = React.lazy(() => import('./views/admin/subfield/TambahSubfield'))
+const EditSubfield = React.lazy(() => import('./views/admin/subfield/EditSubfield'))
 const Unit = React.lazy(() => import('./views/admin/unit/Unit'))
 const TambahUnit = React.lazy(() => import('./views/admin/unit/TambahUnit'))
+const EditUnit = React.lazy(() => import('./views/admin/unit/EditUnit'))
 const Criteria = React.lazy(() => import('./views/admin/criteria/Criteria'))
 const TambahCriteria = React.lazy(() => import('./views/admin/criteria/TambahCriteria'))
+const EditCriteria = React.lazy(() => import('./views/admin/criteria/EditCriteria'))
 const Administrasi = React.lazy(() => import('./views/admin/administrasi/Administrasi'))
 
 // User master data
@@ -102,24 +112,34 @@ const routes = [
   { path: '/login', name: 'Login', element: Login },
   { path: '/unit', name: 'Unit', element: Unit },
   { path: '/unit/tambah', name: 'Tambah Unit', element: TambahUnit },
+  { path: '/unit/edit/:id', name: 'Edit Unit', element: TambahUnit },
   { path: '/directorate', name: 'Directorate', element: Directorate },
   { path: '/directorate/tambah', name: 'Tambah Directorate', element: TambahDirectorate },
+  { path: '/directorate/edit/:id', name: 'Edit Directorate', element: EditDirectorate },
   { path: '/division', name: 'Division', element: Division },
   { path: '/division/tambah', name: 'Tambah Division', element: TambahDivision },
+  { path: '/division/edit/:id', name: 'Edit Division', element: EditDivision },
   { path: '/employee', name: 'Employee', element: Employee },
   { path: '/employee/tambah', name: 'Tambah Employee', element: TambahEmployee },
+  { path: '/employee/edit/:id', name: 'Edit Employee', element: EditEmployee },
   { path: '/field', name: 'Field', element: Field },
   { path: '/field/tambah', name: 'Tambah Field', element: TambahField },
+  { path: '/field/edit/:id', name: 'Edit Field', element: EditField },
   { path: '/grade', name: 'Grade', element: Grade },
   { path: '/grade/tambah', name: 'Tambah Grade', element: TambahGrade },
+  { path: '/grade/edit/:id', exact: true, name: 'Edit Grade', element: EditGrade },
   { path: '/level', name: 'Level', element: Level },
   { path: '/level/tambah', name: 'Tambah Level', element: TambahLevel },
+  { path: '/level/edit/:id', name: 'Edit Level', element: EditLevel },
   { path: '/position', name: 'Position', element: Position },
   { path: '/position/tambah', name: 'Tambah Position', element: TambahPosition },
+  { path: '/position/edit/:id', name: 'Edit Position', element: EditPosition },
   { path: '/subfield', name: 'Subfield', element: Subfield },
   { path: '/subfield/tambah', name: 'Tambah Subfield', element: TambahSubfield },
+  { path: '/subfield/edit/:id', name: 'Edit Subfield', element: EditSubfield },
   { path: '/criteria', name: 'Criteria', element: Criteria },
   { path: '/criteria/tambah', name: 'Tambah Criteria', element: TambahCriteria },
+  { path: '/criteria/edit/:id', name: 'Edit Criteria', element: EditCriteria },
   { path: '/administrasi', name: 'Administrasi User', element: Administrasi },
 
   { path: '/datapenguji', name: 'Penguji', element: DataPenguji },

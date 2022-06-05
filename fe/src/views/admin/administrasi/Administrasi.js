@@ -26,7 +26,7 @@ export class Administrasi extends Component {
       role: "",
       id: 0,
       nip_value: "",
-      email: "",
+      password: "",
       urutan : 1,
     }
   }
@@ -114,19 +114,12 @@ export class Administrasi extends Component {
                               id: employee.id,
                               role: e.target.value, 
                               nip_value: employee.attributes.NIP,
-                              password: employee.attributes.Email,
+                              password: employee.attributes.NIP,
                             }, () => {
                               if(this.state.role == 999){
                                 AdministrasiUserAPI.find(this.state.nip_value).then(
                                   (res) => {
                                     if(res.data.length != 0){
-                                      const body = {
-                                        data: {
-                                          employee: this.state.id,
-                                          password: this.state.email,
-                                          role: this.state.role
-                                        }
-                                      }
                                       AdministrasiUserAPI.delete(employee.attributes.account.data.id).then(
                                         (res) => {
                                           this.getData()
@@ -138,27 +131,20 @@ export class Administrasi extends Component {
                               } else {
                                 AdministrasiUserAPI.find(this.state.nip_value).then(
                                   (res) => {
-                                    if(res.data.length != 0){
-                                      const body = {
-                                        data: {
-                                          employee: this.state.id,
-                                          password: this.state.email,
-                                          role: this.state.role
-                                        }
+                                    const body = {
+                                      data: {
+                                        employee: this.state.id,
+                                        password: this.state.password,
+                                        role: this.state.role
                                       }
+                                    }
+                                    if(res.data.length != 0){
                                       AdministrasiUserAPI.edit(employee.attributes.account.data.id, body).then(
                                         (res) => {
                                           this.getData()
                                       })
                                       this.getData()
                                     } else {
-                                      const body = {
-                                        data: {
-                                          employee: this.state.id,
-                                          password: this.state.email,
-                                          role: this.state.role
-                                        }
-                                      }
                                       AdministrasiUserAPI.add(body).then(
                                         (res) => {
                                         this.getData()

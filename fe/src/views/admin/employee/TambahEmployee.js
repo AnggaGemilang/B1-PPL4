@@ -12,7 +12,6 @@ import {
   CRow,
   CFormCheck  
 } from '@coreui/react'
-import SubfieldAPI from '../../../config/admin/SubFieldAPI'
 import GradeAPI from '../../../config/admin/GradeAPI'
 import LevelAPI from '../../../config/admin/LevelAPI'
 import EmployeeAPI from '../../../config/admin/EmployeeAPI'
@@ -99,7 +98,6 @@ export class TambahEmployee extends Component {
         Email: this.state.email,
         Religion: this.state.religion,
         PhoneNumber: this.state.phone_number,
-        Photo: this.state.photo,
         level: this.state.level,
         grade: this.state.grade,
         sub_field: this.state.sub_field,
@@ -107,7 +105,20 @@ export class TambahEmployee extends Component {
     };
     EmployeeAPI.add(body).then(
       (res) => {
-        window.location = 'http://localhost:3000/admin#/employee';
+        console.log(res.data.id)
+        let formData = new FormData()
+        formData.append('files', this.state.photo)
+        formData.append('ref', 'api::employee.employee')
+        formData.append('refId', res.data.id)
+        formData.append('field', 'Photo')
+        EmployeeAPI.addPhoto(formData).then(
+          (res) => {
+            window.location = 'http://localhost:3000/admin#/employee';
+          },
+          (err) => {
+            console.log("err", err);
+          }
+        );  
       },
       (err) => {
         console.log("err", err);

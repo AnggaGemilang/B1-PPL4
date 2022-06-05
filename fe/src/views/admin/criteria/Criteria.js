@@ -122,7 +122,12 @@ export class Criteria extends Component {
                         <CTableDataCell>{criteria.attributes.value}</CTableDataCell>
                         <CTableDataCell>{criteria.attributes.usefor}</CTableDataCell>
                         <CTableDataCell>
-                          <CButton color={'warning'} variant="outline">Edit</CButton>
+                          <Link 
+                            to={{
+                              pathname: `/criteria/edit/${criteria.id}`,
+                            }}>
+                            <CButton color={'warning'} variant="outline">Edit</CButton>
+                          </Link>
                           <CButton color={'danger'} 
                             variant="outline" 
                             style={{marginLeft: '10px'}}

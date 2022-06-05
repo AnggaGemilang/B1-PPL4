@@ -109,6 +109,7 @@ export class Directorate extends Component {
                     <CTableRow>
                       <CTableHeaderCell scope="col">No</CTableHeaderCell>
                       <CTableHeaderCell scope="col">Name</CTableHeaderCell>
+                      <CTableHeaderCell scope="col">Unit</CTableHeaderCell>
                       <CTableHeaderCell scope="col">Action</CTableHeaderCell>
                     </CTableRow>
                   </CTableHead>
@@ -117,8 +118,14 @@ export class Directorate extends Component {
                       <CTableRow key={directorate.id}>
                         <CTableHeaderCell scope="row">{ this.state.urutan++ }</CTableHeaderCell>
                         <CTableDataCell>{directorate.attributes.directorate_name}</CTableDataCell>
+                        <CTableDataCell>{directorate.attributes.unit.data.attributes.unit_name}</CTableDataCell>
                         <CTableDataCell>
-                          <CButton color={'warning'} variant="outline">Edit</CButton>
+                          <Link 
+                            to={{
+                              pathname: `/directorate/edit/${directorate.id}`,
+                            }}>
+                            <CButton color={'warning'} variant="outline">Edit</CButton>
+                          </Link>
                           <CButton 
                             color={'danger'} 
                             variant="outline" 

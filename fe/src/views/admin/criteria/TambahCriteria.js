@@ -83,8 +83,8 @@ export class TambahCriteria extends Component {
                   <CCol sm={10}>
                     <CFormSelect name="usefor" id="usefor" className="mb-3" aria-label="Large select example" onChange={this.handlechange}>
                       <option>Pilih Penggunaan</option>
-                      <option value="Am">Am</option>
-                      <option value="Md">Md</option>
+                      <option value="am">Am</option>
+                      <option value="md">Md</option>
                     </CFormSelect>
                   </CCol>
                 </CRow>                                
