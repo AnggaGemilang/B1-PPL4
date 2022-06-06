@@ -1,0 +1,48 @@
+{
+  "kind": "collectionType",
+  "collectionName": "scores",
+  "info": {
+    "singularName": "score",
+    "pluralName": "scores",
+    "displayName": "Score",
+    "description": ""
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "type": {
+      "type": "string",
+      "required": true,
+      "maxLength": 255
+    },
+    "score": {
+      "type": "integer",
+      "required": true,
+      "max": 100,
+      "unique": false,
+      "min": 0
+    },
+    "criterion": {
+      "type": "relation",
+      "relation": "oneToOne",
+      "target": "api::criteria.criteria"
+    },
+    "registrant": {
+      "type": "relation",
+      "relation": "oneToOne",
+      "target": "api::registrant.registrant"
+    },
+    "interview": {
+      "type": "relation",
+      "relation": "oneToOne",
+      "target": "api::interview.interview"
+    },
+    "examiner": {
+      "type": "relation",
+      "relation": "oneToOne",
+      "target": "api::examiner.examiner"
+    }
+  }
+}

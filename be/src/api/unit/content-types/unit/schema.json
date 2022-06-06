@@ -1,0 +1,25 @@
+{
+  "kind": "collectionType",
+  "collectionName": "units",
+  "info": {
+    "singularName": "unit",
+    "pluralName": "units",
+    "displayName": "Unit",
+    "description": ""
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "unit_name": {
+      "type": "string"
+    },
+    "directorates": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::directorate.directorate",
+      "mappedBy": "unit"
+    }
+  }
+}

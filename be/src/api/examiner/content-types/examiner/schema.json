@@ -1,0 +1,33 @@
+{
+  "kind": "collectionType",
+  "collectionName": "examiners",
+  "info": {
+    "singularName": "examiner",
+    "pluralName": "examiners",
+    "displayName": "Examiner"
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "employee": {
+      "type": "relation",
+      "relation": "oneToOne",
+      "target": "api::employee.employee",
+      "mappedBy": "examiner"
+    },
+    "registrants": {
+      "type": "relation",
+      "relation": "manyToMany",
+      "target": "api::registrant.registrant",
+      "mappedBy": "examiners"
+    },
+    "interviews": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::interview.interview",
+      "mappedBy": "examiner"
+    }
+  }
+}
