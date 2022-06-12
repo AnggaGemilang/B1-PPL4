@@ -61,7 +61,7 @@ const Dashboard = () => {
     window.location = "/#/login";
   }
 
-  console.log(JSON.parse(localStorage.getItem("auth")).attributes.role)
+  // console.log(JSON.parse(localStorage.getItem("auth")).attributes.role)
 
   const progressExample = [
     { title: 'Visits', value: '29.703 Users', percent: 40, color: 'success' },

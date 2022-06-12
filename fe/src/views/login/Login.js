@@ -10,11 +10,14 @@ import {
   CFormInput,
   CInputGroup,
   CInputGroupText,
+  CFormFloating,
+  CFormLabel,
   CRow,
 } from '@coreui/react'
 import CIcon from '@coreui/icons-react'
 import logoPLN from '../../assets/images/logo_pln.png'
 import { cilLockLocked, cilUser } from '@coreui/icons'
+import background from '../../assets/images/LatarPLN.jpg';
 import LoginAPI from '../../config/admin/LoginAPI'
 
 export class Login extends Component {
@@ -53,38 +56,38 @@ export class Login extends Component {
     }
 
     return (
-      <div className="bg-light min-vh-100 d-flex flex-row align-items-center">
+      <div className="bg-light min-vh-100 d-flex flex-row align-items-center" style={{ backgroundImage: `url(${background})`, backgroundSize: 'cover', }}>
         <CContainer>
           <CRow className="justify-content-center">
-            <CCol md={8}>
+            <CCol md={5}>
               <CCardGroup>
-                <CCard className="p-4">
+                <CCard className="p-4" style={{ borderRadius: "10px" }}>
                   <CCardBody>
                     <CForm onSubmit={this.onLogin}>
-                      <h1>Login</h1>
+                      <h1 className='font-weight-bold'>Login</h1>
                       <p className="text-medium-emphasis">Sign In to your account</p>
-                      <CInputGroup className="mb-3">
-                        <CInputGroupText>
-                          <CIcon icon={cilUser} />
-                        </CInputGroupText>
-                        <CFormInput 
+                      <CFormFloating>
+                        <CFormInput
+                          style={{ height: "60px" }}
+                          type="email"
                           name='email'
+                          autoComplete=''
                           id='email'
-                          placeholder="Enter Email ..."
-                          onChange={this.handlechange} />
-                      </CInputGroup>
-                      <CInputGroup className="mb-4">
-                        <CInputGroupText>
-                          <CIcon icon={cilLockLocked} />
-                        </CInputGroupText>
+                          placeholder="Enter Email ..."                            
+                          onChange={this.handlechange}
+                          />
+                        <CFormLabel htmlFor="floatingInputValue">Masukkan Email . . .</CFormLabel>
+                      </CFormFloating>
+                      <CFormFloating className='mt-3'>
                         <CFormInput
                           type="password"
                           placeholder="Enter Password ..."
-                          autoComplete="current-password"
-                          name='password' id='password' onChange={this.handlechange}                          
+                          autoComplete=''
+                          name='password' id='password' onChange={this.handlechange}
                         />
-                      </CInputGroup>
-                      <CRow>
+                        <CFormLabel htmlFor="floatingInputValue">Masukkan Password . . .</CFormLabel>
+                      </CFormFloating>
+                      <CRow className='mt-3'>
                         <CCol xs={12}>
                           <CButton type="submit" color="primary" className="px-4 w-100">
                             Login
@@ -92,17 +95,6 @@ export class Login extends Component {
                         </CCol>
                       </CRow>
                     </CForm>
-                  </CCardBody>
-                </CCard>
-                <CCard className="text-white bg-primary py-5" style={{ width: '44%' }}>
-                  <CCardBody className="text-center">
-                    <div>
-                      <img src={logoPLN} style={{width:"180px"}}></img>
-                      <p className='mt-5'>
-                        Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
-                        tempor incididunt ut labore et dolore magna aliqua.
-                      </p>
-                    </div>
                   </CCardBody>
                 </CCard>
               </CCardGroup>

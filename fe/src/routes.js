@@ -153,14 +153,12 @@ const routes = [
   { path: '/wawancara/pendaftaran', name: 'Pendaftaran Wawancara', element: PendaftaranWawancara },
   { path: '/wawancara/penilaian', name: 'Penilaian Wawancara', element: PenilaianWawancara },
 
-
   { path: 'report/reportfit', name: 'Report Fit And Proper', element: ReportFit },
   { path: 'report/reportmfit', name: 'Report NM Fit And Proper', element: ReportMFit },
   { path: 'report/detailreport', name: 'Detail Report', element: DetailReport },
   { path: 'report/cetakreport', name: 'Cetak Report', element: CetakReport},
   { path: 'report/reportwawancara', name: 'Report Wawancara', element: ReportWawancara},
   { path: 'report/cetakwawancara', name: 'Cetak Wawancara', element: CetakWawancara},
-
 
   { path: '/dashboard', name: 'Dashboard', element: Dashboard },
 

@@ -12,7 +12,6 @@ import {
   CTableHead,
   CTableHeaderCell,
   CTableRow,
-  CForm,
   CFormInput,
   CModal,
   CModalBody,
