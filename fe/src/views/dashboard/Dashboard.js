@@ -57,12 +57,6 @@ import WidgetsDropdown from '../widgets/WidgetsDropdown'
 const Dashboard = () => {
   const random = (min, max) => Math.floor(Math.random() * (max - min + 1) + min)
 
-  if(localStorage.getItem("auth") == null){
-    window.location = "/#/login";
-  }
-
-  // console.log(JSON.parse(localStorage.getItem("auth")).attributes.role)
-
   const progressExample = [
     { title: 'Visits', value: '29.703 Users', percent: 40, color: 'success' },
     { title: 'Unique', value: '24.093 Users', percent: 20, color: 'info' },

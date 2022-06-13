@@ -18,7 +18,7 @@ const AppContent = () => {
                   path={route.path}
                   exact={route.exact}
                   name={route.name}
-                  element={<route.element />}
+                  element={ sessionStorage.getItem("auth") != null ? <route.element /> : <Navigate to="/login" replace /> }
                 />
               )
             )

@@ -1,6 +1,29 @@
 .foto_karyawan {
-    width: 120px;
-    height: 120px;
+    width: 70px;
+    height: 70px;
     object-fit: cover;
     border-radius: 100%;
 }
+
+@mixin scrollbars($size, $foreground-color, $background-color: transparent) {
+  .sidebar-nav::-webkit-scrollbar {
+      width:  $size;
+      height: $size;
+  }
+
+  .sidebar-nav::-webkit-scrollbar-thumb {
+      background: $foreground-color;
+      border-radius: 50px;
+  }
+
+  .sidebar-nav::-webkit-scrollbar-track {
+      background: $background-color;
+    }
+
+  .sidebar-nav {
+    scrollbar-face-color: $foreground-color;
+    scrollbar-track-color: $background-color;
+  }
+}
+
+@include scrollbars(.5em, slategray);

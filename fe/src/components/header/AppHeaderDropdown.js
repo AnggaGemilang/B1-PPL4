@@ -84,7 +84,7 @@ const AppHeaderDropdown = () => {
           </CBadge>
         </CDropdownItem>
         <CDropdownDivider />
-        <CDropdownItem href="/#/login" onClick={() => localStorage.clear()}>
+        <CDropdownItem href="/#/login" onClick={() => sessionStorage.clear()}>
           <CIcon icon={cilLockLocked} className="me-2" />
           Logout
         </CDropdownItem>

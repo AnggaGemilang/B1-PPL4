@@ -16,7 +16,7 @@ import { CNavGroup, CNavItem, CNavTitle } from '@coreui/react'
 
 let _nav
 
-if(JSON.parse(localStorage.getItem("auth")).attributes.role == 1){
+// if(JSON.parse(localStorage.getItem("auth")).attributes.role == 1){
   _nav = [
     {
       component: CNavItem,
@@ -460,173 +460,173 @@ if(JSON.parse(localStorage.getItem("auth")).attributes.role == 1){
       ],
     },
   ]
-} else if (JSON.parse(localStorage.getItem("auth")).attributes.role == 2){
-  _nav = [
-    {
-      component: CNavItem,
-      name: 'Dashboard',
-      to: '/dashboard',
-      icon: <CIcon icon={cilSpeedometer} customClassName="nav-icon" />,
-    },
-    {
-      component: CNavTitle,
-      name: 'Components',
-    },
-    {
-      component: CNavGroup,
-      name: 'Master Data',
-      to: '/base',
-      icon: <CIcon icon={cilPuzzle} customClassName="nav-icon" />,
-      items: [
-        {
-          component: CNavItem,
-          name: 'Data Peserta',
-          to: '/datapeserta',
-        },
-        {
-          component: CNavItem,
-          name: 'Data Penguji',
-          to: '/datapenguji',
-        },
-      ],
-    },
-    {
-      component: CNavGroup,
-      name: 'Fit & Proper',
-      to: '/base',
-      icon: <CIcon icon={cilPuzzle} customClassName="nav-icon" />,
-      items: [
-        {
-          component: CNavItem,
-          name: 'Pendaftaran',
-          to: '/fitandproper/pendaftaran',
-        },
-        {
-          component: CNavItem,
-          name: 'Penilaian',
-          to: '/fitandproper/penilaian',
-        },
-      ],
-    },
-    {
-      component: CNavGroup,
-      name: 'Wawancara',
-      to: '/base',
-      icon: <CIcon icon={cilPuzzle} customClassName="nav-icon" />,
-      items: [
-        {
-          component: CNavItem,
-          name: 'Pendaftaran',
-          to: '/wawancara/pendaftaran',
-        },
-        {
-          component: CNavItem,
-          name: 'Penilaian',
-          to: '/wawancara/penilaian',
-        },
-      ],
-    },
-  {
-    component: CNavGroup,
-    name: 'Report',
-    to: '/base',
-    icon: <CIcon icon={cilPuzzle} customClassName="nav-icon" />,
-    items: [
-      {
-        component: CNavItem,
-        name: 'Rekap Nilai Fit & Proper',
-        to: '/report/reportfit',
-      },
-      {
-        component: CNavItem,
-        name: 'Rekap Nilai Manual Fit & Proper',
-        to: '/report/reportmfit',
-      },
-      {
-        component: CNavItem,
-        name: 'Cetak Nilai Fit & Proper',
-        to: '/report/cetakreport',
-      },
-      {
-        component: CNavItem,
-        name: 'Rekap Nilai Wawancara',
-        to: '/report/reportwawancara',
-      },
-      {
-        component: CNavItem,
-        name: 'Cetak Nilai Wawancara',
-        to: '/report/cetakwawancara',
-      },
-    ],
-  },
-    {
-      component: CNavTitle,
-      name: 'Master Admin',
-    },
-    {
-      component: CNavGroup,
-      name: 'Master Data',
-      to: '/base',
-      icon: <CIcon icon={cilPuzzle} customClassName="nav-icon" />,
-      items: [
-        {
-          component: CNavItem,
-          name: 'Employee',
-          to: 'employee',
-        },
-        {
-          component: CNavItem,
-          name: 'Directorate',
-          to: 'directorate',
-        },
-        {
-          component: CNavItem,
-          name: 'Division',
-          to: 'division',
-        },
-        {
-          component: CNavItem,
-          name: 'Field',
-          to: 'field',
-        },
-        {
-          component: CNavItem,
-          name: 'Sub Field',
-          to: 'subfield',
-        },
-        {
-          component: CNavItem,
-          name: 'Grade',
-          to: 'grade',
-        },
-        {
-          component: CNavItem,
-          name: 'Level',
-          to: 'level',
-        },
-        {
-          component: CNavItem,
-          name: 'Position',
-          to: 'position',
-        },
-        {
-          component: CNavItem,
-          name: 'Unit',
-          to: 'unit',
-        },
-        {
-          component: CNavItem,
-          name: 'Criteria',
-          to: 'criteria',
-        },
-      ],
-    },
-    {
-      component: CNavItem,
-      name: 'Administrasi User',
-      to: '/administrasi',
-      icon: <CIcon icon={cilDrop} customClassName="nav-icon" />,
-    },
+// } else if (JSON.parse(localStorage.getItem("auth")).attributes.role == 2){
+//   _nav = [
+//     {
+//       component: CNavItem,
+//       name: 'Dashboard',
+//       to: '/dashboard',
+//       icon: <CIcon icon={cilSpeedometer} customClassName="nav-icon" />,
+//     },
+//     {
+//       component: CNavTitle,
+//       name: 'Components',
+//     },
+//     {
+//       component: CNavGroup,
+//       name: 'Master Data',
+//       to: '/base',
+//       icon: <CIcon icon={cilPuzzle} customClassName="nav-icon" />,
+//       items: [
+//         {
+//           component: CNavItem,
+//           name: 'Data Peserta',
+//           to: '/datapeserta',
+//         },
+//         {
+//           component: CNavItem,
+//           name: 'Data Penguji',
+//           to: '/datapenguji',
+//         },
+//       ],
+//     },
+//     {
+//       component: CNavGroup,
+//       name: 'Fit & Proper',
+//       to: '/base',
+//       icon: <CIcon icon={cilPuzzle} customClassName="nav-icon" />,
+//       items: [
+//         {
+//           component: CNavItem,
+//           name: 'Pendaftaran',
+//           to: '/fitandproper/pendaftaran',
+//         },
+//         {
+//           component: CNavItem,
+//           name: 'Penilaian',
+//           to: '/fitandproper/penilaian',
+//         },
+//       ],
+//     },
+//     {
+//       component: CNavGroup,
+//       name: 'Wawancara',
+//       to: '/base',
+//       icon: <CIcon icon={cilPuzzle} customClassName="nav-icon" />,
+//       items: [
+//         {
+//           component: CNavItem,
+//           name: 'Pendaftaran',
+//           to: '/wawancara/pendaftaran',
+//         },
+//         {
+//           component: CNavItem,
+//           name: 'Penilaian',
+//           to: '/wawancara/penilaian',
+//         },
+//       ],
+//     },
+//   {
+//     component: CNavGroup,
+//     name: 'Report',
+//     to: '/base',
+//     icon: <CIcon icon={cilPuzzle} customClassName="nav-icon" />,
+//     items: [
+//       {
+//         component: CNavItem,
+//         name: 'Rekap Nilai Fit & Proper',
+//         to: '/report/reportfit',
+//       },
+//       {
+//         component: CNavItem,
+//         name: 'Rekap Nilai Manual Fit & Proper',
+//         to: '/report/reportmfit',
+//       },
+//       {
+//         component: CNavItem,
+//         name: 'Cetak Nilai Fit & Proper',
+//         to: '/report/cetakreport',
+//       },
+//       {
+//         component: CNavItem,
+//         name: 'Rekap Nilai Wawancara',
+//         to: '/report/reportwawancara',
+//       },
+//       {
+//         component: CNavItem,
+//         name: 'Cetak Nilai Wawancara',
+//         to: '/report/cetakwawancara',
+//       },
+//     ],
+//   },
+//     {
+//       component: CNavTitle,
+//       name: 'Master Admin',
+//     },
+//     {
+//       component: CNavGroup,
+//       name: 'Master Data',
+//       to: '/base',
+//       icon: <CIcon icon={cilPuzzle} customClassName="nav-icon" />,
+//       items: [
+//         {
+//           component: CNavItem,
+//           name: 'Employee',
+//           to: 'employee',
+//         },
+//         {
+//           component: CNavItem,
+//           name: 'Directorate',
+//           to: 'directorate',
+//         },
+//         {
+//           component: CNavItem,
+//           name: 'Division',
+//           to: 'division',
+//         },
+//         {
+//           component: CNavItem,
+//           name: 'Field',
+//           to: 'field',
+//         },
+//         {
+//           component: CNavItem,
+//           name: 'Sub Field',
+//           to: 'subfield',
+//         },
+//         {
+//           component: CNavItem,
+//           name: 'Grade',
+//           to: 'grade',
+//         },
+//         {
+//           component: CNavItem,
+//           name: 'Level',
+//           to: 'level',
+//         },
+//         {
+//           component: CNavItem,
+//           name: 'Position',
+//           to: 'position',
+//         },
+//         {
+//           component: CNavItem,
+//           name: 'Unit',
+//           to: 'unit',
+//         },
+//         {
+//           component: CNavItem,
+//           name: 'Criteria',
+//           to: 'criteria',
+//         },
+//       ],
+//     },
+//     {
+//       component: CNavItem,
+//       name: 'Administrasi User',
+//       to: '/administrasi',
+//       icon: <CIcon icon={cilDrop} customClassName="nav-icon" />,
+//     },
     // {
     //   component: CNavTitle,
     //   name: 'Theme',
@@ -895,174 +895,174 @@ if(JSON.parse(localStorage.getItem("auth")).attributes.role == 1){
     //     },
     //   ],
     // },
-  ]
-} else if (JSON.parse(localStorage.getItem("auth")).attributes.role == 3){
-  _nav = [
-    {
-      component: CNavItem,
-      name: 'Dashboard',
-      to: '/dashboard',
-      icon: <CIcon icon={cilSpeedometer} customClassName="nav-icon" />,
-    },
-    {
-      component: CNavTitle,
-      name: 'Components',
-    },
-    {
-      component: CNavGroup,
-      name: 'Master Data',
-      to: '/base',
-      icon: <CIcon icon={cilPuzzle} customClassName="nav-icon" />,
-      items: [
-        {
-          component: CNavItem,
-          name: 'Data Peserta',
-          to: '/datapeserta',
-        },
-        {
-          component: CNavItem,
-          name: 'Data Penguji',
-          to: '/datapenguji',
-        },
-      ],
-    },
-    {
-      component: CNavGroup,
-      name: 'Fit & Proper',
-      to: '/base',
-      icon: <CIcon icon={cilPuzzle} customClassName="nav-icon" />,
-      items: [
-        {
-          component: CNavItem,
-          name: 'Pendaftaran',
-          to: '/fitandproper/pendaftaran',
-        },
-        {
-          component: CNavItem,
-          name: 'Penilaian',
-          to: '/fitandproper/penilaian',
-        },
-      ],
-    },
-    {
-      component: CNavGroup,
-      name: 'Wawancara',
-      to: '/base',
-      icon: <CIcon icon={cilPuzzle} customClassName="nav-icon" />,
-      items: [
-        {
-          component: CNavItem,
-          name: 'Pendaftaran',
-          to: '/wawancara/pendaftaran',
-        },
-        {
-          component: CNavItem,
-          name: 'Penilaian',
-          to: '/wawancara/penilaian',
-        },
-      ],
-    },
-  {
-    component: CNavGroup,
-    name: 'Report',
-    to: '/base',
-    icon: <CIcon icon={cilPuzzle} customClassName="nav-icon" />,
-    items: [
-      {
-        component: CNavItem,
-        name: 'Rekap Nilai Fit & Proper',
-        to: '/report/reportfit',
-      },
-      {
-        component: CNavItem,
-        name: 'Rekap Nilai Manual Fit & Proper',
-        to: '/report/reportmfit',
-      },
-      {
-        component: CNavItem,
-        name: 'Cetak Nilai Fit & Proper',
-        to: '/report/cetakreport',
-      },
-      {
-        component: CNavItem,
-        name: 'Rekap Nilai Wawancara',
-        to: '/report/reportwawancara',
-      },
-      {
-        component: CNavItem,
-        name: 'Cetak Nilai Wawancara',
-        to: '/report/cetakwawancara',
-      },
-    ],
-  },
-    {
-      component: CNavTitle,
-      name: 'Master Admin',
-    },
-    {
-      component: CNavGroup,
-      name: 'Master Data',
-      to: '/base',
-      icon: <CIcon icon={cilPuzzle} customClassName="nav-icon" />,
-      items: [
-        {
-          component: CNavItem,
-          name: 'Employee',
-          to: 'employee',
-        },
-        {
-          component: CNavItem,
-          name: 'Directorate',
-          to: 'directorate',
-        },
-        {
-          component: CNavItem,
-          name: 'Division',
-          to: 'division',
-        },
-        {
-          component: CNavItem,
-          name: 'Field',
-          to: 'field',
-        },
-        {
-          component: CNavItem,
-          name: 'Sub Field',
-          to: 'subfield',
-        },
-        {
-          component: CNavItem,
-          name: 'Grade',
-          to: 'grade',
-        },
-        {
-          component: CNavItem,
-          name: 'Level',
-          to: 'level',
-        },
-        {
-          component: CNavItem,
-          name: 'Position',
-          to: 'position',
-        },
-        {
-          component: CNavItem,
-          name: 'Unit',
-          to: 'unit',
-        },
-        {
-          component: CNavItem,
-          name: 'Criteria',
-          to: 'criteria',
-        },
-      ],
-    },
-    {
-      component: CNavItem,
-      name: 'Administrasi User',
-      to: '/administrasi',
-      icon: <CIcon icon={cilDrop} customClassName="nav-icon" />,
-    },
+//   ]
+// } else if (JSON.parse(localStorage.getItem("auth")).attributes.role == 3){
+//   _nav = [
+//     {
+//       component: CNavItem,
+//       name: 'Dashboard',
+//       to: '/dashboard',
+//       icon: <CIcon icon={cilSpeedometer} customClassName="nav-icon" />,
+//     },
+//     {
+//       component: CNavTitle,
+//       name: 'Components',
+//     },
+//     {
+//       component: CNavGroup,
+//       name: 'Master Data',
+//       to: '/base',
+//       icon: <CIcon icon={cilPuzzle} customClassName="nav-icon" />,
+//       items: [
+//         {
+//           component: CNavItem,
+//           name: 'Data Peserta',
+//           to: '/datapeserta',
+//         },
+//         {
+//           component: CNavItem,
+//           name: 'Data Penguji',
+//           to: '/datapenguji',
+//         },
+//       ],
+//     },
+//     {
+//       component: CNavGroup,
+//       name: 'Fit & Proper',
+//       to: '/base',
+//       icon: <CIcon icon={cilPuzzle} customClassName="nav-icon" />,
+//       items: [
+//         {
+//           component: CNavItem,
+//           name: 'Pendaftaran',
+//           to: '/fitandproper/pendaftaran',
+//         },
+//         {
+//           component: CNavItem,
+//           name: 'Penilaian',
+//           to: '/fitandproper/penilaian',
+//         },
+//       ],
+//     },
+//     {
+//       component: CNavGroup,
+//       name: 'Wawancara',
+//       to: '/base',
+//       icon: <CIcon icon={cilPuzzle} customClassName="nav-icon" />,
+//       items: [
+//         {
+//           component: CNavItem,
+//           name: 'Pendaftaran',
+//           to: '/wawancara/pendaftaran',
+//         },
+//         {
+//           component: CNavItem,
+//           name: 'Penilaian',
+//           to: '/wawancara/penilaian',
+//         },
+//       ],
+//     },
+//   {
+//     component: CNavGroup,
+//     name: 'Report',
+//     to: '/base',
+//     icon: <CIcon icon={cilPuzzle} customClassName="nav-icon" />,
+//     items: [
+//       {
+//         component: CNavItem,
+//         name: 'Rekap Nilai Fit & Proper',
+//         to: '/report/reportfit',
+//       },
+//       {
+//         component: CNavItem,
+//         name: 'Rekap Nilai Manual Fit & Proper',
+//         to: '/report/reportmfit',
+//       },
+//       {
+//         component: CNavItem,
+//         name: 'Cetak Nilai Fit & Proper',
+//         to: '/report/cetakreport',
+//       },
+//       {
+//         component: CNavItem,
+//         name: 'Rekap Nilai Wawancara',
+//         to: '/report/reportwawancara',
+//       },
+//       {
+//         component: CNavItem,
+//         name: 'Cetak Nilai Wawancara',
+//         to: '/report/cetakwawancara',
+//       },
+//     ],
+//   },
+//     {
+//       component: CNavTitle,
+//       name: 'Master Admin',
+//     },
+//     {
+//       component: CNavGroup,
+//       name: 'Master Data',
+//       to: '/base',
+//       icon: <CIcon icon={cilPuzzle} customClassName="nav-icon" />,
+//       items: [
+//         {
+//           component: CNavItem,
+//           name: 'Employee',
+//           to: 'employee',
+//         },
+//         {
+//           component: CNavItem,
+//           name: 'Directorate',
+//           to: 'directorate',
+//         },
+//         {
+//           component: CNavItem,
+//           name: 'Division',
+//           to: 'division',
+//         },
+//         {
+//           component: CNavItem,
+//           name: 'Field',
+//           to: 'field',
+//         },
+//         {
+//           component: CNavItem,
+//           name: 'Sub Field',
+//           to: 'subfield',
+//         },
+//         {
+//           component: CNavItem,
+//           name: 'Grade',
+//           to: 'grade',
+//         },
+//         {
+//           component: CNavItem,
+//           name: 'Level',
+//           to: 'level',
+//         },
+//         {
+//           component: CNavItem,
+//           name: 'Position',
+//           to: 'position',
+//         },
+//         {
+//           component: CNavItem,
+//           name: 'Unit',
+//           to: 'unit',
+//         },
+//         {
+//           component: CNavItem,
+//           name: 'Criteria',
+//           to: 'criteria',
+//         },
+//       ],
+//     },
+//     {
+//       component: CNavItem,
+//       name: 'Administrasi User',
+//       to: '/administrasi',
+//       icon: <CIcon icon={cilDrop} customClassName="nav-icon" />,
+//     },
     // {
     //   component: CNavTitle,
     //   name: 'Theme',
@@ -1331,51 +1331,51 @@ if(JSON.parse(localStorage.getItem("auth")).attributes.role == 1){
     //     },
     //   ],
     // },
-  ]
-} else if (JSON.parse(localStorage.getItem("auth")).attributes.role == 4){
-    _nav = [
-    {
-      component: CNavItem,
-      name: 'Dashboard',
-      to: '/dashboard',
-      icon: <CIcon icon={cilSpeedometer} customClassName="nav-icon" />,
-    },
-    {
-      component: CNavTitle,
-      name: 'Components',
-    },
-    {
-      component: CNavGroup,
-      name: 'Fit & Proper',
-      to: '/base',
-      icon: <CIcon icon={cilPuzzle} customClassName="nav-icon" />,
-      items: [
-        {
-          component: CNavItem,
-          name: 'Penilaian',
-          to: '/fitandproper/penilaian',
-        },
-      ],
-    },
-    {
-      component: CNavGroup,
-      name: 'Wawancara',
-      to: '/base',
-      icon: <CIcon icon={cilPuzzle} customClassName="nav-icon" />,
-      items: [
-        {
-          component: CNavItem,
-          name: 'Pendaftaran',
-          to: '/wawancara/pendaftaran',
-        },
-        {
-          component: CNavItem,
-          name: 'Penilaian',
-          to: '/wawancara/penilaian',
-        },
-      ],
-    },
-  ]
-}
+//   ]
+// } else if (JSON.parse(localStorage.getItem("auth")).attributes.role == 4){
+//     _nav = [
+//     {
+//       component: CNavItem,
+//       name: 'Dashboard',
+//       to: '/dashboard',
+//       icon: <CIcon icon={cilSpeedometer} customClassName="nav-icon" />,
+//     },
+//     {
+//       component: CNavTitle,
+//       name: 'Components',
+//     },
+//     {
+//       component: CNavGroup,
+//       name: 'Fit & Proper',
+//       to: '/base',
+//       icon: <CIcon icon={cilPuzzle} customClassName="nav-icon" />,
+//       items: [
+//         {
+//           component: CNavItem,
+//           name: 'Penilaian',
+//           to: '/fitandproper/penilaian',
+//         },
+//       ],
+//     },
+//     {
+//       component: CNavGroup,
+//       name: 'Wawancara',
+//       to: '/base',
+//       icon: <CIcon icon={cilPuzzle} customClassName="nav-icon" />,
+//       items: [
+//         {
+//           component: CNavItem,
+//           name: 'Pendaftaran',
+//           to: '/wawancara/pendaftaran',
+//         },
+//         {
+//           component: CNavItem,
+//           name: 'Penilaian',
+//           to: '/wawancara/penilaian',
+//         },
+//       ],
+//     },
+//   ]
+// }
 
 export default _nav

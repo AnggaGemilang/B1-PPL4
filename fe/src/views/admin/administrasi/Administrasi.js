@@ -57,9 +57,9 @@ export class Administrasi extends Component {
 
   render(){
 
-    if(localStorage.getItem("auth") == null){
-      window.location = "/#/login";
-    }
+    // if(localStorage.getItem("auth") == null){
+    //   window.location = "/#/login";
+    // }
 
     return (
       <CRow>
@@ -160,10 +160,10 @@ export class Administrasi extends Component {
                               }
                             })}>
                             <option value="999">Pilih Penggunaan</option>
-                            <option selected={employee.attributes.account.data != null && employee.attributes.account.data.attributes.role == 1} value="1">Administrator</option>
+                            {/* <option selected={employee.attributes.account.data != null && employee.attributes.account.data.attributes.role == 1} value="1">Administrator</option>
                             <option selected={employee.attributes.account.data != null && employee.attributes.account.data.attributes.role == 2} value="2">HR Manager</option>
                             <option selected={employee.attributes.account.data != null && employee.attributes.account.data.attributes.role == 3} value="3">HR Specialist</option>
-                            <option selected={employee.attributes.account.data != null && employee.attributes.account.data.attributes.role == 4} value="4">Penguji</option>
+                            <option selected={employee.attributes.account.data != null && employee.attributes.account.data.attributes.role == 4} value="4">Penguji</option> */}
                           </CFormSelect>
                         </CTableDataCell>
                       </CTableRow>
