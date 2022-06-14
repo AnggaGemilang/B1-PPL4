@@ -18,20 +18,41 @@
       "target": "api::employee.employee",
       "mappedBy": "registrant"
     },
-    "score": {
-      "type": "integer"
-    },
     "examiners": {
       "type": "relation",
       "relation": "manyToMany",
       "target": "api::examiner.examiner",
       "inversedBy": "registrants"
     },
-    "scores": {
+    "ppt": {
+      "type": "string"
+    },
+    "cv": {
+      "type": "string"
+    },
+    "urjab": {
+      "type": "string",
+      "required": false
+    },
+    "fitproper_type": {
+      "type": "string",
+      "required": false
+    },
+    "date": {
+      "type": "date",
+      "required": false
+    },
+    "level": {
       "type": "relation",
-      "relation": "oneToMany",
-      "target": "api::score.score",
-      "mappedBy": "registrant"
+      "relation": "manyToOne",
+      "target": "api::level.level",
+      "inversedBy": "registrants"
+    },
+    "position": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::position.position",
+      "inversedBy": "registrants"
     }
   }
 }

@@ -73,11 +73,17 @@
       "target": "api::registrant.registrant",
       "inversedBy": "employee"
     },
-    "unit": {
+    "grade": {
       "type": "relation",
       "relation": "manyToOne",
-      "target": "api::unit.unit",
+      "target": "api::grade.grade",
       "inversedBy": "employees"
+    },
+    "account": {
+      "type": "relation",
+      "relation": "oneToOne",
+      "target": "api::account.account",
+      "inversedBy": "employee"
     },
     "level": {
       "type": "relation",
@@ -85,10 +91,16 @@
       "target": "api::level.level",
       "inversedBy": "employees"
     },
-    "grade": {
+    "sub_field": {
       "type": "relation",
       "relation": "manyToOne",
-      "target": "api::grade.grade",
+      "target": "api::sub-field.sub-field",
+      "inversedBy": "employees"
+    },
+    "position": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::position.position",
       "inversedBy": "employees"
     }
   }

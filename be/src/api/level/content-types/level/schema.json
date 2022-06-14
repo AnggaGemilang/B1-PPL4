@@ -12,13 +12,40 @@
   },
   "pluginOptions": {},
   "attributes": {
-    "level_name": {
+    "functional_name": {
       "type": "string"
+    },
+    "structural_name": {
+      "type": "string",
+      "required": true,
+      "unique": false
+    },
+    "hierarchy": {
+      "type": "integer",
+      "default": 0,
+      "required": true,
+      "min": 0,
+      "max": 5
+    },
+    "grades": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::grade.grade",
+      "mappedBy": "level"
     },
     "employees": {
       "type": "relation",
       "relation": "oneToMany",
       "target": "api::employee.employee",
+      "mappedBy": "level"
+    },
+    "id_level": {
+      "type": "string"
+    },
+    "registrants": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::registrant.registrant",
       "mappedBy": "level"
     }
   }

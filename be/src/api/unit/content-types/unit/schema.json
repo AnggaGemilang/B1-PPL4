@@ -15,17 +15,11 @@
     "unit_name": {
       "type": "string"
     },
-    "employees": {
+    "directorates": {
       "type": "relation",
       "relation": "oneToMany",
-      "target": "api::employee.employee",
+      "target": "api::directorate.directorate",
       "mappedBy": "unit"
-    },
-    "positions": {
-      "type": "relation",
-      "relation": "manyToMany",
-      "target": "api::position.position",
-      "mappedBy": "units"
     }
   }
 }

@@ -4,7 +4,8 @@
   "info": {
     "singularName": "account",
     "pluralName": "accounts",
-    "displayName": "Account"
+    "displayName": "Account",
+    "description": ""
   },
   "options": {
     "draftAndPublish": true
@@ -14,12 +15,17 @@
     "role": {
       "type": "integer",
       "required": true,
-      "max": 3,
+      "max": 4,
       "min": 0
     },
+    "employee": {
+      "type": "relation",
+      "relation": "oneToOne",
+      "target": "api::employee.employee",
+      "mappedBy": "account"
+    },
     "password": {
-      "type": "password",
-      "required": true
+      "type": "string"
     }
   }
 }

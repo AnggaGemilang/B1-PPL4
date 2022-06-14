@@ -17,17 +17,17 @@
       "target": "api::employee.employee",
       "mappedBy": "examiner"
     },
-    "scores": {
-      "type": "relation",
-      "relation": "manyToMany",
-      "target": "api::score.score",
-      "inversedBy": "examiners"
-    },
     "registrants": {
       "type": "relation",
       "relation": "manyToMany",
       "target": "api::registrant.registrant",
-      "inversedBy": "examiners"
+      "mappedBy": "examiners"
+    },
+    "interviews": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::interview.interview",
+      "mappedBy": "examiner"
     }
   }
 }

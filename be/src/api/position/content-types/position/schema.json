@@ -15,17 +15,23 @@
     "position_name": {
       "type": "string"
     },
-    "units": {
+    "grades": {
       "type": "relation",
       "relation": "manyToMany",
-      "target": "api::unit.unit",
+      "target": "api::grade.grade",
       "inversedBy": "positions"
     },
-    "directorate": {
+    "employees": {
       "type": "relation",
-      "relation": "manyToOne",
-      "target": "api::directorate.directorate",
-      "inversedBy": "positions"
+      "relation": "oneToMany",
+      "target": "api::employee.employee",
+      "mappedBy": "position"
+    },
+    "registrants": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::registrant.registrant",
+      "mappedBy": "position"
     }
   }
 }
