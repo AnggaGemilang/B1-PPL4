@@ -109,7 +109,7 @@ const Toasts = React.lazy(() => import('./views/notifications/toasts/Toasts'))
 const Widgets = React.lazy(() => import('./views/widgets/Widgets'))
 
 const routes = [
-  { path: '/', exact: true, name: 'Home' },
+  { path: '/dashboard', exact: true, name: 'Dashboard', element: Dashboard },
   { path: '/login', exact: true, name: 'Login', element: Login },
   { path: '/unit', exact: true, name: 'Unit', element: Unit },
   { path: '/unit/tambah', exact: true, name: 'Tambah Unit', element: TambahUnit },
@@ -160,8 +160,6 @@ const routes = [
   { path: 'report/cetakreport', exact: true, name: 'Cetak Report', element: CetakReport},
   { path: 'report/reportwawancara', exact: true, name: 'Report Wawancara', element: ReportWawancara},
   { path: 'report/cetakwawancara', exact: true, name: 'Cetak Wawancara', element: CetakWawancara},
-
-  { path: '/dashboard', exact: true, name: 'Dashboard', element: Dashboard },
 
   { path: '/theme', name: 'Theme', element: Colors, exact: true },
   { path: '/theme/colors', name: 'Colors', element: Colors },

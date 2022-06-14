@@ -25,7 +25,7 @@ const AppSidebar = () => {
       onVisibleChange={(visible) => {
         dispatch({ type: 'set', sidebarShow: visible })
       }}>
-      <CSidebarBrand className="d-none d-md-flex" to="/">
+      <CSidebarBrand className="d-none d-md-flex" style={{ background: "rgba(48,60,84, 0.05)" }}>
         <CImage className="sidebar-brand-full" src={logoPLN} height={35} />
         <CImage className="sidebar-brand-narrow" src={logoPLN} height={35} />
       </CSidebarBrand>

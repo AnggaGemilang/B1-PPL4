@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import React, { useState, useEffect } from 'react'
 import {
   CButton,
   CCard,
@@ -9,103 +9,111 @@ import {
   CFormInput,
   CFormLabel,
   CRow,
+  CCallout,
+  CAlert
 } from '@coreui/react'
+import {useNavigate} from 'react-router-dom'
 import DataPesertaAPI from '../../../config/user/DataPesertaAPI'
 
-export class TambahPeserta extends Component {
-  constructor(props) {
-    super(props)
-    this.state = {
-      nip_value: "",
-      nama_karyawan: '',
-      id_karyawan: 0
-    };
-    this.handlechange = this.handlechange.bind(this);    
-  }
+const TambahPeserta = () => {
+  const navigate = useNavigate();
+  const [nipValue, setNipValue] = useState("")
+  const [state, setState] = useState({
+    namaKaryawan: "",
+    idKaryawan: 0,
+    errorMessage: ""
+  });
 
-  handlechange = (event) => {
-    this.setState({nip_value: event.target.value }, ()=>{
-      DataPesertaAPI.findEmployee(this.state.nip_value).then(
-        (res) => {
-          if(res.data.length == 1){
-            this.setState({
-              nama_karyawan: res.data[0].attributes.Name,
-              id_karyawan: res.data[0].id
-            });
-          } else {
-            this.setState({
-              nama_karyawan: '',
-              id: 0,
-            });
-          }
-        },
-        (err) => {
-          console.log("err", err)
+  useEffect(() => {
+    console.log(nipValue)
+    if (nipValue.length > 1) {
+      DataPesertaAPI.findEmployee(nipValue).then(
+      (res) => {
+        console.log(res)
+        if(res.data.length == 1){
+          console.log(res.data[0].attributes.Name)
+          setState({
+            namaKaryawan: res.data[0].attributes.Name,
+            idKaryawan: res.data[0].id
+          });
+        } 
+        else {
+          setState({
+            namaKaryawan: '',
+            idKaryawan: 0,
+          });
         }
-      );
-    })
-  };
+      });
+    }
+  }, [nipValue])
 
-  postData = (event) => {
+  const postData = (event) => {
     event.preventDefault();
-    if(this.state.nama_karyawan.length > 0){
+    if(state.namaKaryawan.length > 0){
       const body = {
         data: {
-          employee: this.state.id_karyawan
+          employee: state.idKaryawan
         }
       }
       DataPesertaAPI.add(body).then(
         (res) => {
-          window.location = "/#/datapeserta";
+          navigate('/datapeserta', {state: { successMessage: 'Registrant has added successfully' } });
         },
         (err) => {
-          console.log("err", err);
+          setState({ errorMessage: "" })
         }
       );    
     } else {
-      
+      setState({ errorMessage: "Enter NIP properly" })
     }
   }
 
-  render(){
-
-    if(localStorage.getItem("auth") == null){
-      window.location = "/#/login";
-    }
-
-    return (
-      <CRow>
+  return (
+    <CRow>
+      <CCol xs={12}>
         <CCol xs={12}>
-          <CCard className="mb-4">
-            <CCardHeader>
-              <strong>Tambah Peserta</strong>
-            </CCardHeader>
-            <CCardBody>
-                <CForm onSubmit={this.postData}>
-                  <CRow className="mb-3">
-                    <CFormLabel htmlFor="nip_value" className="col-sm-2 col-form-label" placeholder='Masukkan NIP . . .' >
-                      NIP
-                    </CFormLabel>
-                    <CCol sm={10}>
-                      <CFormInput type="text" id="nip_value" name="nip_value" onChange={this.handlechange} />
-                    </CCol>
-                  </CRow>
-                  <CRow className="mb-3">
-                    <CFormLabel htmlFor="nama_karyawan" className="col-sm-2 col-form-label" >
-                      Nama
-                    </CFormLabel>
-                    <CCol sm={10}>
-                      <CFormInput type="text" id="nama_karyawan" name="nama_karyawan" placeholder='Nama Pegawai Akan Muncul Disini' disabled value={this.state.nama_karyawan} />
-                    </CCol>
-                  </CRow>
-                  <CButton type="submit" style={{width:'100%'}}>Submit</CButton>
-                </CForm>
-            </CCardBody>
-          </CCard>
+          <CCallout color="info" className="bg-white">
+            <p style={{ fontSize: "18px", marginBottom: "0px" }}><b>Catatan</b></p>
+            <ul className='catatan' style={{ marginBottom: "0px" }}>
+              <li>Lorem Ipsum is simply dummy text of the printing and typesetting industry</li>
+              <li>Contrary to popular belief, Lorem Ipsum is not simply random text</li>
+              <li>It is a long established fact that a reader will be distracted by the</li>
+              <li>There are many variations of passages of Lorem Ipsum available</li>
+            </ul>
+          </CCallout>
         </CCol>
-      </CRow>
-    )
-  }
+        <CCol xs={12}>
+          { state.errorMessage && <CAlert color="danger" dismissible onClose={() => { setState({ errorMessage: "" }) }}> { state.errorMessage } </CAlert> }
+        </CCol>
+        <CCard className="mb-4">
+          <CCardHeader>
+            <strong>Tambah Peserta</strong>
+          </CCardHeader>
+          <CCardBody>
+            <CForm onSubmit={postData}>
+              <CRow className="mb-3">
+                <CFormLabel htmlFor="nipValue" className="col-sm-2 col-form-label" placeholder='Masukkan NIP . . .' >
+                  NIP
+                </CFormLabel>
+                <CCol sm={10}>
+                  <CFormInput type="text" id="nipValue" name="nipValue" onChange={(e) => setNipValue(e.target.value )} />
+                </CCol>
+              </CRow>
+              <CRow className="mb-3">
+                <CFormLabel htmlFor="namaKaryawan" className="col-sm-2 col-form-label" >
+                  Nama
+                </CFormLabel>
+                <CCol sm={10}>
+                  <CFormInput type="text" id="namaKaryawan" name="namaKaryawan" value={state.namaKaryawan} placeholder='Nama Pegawai Akan Muncul Disini' disabled />
+                </CCol>
+              </CRow>
+              <CButton type="submit" style={{width:'100%'}}>Submit</CButton>
+            </CForm>
+          </CCardBody>
+        </CCard>
+      </CCol>
+    </CRow>
+  )
 }
 
 export default TambahPeserta

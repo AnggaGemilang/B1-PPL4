@@ -5,6 +5,10 @@
     border-radius: 100%;
 }
 
+td, th {
+  vertical-align: middle;
+}
+
 @mixin scrollbars($size, $foreground-color, $background-color: transparent) {
   .sidebar-nav::-webkit-scrollbar {
       width:  $size;
@@ -27,3 +31,7 @@
 }
 
 @include scrollbars(.5em, slategray);
+
+.catatan > li {
+  font-size: 14px;
+}

@@ -1,4 +1,4 @@
-import React, {Component} from 'react'
+import React, { useState, useEffect } from 'react'
 import {
   CButton,
   CCard,
@@ -9,86 +9,95 @@ import {
   CFormInput,
   CFormLabel,
   CRow,
+  CCallout,
+  CAlert
 } from '@coreui/react'
+import {useNavigate} from 'react-router-dom'
 import DataPengujiAPI from '../../../config/user/DataPengujiAPI'
 
-export class TambahPenguji extends Component {
+const TambahPenguji = () => {
+  const navigate = useNavigate();
+  const [nipValue, setNipValue] = useState("")
+  const [state, setState] = useState({
+    namaKaryawan: "",
+    idKaryawan: 0,
+    errorMessage: ""
+  });
 
-  constructor(props) {
-    super(props)
-    this.state = {
-      nip_value: "",
-      id_karyawan: 0,
-      nama_karyawan: "",
-    };
-    this.handlechange= this.handlechange.bind(this);    
-  }
-
-  handlechange = (event) => {
-    this.setState({ nip_value: event.target.value }, () => {
-      DataPengujiAPI.findEmployee(this.state.nip_value).then(
-        (res) => {
-          if(res.data.length == 1){
-            this.setState({
-              nama_karyawan: res.data[0].attributes.Name,
-              id_karyawan: res.data[0].id
-            });
-          } else {
-            this.setState({
-              nama_karyawan: '',
-              id: 0,
-            });
-          }
-        },
-        (err) => {
-          console.log("err", err)
+  useEffect(() => {
+    console.log(nipValue)
+    if (nipValue.length > 1) {
+      DataPengujiAPI.findEmployee(nipValue).then(
+      (res) => {
+        console.log(res)
+        if(res.data.length == 1){
+          console.log(res.data[0].attributes.Name)
+          setState({
+            namaKaryawan: res.data[0].attributes.Name,
+            idKaryawan: res.data[0].id
+          });
+        } 
+        else {
+          setState({
+            namaKaryawan: '',
+            idKaryawan: 0,
+          });
         }
-      )
-    })
-  };
+      });
+    }
+  }, [nipValue])
 
-  postData = (event) => {
+  const postData = (event) => {
     event.preventDefault();
-    if(this.state.nama_karyawan.length > 0){
+    if(state.namaKaryawan.length > 0){
       const body = {
         data: {
-          employee: this.state.id_karyawan
+          employee: state.idKaryawan
         }
       }
       DataPengujiAPI.add(body).then(
         (res) => {
-          window.location = "/#/datapenguji";
+          navigate('/datapenguji', {state: { successMessage: 'Examiner has added successfully' } });
         },
         (err) => {
-
+          setState({ errorMessage: "" })
         }
       );    
     } else {
-      
+      setState({ errorMessage: "Enter NIP properly" })
     }
   }
 
-  render(){
-
-    if(localStorage.getItem("auth") == null){
-      window.location = "/#/login";
-    }
-
-    return (
-      <CRow>
+  return (
+    <CRow>
+      <CCol xs={12}>
+        <CCol xs={12}>
+          <CCallout color="info" className="bg-white">
+            <p style={{ fontSize: "18px", marginBottom: "0px" }}><b>Catatan</b></p>
+            <ul className='catatan' style={{ marginBottom: "0px" }}>
+              <li>Lorem Ipsum is simply dummy text of the printing and typesetting industry</li>
+              <li>Contrary to popular belief, Lorem Ipsum is not simply random text</li>
+              <li>It is a long established fact that a reader will be distracted by the</li>
+              <li>There are many variations of passages of Lorem Ipsum available</li>
+            </ul>
+          </CCallout>
+        </CCol>
+        <CCol xs={12}>
+          { state.errorMessage && <CAlert color="danger" dismissible onClose={() => { setState({errorMessage:""}) }}> { state.errorMessage } </CAlert> }
+        </CCol>
         <CCol xs={12}>
           <CCard className="mb-4">
             <CCardHeader>
               <strong>Tambah Penguji</strong>
             </CCardHeader>
             <CCardBody>
-                <CForm onSubmit={this.postData}>
+                <CForm onSubmit={postData}>
                   <CRow className="mb-3">
                     <CFormLabel htmlFor="nip_value" className="col-sm-2 col-form-label" placeholder='Masukkan NIK'>
                       NIP
                     </CFormLabel>
                     <CCol sm={10}>
-                      <CFormInput type="text" id="nip_value" name="nip_value" onChange={this.handlechange} />
+                      <CFormInput type="text" id="nip_value" name="nip_value" onChange={(e) => setNipValue(e.target.value )} />
                     </CCol>
                   </CRow>
                   <CRow className="mb-3">
@@ -96,7 +105,7 @@ export class TambahPenguji extends Component {
                       Nama
                     </CFormLabel>
                     <CCol sm={10}>
-                      <CFormInput type="text" id="nama_karyawan" name="nama_karyawan" placeholder='Nama Pegawai Akan Muncul Disini' disabled value={this.state.nama_karyawan} />
+                      <CFormInput type="text" id="nama_karyawan" name="nama_karyawan"  value={state.namaKaryawan} placeholder='Nama Pegawai Akan Muncul Disini' disabled />
                     </CCol>
                   </CRow>
                   <CButton type="submit" style={{width:'100%'}}>Submit</CButton>
@@ -104,9 +113,9 @@ export class TambahPenguji extends Component {
             </CCardBody>
           </CCard>
         </CCol>
-      </CRow>
-    )
-  }
+      </CCol>
+    </CRow>
+  )
 }
 
 export default TambahPenguji
