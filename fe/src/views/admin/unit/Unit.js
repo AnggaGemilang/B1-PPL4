@@ -15,6 +15,7 @@ import {
   CForm,
   CFormInput,
 } from '@coreui/react'
+import { Link } from 'react-router-dom'
 import UnitAPI from '../../../config/admin/UnitAPI'
 
 export class Unit extends Component {
@@ -67,11 +68,14 @@ export class Unit extends Component {
                   </CForm>
                 </CCol>
                 <CCol>
-                  <CButton
-                    color='primary'
-                    variant="outline" >
-                      Tambah Unit
-                  </CButton>
+                  <Link to={'/admin/unit/tambah'}>
+                    <CButton
+                      color='primary'
+                      style={{width:'100%'}}
+                      variant="outline" >
+                        Tambah Unit
+                    </CButton>
+                  </Link>
                 </CCol>
               </CRow>
                 <CTable striped className='mt-3'>

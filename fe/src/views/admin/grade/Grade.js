@@ -14,7 +14,13 @@ import {
   CTableRow,
   CForm,
   CFormInput,
+  CModal,
+  CModalBody,
+  CModalFooter,
+  CModalHeader,
+  CModalTitle,    
 } from '@coreui/react'
+import { Link } from 'react-router-dom'
 import GradeAPI from '../../../config/admin/GradeAPI'
 
 export class Grade extends Component {
@@ -23,9 +29,29 @@ export class Grade extends Component {
     this.state = {
       grades: [],
       urutan : 1,
+      filter_query: '',
+      id: 0,
+      grade_name: ''
     }
+    this.handlechange = this.handlechange.bind(this);
   }
   
+  handlechange = (event) => {
+    event.preventDefault()
+    this.setState({ filter_query: event.target.value, urutan: 1 }, () => {
+      GradeAPI.find(this.state.filter_query).then(
+        (res) => {
+          if(res.data.length != 0){
+            this.setState({
+              grades: res.data,
+              urutan: 1
+            });
+          }
+        }
+      )
+    });
+  };
+
   componentDidMount(){
     this.getData()
   }
@@ -34,20 +60,25 @@ export class Grade extends Component {
     GradeAPI.get().then((res) => {
       console.log(res.data)
       this.setState({
-        grades: res.data
+        grades: res.data,
+        urutan: 1
       })
     })
   }
-  deleteData(id){
-    GradeAPI.delete(id).then((res) => {
-      this.setState({
-        Response: res.data.id
-      })
-    }, () => {
+
+  deleteData(){
+    GradeAPI.delete(this.state.id).then((res) => {
+      this.setState({visible:false})
       this.getData()
     })
   }
+
   render(){
+
+    if(localStorage.getItem("auth") == null){
+      window.location = "/#/login";
+    }
+
     return (
       <CRow>
         <CCol xs={12}>
@@ -58,56 +89,74 @@ export class Grade extends Component {
             <CCardBody className='mt-3'>
               <CRow>
                 <CCol xs={9}>
-                  <CForm>
-                      <CFormInput
-                        type="text"
-                        id="exampleFormControlInput1"
-                        placeholder="Masukkan Kata Kunci Pencarian . . ."
-                      />
-                  </CForm>
+                  <CFormInput
+                    type="text"
+                    name='filter_query'
+                    id="filter_query"
+                    placeholder="Masukkan Kata Kunci Pencarian . . ."
+                    onChange={this.handlechange}
+                  />
                 </CCol>
                 <CCol>
-                  <CButton
-                    color='primary'
-                    style={{width:'100%'}}
-                    variant="outline" >
-                      Tambah Grade
-                  </CButton>
+                  <Link to={'/grade/tambah'}>
+                    <CButton
+                      color='primary'
+                      style={{width:'100%'}}
+                      variant="outline" >
+                        Tambah Grade
+                    </CButton>
+                  </Link>
                 </CCol>
               </CRow>
-                <CTable striped className='mt-3'>
+                <CTable striped className='mt-3 text-center'>
                   <CTableHead>
                     <CTableRow>
                       <CTableHeaderCell scope="col">No</CTableHeaderCell>
                       <CTableHeaderCell scope="col">Name</CTableHeaderCell>
-                      <CTableHeaderCell scope="col">Description</CTableHeaderCell>
-                      <CTableHeaderCell scope="col">Place and Date Birth</CTableHeaderCell>
-                      <CTableHeaderCell scope="col">Position</CTableHeaderCell>
-                      <CTableHeaderCell scope="col">Photo</CTableHeaderCell>
                       <CTableHeaderCell scope="col">Action</CTableHeaderCell>
                     </CTableRow>
                   </CTableHead>
                   <CTableBody>
-                    {/* { this.state.grades.map(team =>
-                      <CTableRow key={team.id}>
+                    { this.state.grades.map(grade =>
+                      <CTableRow key={grade.id}>
                         <CTableHeaderCell scope="row">{ this.state.urutan ++ }</CTableHeaderCell>
-                        <CTableDataCell>{team.attributes.name}</CTableDataCell>
-                        <CTableDataCell>{((team.attributes.description).length <= 25) ? team.attributes.description : team.attributes.description.substring(0, 25) + "...."}</CTableDataCell>
-                        <CTableDataCell>{team.attributes.placeBirth}, {team.attributes.dateBirth}</CTableDataCell>
-                        <CTableDataCell>{team.attributes.position.data.attributes.title}</CTableDataCell>
+                        <CTableDataCell>{grade.attributes.grade_name}</CTableDataCell>
                         <CTableDataCell>
-                          <img src={"http://localhost:1337" + team.attributes.photo.data.attributes.formats.thumbnail.url} alt="user icon" />
-                        </CTableDataCell>
-                        <CTableDataCell>
-                          <CButton color={'warning'} variant="outline">
-                          Edit</CButton>
-                          <CButton color={'danger'} variant="outline">
-                          Delete</CButton>
+                          <Link 
+                            to={{
+                              pathname: `/grade/edit/${grade.id}`,
+                            }}>
+                            <CButton color={'warning'} variant="outline">Edit</CButton>
+                          </Link>
+                          <CButton 
+                            color={'danger'} 
+                            variant="outline" 
+                            style={{marginLeft: '10px'}}
+                            onClick={() => this.setState({ 
+                              visible: true, 
+                              id: grade.id, 
+                              grade_name: grade.attributes.grade_name, 
+                              urutan: 1 
+                            })}>Delete</CButton>
                         </CTableDataCell>
                       </CTableRow>
-                    )} */}
+                    )}
                   </CTableBody>
                 </CTable>
+              <CModal backdrop="static" visible={this.state.visible} onClose={() => this.setState({ visible: false, urutan: 1 })}>
+                <CModalHeader>
+                  <CModalTitle>Are You Sure?</CModalTitle>
+                </CModalHeader>
+                <CModalBody>
+                  This will remove {this.state.grade_name} as registrant permanently
+                </CModalBody>
+                <CModalFooter>
+                  <CButton color="secondary" onClick={() => this.setState({ visible: false, urutan: 1 })}>
+                    Close
+                  </CButton>
+                  <CButton color="danger" onClick={() => this.deleteData()}>Delete</CButton>
+                </CModalFooter>
+              </CModal>                 
             </CCardBody>
           </CCard>
         </CCol>

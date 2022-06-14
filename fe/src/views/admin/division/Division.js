@@ -8,13 +8,13 @@ import {
   CTable,
   CTableBody,
   CButton,
-  CTableDataCell,
   CTableHead,
   CTableHeaderCell,
   CTableRow,
   CForm,
   CFormInput,
 } from '@coreui/react'
+import { Link } from 'react-router-dom'
 import DivisionAPI from '../../../config/admin/DivisionAPI'
 
 export class Directorate extends Component {
@@ -67,12 +67,14 @@ export class Directorate extends Component {
                   </CForm>
                 </CCol>
                 <CCol>
-                  <CButton
-                    color='primary'
-                    style={{width:'100%'}}
-                    variant="outline" >
-                      Tambah Divisi
-                  </CButton>
+                  <Link to={'/admin/division/tambah'}>
+                    <CButton
+                      color='primary'
+                      style={{width:'100%'}}
+                      variant="outline" >
+                        Tambah Divisi
+                    </CButton>
+                  </Link>
                 </CCol>
               </CRow>
                 <CTable striped className='mt-3'>

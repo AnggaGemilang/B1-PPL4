@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import React, { useState, useEffect } from 'react'
 import {
   CButton,
   CCard,
@@ -6,93 +6,114 @@ import {
   CCardHeader,
   CCol,
   CForm,
-  CFormCheck,
   CFormInput,
   CFormLabel,
-  CFormSelect,
-  CInputGroup,
-  CInputGroupText,
   CRow,
+  CCallout,
+  CAlert
 } from '@coreui/react'
+import {useNavigate} from 'react-router-dom'
+import DataPesertaAPI from '../../../config/user/DataPesertaAPI'
 
-export class TambahPeserta extends Component {
+const TambahPeserta = () => {
+  const navigate = useNavigate();
+  const [nipValue, setNipValue] = useState("")
+  const [state, setState] = useState({
+    namaKaryawan: "",
+    idKaryawan: 0,
+    errorMessage: ""
+  });
 
-state = {
-    data: {
-      NIP: 0,
-    }
-  };
-
-  handleFormChange = (event) => {
-    console.log("handleFormChange", event.target);
-    let dataNew = { ...this.state.data };
-    dataNew[event.target.name] = event.target.value;
-    this.setState(
-      {
-        data: dataNew,
-      },
-      () => {
-        console.log("value data", this.state.data);
-      }
-    );
-  };
-
-  handleSubmit = () => {
-    console.log("submit");
-    this.postData();
-  };
-
-  postData = (event) => {
-    event.preventDefault();
-    const data = {
-      NIP: this.state.data["NIP"],
-    };
-    axios.post("http://localhost:1337/api/registrants", { data }).then(
+  useEffect(() => {
+    console.log(nipValue)
+    if (nipValue.length > 1) {
+      DataPesertaAPI.findEmployee(nipValue).then(
       (res) => {
-        console.log("res post",res);
-        // alert.show("hello world");
-      },
-      (err) => {
-        console.log("err", err);
-      }
-    );
-  };
+        console.log(res)
+        if(res.data.length == 1){
+          console.log(res.data[0].attributes.Name)
+          setState({
+            namaKaryawan: res.data[0].attributes.Name,
+            idKaryawan: res.data[0].id
+          });
+        } 
+        else {
+          setState({
+            namaKaryawan: '',
+            idKaryawan: 0,
+          });
+        }
+      });
+    }
+  }, [nipValue])
 
-  render(){
-      return (
-        <CRow>
-          <CCol xs={12}>
-            <CCard className="mb-4">
-              <CCardHeader>
-                <strong>Tambah Peserta</strong>
-              </CCardHeader>
-              <CCardBody>
-                  <CForm onSubmit={this.postData}>
-                    <CRow className="mb-3">
-                      <CFormLabel htmlFor="inputEmail3" className="col-sm-2 col-form-label">
-                        NIP
-                      </CFormLabel>
-                      <CCol sm={10}>
-                        <CFormInput type="number" id="inputEmail3" name='NIP' placeholder='Masukkan NIP' onChange={this.handleFormChange} />
-                      </CCol>
-                    </CRow>
-                    <CRow className="mb-3">
-                      <CFormLabel htmlFor="inputPassword3" className="col-sm-2 col-form-label">
-                        Nama
-                      </CFormLabel>
-                      <CCol sm={10}>
-                        <CFormInput type="password" id="inputPassword3" placeholder='Nama Pegawai Akan Muncul Disini' disabled />
-                      </CCol>
-                    </CRow>
-                    <CButton type="submit" style={{width:'100%'}}>Submit</CButton>
-                  </CForm>
-              </CCardBody>
-            </CCard>
-          </CCol>
-        </CRow>
-      )
+  const postData = (event) => {
+    event.preventDefault();
+    if(state.namaKaryawan.length > 0){
+      const body = {
+        data: {
+          employee: state.idKaryawan
+        }
+      }
+      DataPesertaAPI.add(body).then(
+        (res) => {
+          navigate('/datapeserta', {state: { successMessage: 'Registrant has added successfully' } });
+        },
+        (err) => {
+          setState({ errorMessage: "" })
+        }
+      );    
+    } else {
+      setState({ errorMessage: "Enter NIP properly" })
+    }
   }
 
+  return (
+    <CRow>
+      <CCol xs={12}>
+        <CCol xs={12}>
+          <CCallout color="info" className="bg-white">
+            <p style={{ fontSize: "18px", marginBottom: "0px" }}><b>Catatan</b></p>
+            <ul className='catatan' style={{ marginBottom: "0px" }}>
+              <li>Lorem Ipsum is simply dummy text of the printing and typesetting industry</li>
+              <li>Contrary to popular belief, Lorem Ipsum is not simply random text</li>
+              <li>It is a long established fact that a reader will be distracted by the</li>
+              <li>There are many variations of passages of Lorem Ipsum available</li>
+            </ul>
+          </CCallout>
+        </CCol>
+        <CCol xs={12}>
+          { state.errorMessage && <CAlert color="danger" dismissible onClose={() => { setState({ errorMessage: "" }) }}> { state.errorMessage } </CAlert> }
+        </CCol>
+        <CCard className="mb-4">
+          <CCardHeader>
+            <strong>Tambah Peserta</strong>
+          </CCardHeader>
+          <CCardBody>
+            <CForm onSubmit={postData}>
+              <CRow className="mb-3">
+                <CFormLabel htmlFor="nipValue" className="col-sm-2 col-form-label" placeholder='Masukkan NIP . . .' >
+                  NIP
+                </CFormLabel>
+                <CCol sm={10}>
+                  <CFormInput type="text" id="nipValue" name="nipValue" onChange={(e) => setNipValue(e.target.value )} />
+                </CCol>
+              </CRow>
+              <CRow className="mb-3">
+                <CFormLabel htmlFor="namaKaryawan" className="col-sm-2 col-form-label" >
+                  Nama
+                </CFormLabel>
+                <CCol sm={10}>
+                  <CFormInput type="text" id="namaKaryawan" name="namaKaryawan" value={state.namaKaryawan} placeholder='Nama Pegawai Akan Muncul Disini' disabled />
+                </CCol>
+              </CRow>
+              <CButton type="submit" style={{width:'100%'}}>Submit</CButton>
+            </CForm>
+          </CCardBody>
+        </CCard>
+      </CCol>
+    </CRow>
+  )
 }
 
 export default TambahPeserta

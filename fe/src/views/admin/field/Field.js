@@ -15,6 +15,7 @@ import {
   CForm,
   CFormInput,
 } from '@coreui/react'
+import { Link } from 'react-router-dom'
 import FieldAPI from '../../../config/admin/FieldAPI'
 
 export class Field extends Component {
@@ -67,12 +68,14 @@ export class Field extends Component {
                   </CForm>
                 </CCol>
                 <CCol>
-                  <CButton
-                    color='primary'
-                    style={{width:'100%'}}
-                    variant="outline" >
-                      Tambah Bidang
-                  </CButton>
+                  <Link to={'/admin/field/tambah'}>
+                    <CButton
+                      color='primary'
+                      style={{width:'100%'}}
+                      variant="outline" >
+                        Tambah Bidang
+                    </CButton>
+                  </Link>
                 </CCol>
               </CRow>
                 <CTable striped className='mt-3'>

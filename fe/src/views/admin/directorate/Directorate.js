@@ -14,18 +14,45 @@ import {
   CTableRow,
   CForm,
   CFormInput,
+  CModal,
+  CModalBody,
+  CModalFooter,
+  CModalHeader,
+  CModalTitle,  
 } from '@coreui/react'
+import { Link } from 'react-router-dom'
 import DirectorateAPI from '../../../config/admin/DirectorateAPI'
 
 export class Directorate extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      teams: [],
+      directorates: [],
       urutan : 1,
+      id: 0,
+      directorate_name: '',
+      visible: false,
+      filter_query: '',      
     }
+    this.handlechange = this.handlechange.bind(this);
   }
   
+  handlechange = (event) => {
+    event.preventDefault()
+    this.setState({ filter_query: event.target.value, urutan: 1 }, () => {
+      DirectorateAPI.find(this.state.filter_query).then(
+        (res) => {
+          if(res.data.length != 0){
+            this.setState({
+              directorates: res.data,
+              urutan: 1
+            });
+          }
+        }
+      )
+    });
+  };
+
   componentDidMount(){
     this.getData()
   }
@@ -34,20 +61,25 @@ export class Directorate extends Component {
     DirectorateAPI.get().then((res) => {
       console.log(res.data)
       this.setState({
-        directorates: res.data
+        directorates: res.data,
+        urutan: 1        
       })
     })
   }
-  deleteData(id){
-    DirectorateAPI.delete(id).then((res) => {
-      this.setState({
-        Response: res.data.id
-      })
-    }, () => {
+
+  deleteData(){
+    DirectorateAPI.delete(this.state.id).then((res) => {
+      this.setState({visible:false})
       this.getData()
     })
   }
+
   render(){
+
+    if(localStorage.getItem("auth") == null){
+      window.location = "/#/login";
+    }
+
     return (
       <CRow>
         <CCol xs={12}>
@@ -58,56 +90,76 @@ export class Directorate extends Component {
             <CCardBody className='mt-3'>
               <CRow>
                 <CCol xs={9}>
-                  <CForm>
-                      <CFormInput
-                        type="text"
-                        id="exampleFormControlInput1"
-                        placeholder="Masukkan Kata Kunci Pencarian . . ."
-                      />
-                  </CForm>
+                  <CFormInput
+                    type="text"
+                    name='filter_query'
+                    id="filter_query"
+                    placeholder="Masukkan Kata Kunci Pencarian . . ."
+                    onChange={this.handlechange}
+                  />
                 </CCol>
                 <CCol>
-                  <CButton
-                    color='primary'
-                    style={{width:'100%'}}
-                    variant="outline" >
-                      Tambah Direktorat
-                  </CButton>
+                  <Link to={'/directorate/tambah'}>
+                    <CButton
+                      color='primary'
+                      style={{width:'100%'}}
+                      variant="outline" >
+                        Tambah Direktorat
+                    </CButton>
+                  </Link>
                 </CCol>
               </CRow>
-                <CTable striped className='mt-3'>
+                <CTable striped className='mt-3 text-center'>
                   <CTableHead>
                     <CTableRow>
                       <CTableHeaderCell scope="col">No</CTableHeaderCell>
                       <CTableHeaderCell scope="col">Name</CTableHeaderCell>
-                      <CTableHeaderCell scope="col">Description</CTableHeaderCell>
-                      <CTableHeaderCell scope="col">Place and Date Birth</CTableHeaderCell>
-                      <CTableHeaderCell scope="col">Position</CTableHeaderCell>
-                      <CTableHeaderCell scope="col">Photo</CTableHeaderCell>
+                      <CTableHeaderCell scope="col">Unit</CTableHeaderCell>
                       <CTableHeaderCell scope="col">Action</CTableHeaderCell>
                     </CTableRow>
                   </CTableHead>
                   <CTableBody>
-                    {/* { this.state.teams.map(team =>
-                      <CTableRow key={team.id}>
-                        <CTableHeaderCell scope="row">{ this.state.urutan ++ }</CTableHeaderCell>
-                        <CTableDataCell>{team.attributes.name}</CTableDataCell>
-                        <CTableDataCell>{((team.attributes.description).length <= 25) ? team.attributes.description : team.attributes.description.substring(0, 25) + "...."}</CTableDataCell>
-                        <CTableDataCell>{team.attributes.placeBirth}, {team.attributes.dateBirth}</CTableDataCell>
-                        <CTableDataCell>{team.attributes.position.data.attributes.title}</CTableDataCell>
+                    { this.state.directorates.map(directorate =>
+                      <CTableRow key={directorate.id}>
+                        <CTableHeaderCell scope="row">{ this.state.urutan++ }</CTableHeaderCell>
+                        <CTableDataCell>{directorate.attributes.directorate_name}</CTableDataCell>
+                        <CTableDataCell>{directorate.attributes.unit.data.attributes.unit_name}</CTableDataCell>
                         <CTableDataCell>
-                          <img src={"http://localhost:1337" + team.attributes.photo.data.attributes.formats.thumbnail.url} alt="user icon" />
-                        </CTableDataCell>
-                        <CTableDataCell>
-                          <CButton color={'warning'} variant="outline">
-                          Edit</CButton>
-                          <CButton color={'danger'} variant="outline">
-                          Delete</CButton>
+                          <Link 
+                            to={{
+                              pathname: `/directorate/edit/${directorate.id}`,
+                            }}>
+                            <CButton color={'warning'} variant="outline">Edit</CButton>
+                          </Link>
+                          <CButton 
+                            color={'danger'} 
+                            variant="outline" 
+                            style={{marginLeft: '10px'}}
+                            onClick={() => this.setState({ 
+                              visible: true, 
+                              id: directorate.id, 
+                              directorate_name: directorate.attributes.directorate_name, 
+                              urutan: 1 
+                            })}>Delete</CButton>
                         </CTableDataCell>
                       </CTableRow>
-                    )} */}
+                    )}
                   </CTableBody>
                 </CTable>
+                <CModal backdrop="static" visible={this.state.visible} onClose={() => this.setState({ visible: false, urutan: 1 })}>
+                <CModalHeader>
+                  <CModalTitle>Are You Sure?</CModalTitle>
+                </CModalHeader>
+                <CModalBody>
+                  This will remove {this.state.directorate_name} as registrant permanently
+                </CModalBody>
+                <CModalFooter>
+                  <CButton color="secondary" onClick={() => this.setState({ visible: false, urutan: 1 })}>
+                    Close
+                  </CButton>
+                  <CButton color="danger" onClick={() => this.deleteData()}>Delete</CButton>
+                </CModalFooter>
+              </CModal>                 
             </CCardBody>
           </CCard>
         </CCol>

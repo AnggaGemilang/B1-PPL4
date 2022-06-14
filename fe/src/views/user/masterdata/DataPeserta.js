@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import React, { useState, useEffect } from 'react'
 import {
   CCard,
   CCardBody,
@@ -12,126 +12,199 @@ import {
   CTableHead,
   CTableHeaderCell,
   CTableRow,
-  CForm,
   CFormInput,
+  CModal,
+  CModalBody,
+  CModalFooter,
+  CModalHeader,
+  CModalTitle,
+  CAccordion,
+  CAccordionBody,
+  CAccordionHeader,
+  CAccordionItem, 
+  CFormLabel,
+  CAlert,
+  CForm
 } from '@coreui/react'
+import CIcon from '@coreui/icons-react'
+import { useLocation } from "react-router-dom";
+import { cilSearch, cilPlus } from '@coreui/icons'
+import url from "../../../config/setting"
 import DataPesertaAPI from '../../../config/user/DataPesertaAPI'
 import { Link } from 'react-router-dom'
 
-export class DataPeserta extends Component {
-  constructor(props) {
-    super(props)
-    this.state = {
-      registrants: [],
-      urutan : 1,
+const DataPeserta = () => {
+  const location = useLocation();
+  const [registrants, setRegistrants] = useState([]);
+  const [message, setMessage] = useState("");
+  const [chosenRegistrant, setChosenRegistrant] = useState({
+    visible: false,
+    name: "",
+    id: 0    
+  })
+
+  useEffect(() => {
+    setMessage(location?.state?.successMessage)
+    getData()
+  }, [])  
+
+  const filterSearch = (e) => {
+    e.preventDefault()
+
+    let query = ""
+    if(document.getElementById("filter_nama").value){
+      query += `&filters[employee][Name][$contains]=${document.getElementById("filter_nama").value}`
     }
+    if(document.getElementById("filter_nip").value){
+      query += `&filters[employee][NIP][$contains]=${document.getElementById("filter_nip").value}`
+    }
+
+    DataPesertaAPI.findRegistrants(query).then(
+      (res) => {
+        if(res.data.length != 0){
+          setRegistrants(res.data)
+        } else {
+          setRegistrants([])         
+        }
+      }
+    )    
   }
   
-  componentDidMount(){
-    this.getData()
+  const getData = () => {
+    DataPesertaAPI.get().then((res) => {
+      setRegistrants(res.data)
+    })
   }
 
-  getData(){
-    DataPesertaAPI.get().then((res) => {
-      console.log(res.data)
-      this.setState({
-        registrants: res.data
-      })
-    }, () => {
-      console.log(this.state.registrants)
+  const deleteData = () => {
+    DataPesertaAPI.delete(chosenRegistrant.id).then((res) => {
+      setMessage("Registrant has deleted successfully")
+      setChosenRegistrant({ visible: false })
+      getData()
     })
   }
-  deleteData(id){
-    DataPesertaAPI.delete(id).then((res) => {
-      this.setState({
-        Response: res.data.id
-      })
-    }, () => {
-      this.getData()
-    })
-  }
-  render(){
-    return (
-      <CRow>
-        <CCol xs={12}>
-          <CCard className="mb-4">
-            <CCardHeader>
-              <strong>Data Peserta</strong>
-            </CCardHeader>
-            <CCardBody className='mt-3'>
-              <CRow>
-                <CCol xs={9}>
-                  <CForm>
-                      <CFormInput
-                        type="text"
-                        id="exampleFormControlInput1"
-                        placeholder="Masukkan Kata Kunci Pencarian . . ."
-                      />
-                  </CForm>
-                </CCol>
-                <CCol>
-                  <Link to={'/tambahpeserta'}>
+
+  return (
+    <CRow>
+      <CCol>
+        <CAccordion>
+          <CAccordionItem itemKey={1}>
+            <CAccordionHeader><CIcon icon={cilSearch} style={{ marginRight: "10px" }}/>Pencarian Data</CAccordionHeader>
+            <CAccordionBody>
+              <CForm onSubmit={filterSearch}>
+                <CRow className='mt-2'>
+                  <CCol xs={6}>
+                    <CFormLabel htmlFor="exampleFormControlInput1">Nama lengkap</CFormLabel>
+                    <CFormInput
+                      type="text"
+                      name='filter_nama'
+                      id="filter_nama"
+                      placeholder="Masukkan Kata Kunci Pencarian . . ."
+                    />
+                  </CCol>
+                  <CCol xs={6}>
+                    <CFormLabel htmlFor="exampleFormControlInput1">NIP</CFormLabel>
+                    <CFormInput
+                      type="text"
+                      name='filter_nip'
+                      id="filter_nip"
+                      placeholder="Masukkan Kata Kunci Pencarian . . ."
+                    />
+                  </CCol>
+                </CRow>               
+                <CRow>
+                  <hr className='mt-4' style={{ marginLeft: "12px", width: "97.6%" }} />
+                </CRow>
+                <CRow>
+                  <CCol style={{ display: "flex", justifyContent: "right" }}>
                     <CButton
+                      type='submit'
                       color='primary'
-                      style={{width:'100%'}}
-                      variant="outline" >
-                        Tambah Peserta
-                    </CButton>
-                  </Link>
-                </CCol>
-              </CRow>
-                <CTable striped className='mt-3'>
-                  <CTableHead>
-                    <CTableRow>
-                      <CTableHeaderCell scope="col">No</CTableHeaderCell>
-                      <CTableHeaderCell scope="col">Foto</CTableHeaderCell>
-                      <CTableHeaderCell scope="col">Nama</CTableHeaderCell>
-                      <CTableHeaderCell scope="col">NIP</CTableHeaderCell>
-                      <CTableHeaderCell scope="col">Jabatan</CTableHeaderCell>
-                      <CTableHeaderCell scope="col">Grade</CTableHeaderCell>
-                      <CTableHeaderCell scope="col">Jenjang</CTableHeaderCell>
-                      <CTableHeaderCell scope="col">Action</CTableHeaderCell>
+                      style={{ width:'10%', borderRadius: "50px", fontSize: "14px" }} >
+                        <CIcon icon={cilSearch} style={{ marginRight: "10px", color: "#FFFFFF" }}/>
+                        Cari
+                    </CButton>                                          
+                  </CCol>
+                </CRow>
+              </CForm>
+            </CAccordionBody>
+          </CAccordionItem>
+        </CAccordion>   
+        <CCol xs={12} className="mt-3">
+          { message && <CAlert color="success" dismissible onClose={() => { setMessage("") }}> { message } </CAlert> }
+        </CCol>                 
+        <CCard className="mb-4 mt-3">
+          <CCardHeader>
+            <strong>Data Peserta</strong>
+          </CCardHeader>
+          <CCardBody>
+            <CRow>
+              <CCol xs={12}>
+                <Link to={'/tambahpeserta'}>
+                  <CButton
+                    color='primary'
+                    style={{width:'17%', borderRadius: "50px", fontSize: "14px"}} >
+                      <CIcon icon={cilPlus} style={{ marginRight: "10px", color: "#FFFFFF" }}/>
+                      Tambah Peserta
+                  </CButton>
+                </Link>
+              </CCol>
+            </CRow>
+              <CTable striped className='mt-3 text-center'>
+                <CTableHead>
+                   <CTableRow>
+                    <CTableHeaderCell scope="col">No</CTableHeaderCell>
+                    <CTableHeaderCell scope="col">Foto</CTableHeaderCell>
+                    <CTableHeaderCell scope="col">Nama</CTableHeaderCell>
+                    <CTableHeaderCell scope="col">NIP</CTableHeaderCell>
+                    <CTableHeaderCell scope="col">Action</CTableHeaderCell>
+                  </CTableRow>
+                </CTableHead>
+                <CTableBody>
+                  { registrants.map( (registrant, index) =>
+                    <CTableRow key={registrant.id}>
+                      <CTableHeaderCell scope="row">{ index+1 }</CTableHeaderCell>
+                      <CTableDataCell>
+                        <img className='foto_karyawan' src={url + registrant.attributes.employee.data.attributes.Photo.data.attributes.formats.thumbnail.url} alt="Photo" />
+                      </CTableDataCell>
+                      <CTableDataCell>{registrant.attributes.employee.data.attributes.Name}</CTableDataCell>
+                      <CTableDataCell>{registrant.attributes.employee.data.attributes.NIP}</CTableDataCell>
+                      <CTableDataCell>
+                        <CButton
+                          color='danger'
+                          variant="outline" 
+                          onClick={() => setChosenRegistrant({ 
+                            visible: true, 
+                            name: registrant.attributes.employee.data.attributes.Name,
+                            id: registrant.id
+                          })}
+                          style={{marginLeft: '10px'}} >
+                            Hapus
+                        </CButton>
+                      </CTableDataCell>
                     </CTableRow>
-                  </CTableHead>
-                  <CTableBody>
-                    { this.state.registrants.map(registrant =>
-                      <CTableRow key={registrant.id}>
-                        <CTableHeaderCell scope="row">{ this.state.urutan ++ }</CTableHeaderCell>
-                        <CTableDataCell>
-                          <img src={"http://localhost:1337" + registrant.attributes.employee.data.attributes.Photo.data.attributes.formats.thumbnail.url} alt="user icon" />
-                        </CTableDataCell>
-                        <CTableDataCell>{registrant.attributes.employee.data.attributes.Name}</CTableDataCell>
-                        <CTableDataCell>{registrant.attributes.employee.data.attributes.NIP}</CTableDataCell>
-                        <CTableDataCell>{registrant.attributes.employee.data.attributes.Position}</CTableDataCell>
-                        <CTableDataCell>{registrant.attributes.employee.data.attributes.grade.data.attributes.grade_name}</CTableDataCell>
-                        <CTableDataCell>{registrant.attributes.employee.data.attributes.level.data.attributes.level_name}</CTableDataCell>
-                        <CTableDataCell>
-                          <Link to={'/tambahpeserta/edit'}>
-                            <CButton
-                              color='warning'
-                              variant="outline"  >
-                                Edit
-                            </CButton>
-                          </Link>
-                          <Link to={'/tambahpeserta'}>
-                            <CButton
-                              color='danger'
-                              variant="outline" 
-                              style={{marginLeft: '10px'}} >
-                                Hapus
-                            </CButton>
-                          </Link>
-                        </CTableDataCell>
-                      </CTableRow>
-                    )}
-                  </CTableBody>
-                </CTable>
-            </CCardBody>
-          </CCard>
-        </CCol>
-      </CRow>
-    )
-  }
+                  )}
+                </CTableBody>
+              </CTable>
+            <CModal backdrop="static" visible={chosenRegistrant.visible} onClose={() => setChosenRegistrant({ visible: false })}>
+              <CModalHeader>
+                <CModalTitle>Are You Sure?</CModalTitle>
+              </CModalHeader>
+              <CModalBody>
+                This will remove {chosenRegistrant.name} as registrant permanently
+              </CModalBody>
+              <CModalFooter>
+                <CButton color="secondary" onClick={() => setChosenRegistrant({ visible: false })}>
+                  Close
+                </CButton>
+                <CButton color="danger" onClick={() => deleteData()}>Delete</CButton>
+              </CModalFooter>
+            </CModal>
+          </CCardBody>
+        </CCard>
+      </CCol>
+    </CRow>
+  )
 }
 
 export default DataPeserta
