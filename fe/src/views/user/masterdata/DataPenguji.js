@@ -53,10 +53,10 @@ const DataPenguji = () => {
     e.preventDefault()
 
     let query = ""
-    if(document.getElementById("filter_nama").value){
+    if(document.getElementById("filter_nama").value.length != 0){
       query += `&filters[employee][Name][$contains]=${document.getElementById("filter_nama").value}`
     }
-    if(document.getElementById("filter_nip").value){
+    if(document.getElementById("filter_nip").value.length != 0){
       query += `&filters[employee][NIP][$contains]=${document.getElementById("filter_nip").value}`
     }
 
@@ -74,6 +74,7 @@ const DataPenguji = () => {
   const getData = () => {
     DataPengujiAPI.get().then((res) => {
       setExaminers(res.data)
+      console.log(res.data)
     })
   }
   

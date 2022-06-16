@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import React, { useState, useEffect } from 'react'
 import {
   CCard,
   CCardBody,
@@ -12,111 +12,199 @@ import {
   CTableHead,
   CTableHeaderCell,
   CTableRow,
-  CForm,
   CFormInput,
+  CModal,
+  CModalBody,
+  CModalFooter,
+  CModalHeader,
+  CModalTitle,  
+  CAccordion,
+  CAccordionBody,
+  CAccordionHeader,
+  CAccordionItem, 
+  CFormLabel,
+  CAlert,
+  CForm,
+  CFormSelect  
 } from '@coreui/react'
+import CIcon from '@coreui/icons-react'
+import { cilSearch, cilPlus } from '@coreui/icons'
 import { Link } from 'react-router-dom'
 import LevelAPI from '../../../config/admin/LevelAPI'
 
-export class Level extends Component {
-  constructor(props) {
-    super(props)
-    this.state = {
-      levels: [],
-      urutan : 1,
+const Level = () => {
+  const [levels, setLevels] = useState([])
+  const [message, setMessage] = useState("");
+  const [chosenLevel, setChosenLevel] = useState({
+    visible: false,
+    name: "",
+    id: 0,
+  })
+
+  useEffect(() => {
+    setMessage(location?.state?.successMessage)
+    getData()
+  }, [])    
+
+  const filterSearch = (e) => {
+    e.preventDefault()
+
+    let query = ""
+    if(document.getElementById("filter_snama").value.length != 0){
+      query += `&filters[structural_name][$contains]=${document.getElementById("filter_snama").value}`
     }
-  }
-  
-  componentDidMount(){
-    this.getData()
+    if(document.getElementById("filter_fnama").value.length != 0){
+      query += `&filters[functional_name][$contains]=${document.getElementById("filter_fnama").value}`
+    }
+
+    LevelAPI.find(query).then(
+      (res) => {
+        if(res.data.length != 0){
+          setLevels(res.data)
+        } else {
+          setLevels([])
+        }
+      }
+    )
   }
 
-  getData(){
+  const getData = () => {
     LevelAPI.get().then((res) => {
+      setLevels(res.data)
       console.log(res.data)
-      this.setState({
-        levels: res.data
-      })
     })
   }
-  deleteData(id){
-    LevelAPI.delete(id).then((res) => {
-      this.setState({
-        Response: res.data.id
-      })
-    }, () => {
-      this.getData()
+
+  const deleteData = () => {
+    LevelAPI.delete(state.id).then((res) => {
+      setChosenLevel({ visible:false })
+      getData()
     })
   }
-  render(){
-    return (
-      <CRow>
-        <CCol xs={12}>
-          <CCard className="mb-4">
+
+  return (
+    <CRow>
+      <CCol xs={12}>
+        <CAccordion>
+          <CAccordionItem itemKey={1}>
+            <CAccordionHeader><CIcon icon={cilSearch} style={{ marginRight: "10px" }}/>Pencarian Data</CAccordionHeader>
+            <CAccordionBody>
+              <CForm onSubmit={filterSearch}>
+                <CRow className='mt-2'>
+                  <CCol xs={6}>
+                    <CFormLabel htmlFor="exampleFormControlInput1">Structural Name</CFormLabel>
+                    <CFormInput
+                      type="text"
+                      name='filter_snama'
+                      id="filter_snama"
+                      placeholder="Enter Structural Name . . ."
+                    />
+                  </CCol>
+                  <CCol xs={6}>
+                    <CFormLabel htmlFor="exampleFormControlInput1">Functional Name</CFormLabel>
+                    <CFormInput
+                      type="text"
+                      name='filter_fnama'
+                      id="filter_fnama"
+                      placeholder="Enter Functional Name . . ."
+                    />
+                  </CCol>
+                </CRow>                     
+                <CRow>
+                  <hr className='mt-4' style={{ marginLeft: "12px", width: "97.6%" }} />
+                </CRow>
+                <CRow>
+                  <CCol style={{ display: "flex", justifyContent: "right" }}>
+                    <CButton
+                        type='submit'
+                        color='primary'
+                        style={{ width:'10%', borderRadius: "50px", fontSize: "14px" }} >
+                          <CIcon icon={cilSearch} style={{ marginRight: "10px", color: "#FFFFFF" }}/>
+                          Cari
+                      </CButton>                                          
+                    </CCol>
+                  </CRow>
+                </CForm>
+              </CAccordionBody>
+            </CAccordionItem>
+          </CAccordion>        
+          <CCol xs={12} className="mt-3">
+            { message && <CAlert color="success" dismissible onClose={() => { setMessage("") }}> { message } </CAlert> }
+          </CCol> 
+          <CCard className="mb-4 mt-3">
             <CCardHeader>
-              <strong>Data Jenjang</strong>
+              <strong>Data Level</strong>
             </CCardHeader>
-            <CCardBody className='mt-3'>
+            <CCardBody>
               <CRow>
-                <CCol xs={9}>
-                  <CForm>
-                      <CFormInput
-                        type="text"
-                        id="exampleFormControlInput1"
-                        placeholder="Masukkan Kata Kunci Pencarian . . ."
-                      />
-                  </CForm>
-                </CCol>
                 <CCol>
-                  <Link to={'/admin/level/tambah'}>
+                  <Link to={'/directorate/tambah'}>
                     <CButton
                       color='primary'
-                      style={{width:'100%'}}
-                      variant="outline" >
-                        Tambah Jenjang
+                      style={{width:'18%', borderRadius: "50px", fontSize: "14px"}} >
+                      <CIcon icon={cilPlus} style={{ marginRight: "10px", color: "#FFFFFF" }} />
+                        Tambah Level
                     </CButton>
                   </Link>
                 </CCol>
               </CRow>
-                <CTable striped className='mt-3'>
+              <CRow className='pl-2 mr-5'>
+                <CTable striped className='mt-3 text-center'>
                   <CTableHead>
                     <CTableRow>
                       <CTableHeaderCell scope="col">No</CTableHeaderCell>
-                      <CTableHeaderCell scope="col">Name</CTableHeaderCell>
-                      <CTableHeaderCell scope="col">Description</CTableHeaderCell>
-                      <CTableHeaderCell scope="col">Place and Date Birth</CTableHeaderCell>
-                      <CTableHeaderCell scope="col">Position</CTableHeaderCell>
-                      <CTableHeaderCell scope="col">Photo</CTableHeaderCell>
+                      <CTableHeaderCell scope="col">Structural Name</CTableHeaderCell>
+                      <CTableHeaderCell scope="col">Functional Name</CTableHeaderCell>
                       <CTableHeaderCell scope="col">Action</CTableHeaderCell>
                     </CTableRow>
                   </CTableHead>
                   <CTableBody>
-                    {/* { this.state.levels.map(team =>
-                      <CTableRow key={team.id}>
-                        <CTableHeaderCell scope="row">{ this.state.urutan ++ }</CTableHeaderCell>
-                        <CTableDataCell>{team.attributes.name}</CTableDataCell>
-                        <CTableDataCell>{((team.attributes.description).length <= 25) ? team.attributes.description : team.attributes.description.substring(0, 25) + "...."}</CTableDataCell>
-                        <CTableDataCell>{team.attributes.placeBirth}, {team.attributes.dateBirth}</CTableDataCell>
-                        <CTableDataCell>{team.attributes.position.data.attributes.title}</CTableDataCell>
+                    { levels.map( (level, index) =>
+                      <CTableRow key={level.id}>
+                        <CTableHeaderCell scope="row">{ index+1 }</CTableHeaderCell>
+                        <CTableDataCell>{level.attributes.structural_name}</CTableDataCell>
+                        <CTableDataCell>{level.attributes.functional_name}</CTableDataCell>
                         <CTableDataCell>
-                          <img src={"http://localhost:1337" + team.attributes.photo.data.attributes.formats.thumbnail.url} alt="user icon" />
-                        </CTableDataCell>
-                        <CTableDataCell>
-                          <CButton color={'warning'} variant="outline">
-                          Edit</CButton>
-                          <CButton color={'danger'} variant="outline">
-                          Delete</CButton>
+                          <Link 
+                            to={{
+                              pathname: `/level/edit/${level.id}`,
+                            }}>
+                            <CButton color={'warning'} variant="outline">Edit</CButton>
+                          </Link>
+                          <CButton 
+                            color={'danger'} 
+                            variant="outline" 
+                            style={{marginLeft: '10px'}}
+                            onClick={() => setChosenLevel({ 
+                              visible: true, 
+                              id: level.id, 
+                              name: level.attributes.structural_name + " - " + level.attributes.functional_name, 
+                            })}>Delete</CButton>
                         </CTableDataCell>
                       </CTableRow>
-                    )} */}
+                    )}
                   </CTableBody>
                 </CTable>
+              </CRow>
+              <CModal backdrop="static" visible={chosenLevel.visible} onClose={() => setChosenLevel({ visible: false })}>
+                <CModalHeader>
+                  <CModalTitle>Are You Sure?</CModalTitle>
+                </CModalHeader>
+                <CModalBody>
+                  This will remove {chosenLevel.name} permanently
+                </CModalBody>
+                <CModalFooter>
+                  <CButton color="secondary" onClick={() => setChosenLevel({ visible: false })}>
+                    Close
+                  </CButton>
+                  <CButton color="danger" onClick={() => deleteData()}>Delete</CButton>
+                </CModalFooter>
+              </CModal>
             </CCardBody>
           </CCard>
         </CCol>
       </CRow>
-    )
-  }
+  )
 }
 
 export default Level

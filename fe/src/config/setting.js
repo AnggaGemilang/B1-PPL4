@@ -1,3 +1,3 @@
-const url = "https://c56b-123-253-232-249.ap.ngrok.io"
+const url = "https://55a5-202-80-213-233.ap.ngrok.io"
 
 export default url
