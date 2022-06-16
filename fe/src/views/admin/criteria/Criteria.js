@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import React, { useState, useEffect } from 'react'
 import {
   CCard,
   CCardBody,
@@ -12,120 +12,172 @@ import {
   CTableHead,
   CTableHeaderCell,
   CTableRow,
-  CForm,
   CFormInput,
   CModal,
   CModalBody,
   CModalFooter,
   CModalHeader,
-  CModalTitle,
+  CModalTitle,  
+  CAccordion,
+  CAccordionBody,
+  CAccordionHeader,
+  CAccordionItem, 
+  CFormLabel,
+  CAlert,
+  CForm,
+  CFormSelect  
 } from '@coreui/react'
+import CIcon from '@coreui/icons-react'
+import { cilSearch, cilPlus } from '@coreui/icons'
 import { Link } from 'react-router-dom'
 import CriteriaAPI from '../../../config/admin/CriteriaAPI'
 
-export class Criteria extends Component {
-  constructor(props) {
-    super(props)
-    this.state = {
-      criterias: [],
-      urutan : 1,
-      id: 0,
-      filter_query: '',      
-      criteria_name: '',
-      visible: false
+const Criteria = () => {
+  const [criterias, setCriterias] = useState([])
+  const [message, setMessage] = useState("");
+  const [chosenCriteria, setChosenCriteria] = useState({
+    visible: false,
+    name: "",
+    id: 0,
+  })
+
+  useEffect(() => {
+    setMessage(location?.state?.successMessage)
+    getData()
+  }, [])    
+
+  const filterSearch = (e) => {
+    e.preventDefault()
+
+    let query = ""
+    if(document.getElementById("filter_nama").value.length != 0){
+      query += `&filters[criteria][$contains]=${document.getElementById("filter_nama").value}`
     }
-    this.handlechange = this.handlechange.bind(this);
-  }
-  
-  handlechange = (event) => {
-    event.preventDefault()
-    this.setState({ filter_query: event.target.value, urutan: 1 }, () => {
-      CriteriaAPI.find(this.state.filter_query).then(
-        (res) => {
-          if(res.data.length != 0){
-            this.setState({
-              criterias: res.data,
-              urutan: 1
-            });
-          }
+    if(document.getElementById("filter_value").value.length != 0){
+      query += `&filters[value][$eq]=${document.getElementById("filter_value").value}`
+    }    
+    if(document.getElementById("filter_usefor").value.length != 0){
+      query += `&filters[useFor][$eq]=${document.getElementById("filter_usefor").value}`
+    }
+
+    CriteriaAPI.find(query).then(
+      (res) => {
+        if(res.data.length != 0){
+          setCriterias(res.data)
+        } else {
+          setCriterias([])
         }
-      )
-    });
-  };
-
-  componentDidMount(){
-    this.getData()
+      }
+    )
   }
 
-  getData(){
+  const getData = () => {
     CriteriaAPI.get().then((res) => {
-      console.log(res.data)
-      this.setState({
-        criterias: res.data,
-        urutan: 1
-      })
+      setCriterias(res.data)
     })
   }
 
-  deleteData(){
-    CriteriaAPI.delete(this.state.id).then((res) => {
-      this.setState({visible:false})
-      this.getData()
+  const deleteData = () => {
+    CriteriaAPI.delete(state.id).then((res) => {
+      setChosenCriteria({visible:false})
+      getData()
     })
   }
 
-  render(){
-
-    if(localStorage.getItem("auth") == null){
-      window.location = "/#/login";
-    }
-
-    return (
-      <CRow>
-        <CCol xs={12}>
-          <CCard className="mb-4">
+  return (
+    <CRow>
+      <CCol xs={12}>
+        <CAccordion>
+          <CAccordionItem itemKey={1}>
+            <CAccordionHeader><CIcon icon={cilSearch} style={{ marginRight: "10px" }}/>Pencarian Data</CAccordionHeader>
+            <CAccordionBody>
+              <CForm onSubmit={filterSearch}>
+                <CRow className='mt-2'>
+                  <CCol xs={6}>
+                    <CFormLabel htmlFor="filter_nama">Criteria Name</CFormLabel>
+                    <CFormInput
+                      type="text"
+                      name='filter_nama'
+                      id="filter_nama"
+                      placeholder="Enter Criteria Name . . ."
+                    />
+                  </CCol>
+                  <CCol xs={6}>
+                    <CFormLabel htmlFor="filter_value">Value</CFormLabel>
+                    <CFormInput
+                      type="text"
+                      name='filter_value'
+                      id="filter_value"
+                      placeholder="Enter Value . . ."
+                    />
+                  </CCol>
+                </CRow>             
+                <CRow className='mt-3'>
+                  <CCol xs={12}>
+                    <CFormLabel htmlFor="filter_usefor">Use For</CFormLabel>
+                    <CFormSelect name="filter_usefor" id="filter_usefor" className="mb-3" aria-label="Large select example">
+                      <option value="">Choose Use For</option>
+                      <option value="am">Ahli Madya</option>
+                      <option value="md">Modern Madya</option>
+                    </CFormSelect>
+                  </CCol>
+                </CRow>                
+                <CRow>
+                  <hr className='mt-4' style={{ marginLeft: "12px", width: "97.6%" }} />
+                </CRow>
+                <CRow>
+                  <CCol style={{ display: "flex", justifyContent: "right" }}>
+                    <CButton
+                        type='submit'
+                        color='primary'
+                        style={{ width:'10%', borderRadius: "50px", fontSize: "14px" }} >
+                          <CIcon icon={cilSearch} style={{ marginRight: "10px", color: "#FFFFFF" }}/>
+                          Cari
+                      </CButton>                                          
+                    </CCol>
+                  </CRow>
+                </CForm>
+              </CAccordionBody>
+            </CAccordionItem>
+          </CAccordion>        
+          <CCol xs={12} className="mt-3">
+            { message && <CAlert color="success" dismissible onClose={() => { setMessage("") }}> { message } </CAlert> }
+          </CCol> 
+          <CCard className="mb-4 mt-3">
             <CCardHeader>
               <strong>Data Criteria</strong>
             </CCardHeader>
-            <CCardBody className='mt-3'>
+            <CCardBody>
               <CRow>
-                <CCol xs={9}>
-                  <CFormInput
-                    type="text"
-                    name='filter_query'
-                    id="filter_query"
-                    placeholder="Masukkan Kata Kunci Pencarian . . ."
-                    onChange={this.handlechange}
-                  />
-                </CCol>
                 <CCol>
                   <Link to={'/criteria/tambah'}>
                     <CButton
                       color='primary'
-                      style={{width:'100%'}}
-                      variant="outline" >
-                        Tambah Kriteria
+                      style={{width:'18%', borderRadius: "50px", fontSize: "14px"}} >
+                      <CIcon icon={cilPlus} style={{ marginRight: "10px", color: "#FFFFFF" }} />
+                        Tambah Criteria
                     </CButton>
                   </Link>
                 </CCol>
               </CRow>
+              <CRow className='pl-2 mr-5'>
                 <CTable striped className='mt-3 text-center'>
                   <CTableHead>
                     <CTableRow>
                       <CTableHeaderCell scope="col">No</CTableHeaderCell>
-                      <CTableHeaderCell scope="col">Nama Kriteria</CTableHeaderCell>
-                      <CTableHeaderCell scope="col">Bobot</CTableHeaderCell>
-                      <CTableHeaderCell scope="col">Penggunaan</CTableHeaderCell>
-                      <CTableHeaderCell scope="col">Aksi</CTableHeaderCell>
+                      <CTableHeaderCell scope="col">Criteria Name</CTableHeaderCell>
+                      <CTableHeaderCell scope="col">Value</CTableHeaderCell>
+                      <CTableHeaderCell scope="col">Use For</CTableHeaderCell>
+                      <CTableHeaderCell scope="col">Action</CTableHeaderCell>
                     </CTableRow>
                   </CTableHead>
                   <CTableBody>
-                    { this.state.criterias.map(criteria =>
+                    { criterias.map( (criteria, index) =>
                       <CTableRow key={criteria.id}>
-                        <CTableHeaderCell scope="row">{ this.state.urutan ++ }</CTableHeaderCell>
+                        <CTableHeaderCell scope="row">{ index+1 }</CTableHeaderCell>
                         <CTableDataCell>{criteria.attributes.criteria}</CTableDataCell>
                         <CTableDataCell>{criteria.attributes.value}</CTableDataCell>
-                        <CTableDataCell>{criteria.attributes.usefor}</CTableDataCell>
+                        <CTableDataCell>{criteria.attributes.useFor == "am" ? "Ahli Madya" : "Modern Madya"}</CTableDataCell>
                         <CTableDataCell>
                           <Link 
                             to={{
@@ -133,41 +185,40 @@ export class Criteria extends Component {
                             }}>
                             <CButton color={'warning'} variant="outline">Edit</CButton>
                           </Link>
-                          <CButton color={'danger'} 
+                          <CButton 
+                            color={'danger'} 
                             variant="outline" 
                             style={{marginLeft: '10px'}}
-                            onClick={() => this.setState({ 
+                            onClick={() => setChosenCriteria({ 
                               visible: true, 
                               id: criteria.id, 
-                              criteria_name: criteria.attributes.criteria, 
-                              urutan: 1 
-                            })}
-                            >Delete</CButton>
+                              name: criteria.attributes.criteria, 
+                            })}>Delete</CButton>
                         </CTableDataCell>
                       </CTableRow>
                     )}
                   </CTableBody>
                 </CTable>
-              <CModal backdrop="static" visible={this.state.visible} onClose={() => this.setState({ visible: false, urutan: 1 })}>
+              </CRow>
+              <CModal backdrop="static" visible={chosenCriteria.visible} onClose={() => setChosenCriteria({ visible: false })}>
                 <CModalHeader>
                   <CModalTitle>Are You Sure?</CModalTitle>
                 </CModalHeader>
                 <CModalBody>
-                  This will remove {this.state.criteria_name} as registrant permanently
+                  This will remove {chosenCriteria.name} permanently
                 </CModalBody>
                 <CModalFooter>
-                  <CButton color="secondary" onClick={() => this.setState({ visible: false, urutan: 1 })}>
+                  <CButton color="secondary" onClick={() => setChosenCriteria({ visible: false })}>
                     Close
                   </CButton>
-                  <CButton color="danger" onClick={() => this.deleteData()}>Delete</CButton>
+                  <CButton color="danger" onClick={() => deleteData()}>Delete</CButton>
                 </CModalFooter>
-              </CModal> 
+              </CModal>                 
             </CCardBody>
           </CCard>
         </CCol>
       </CRow>
     )
-  }
 }
 
 export default Criteria

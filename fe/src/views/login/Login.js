@@ -46,7 +46,8 @@ const Login = () => {
   }
 
   return (
-    <div className="bg-light min-vh-100 d-flex flex-row align-items-center" style={{ backgroundImage: `url(${background})`, backgroundSize: 'cover', }}>
+// style={{ backgroundImage: `url(${background})`, backgroundSize: 'cover', }}
+    <div className="bg-light min-vh-100 d-flex flex-row align-items-center">
       <CContainer>
         <CRow className="justify-content-center">
           <CCol md={5}>
@@ -78,11 +79,11 @@ const Login = () => {
                       <CFormLabel htmlFor="floatingInputValue">Masukkan Password . . .</CFormLabel>
                     </CFormFloating>
                     <CRow className='mt-3'>
-                      <CCol xs={12}>
-                        <CButton disabled={state.visible} type="submit" color="primary" className="p-2 w-100 position-relative" >
+                      <CCol xs={12} className="position-relative">
+                        <CButton disabled={state.visible} type="submit" color="primary" className="p-2 w-100" >
                           Login
-                          { state.visible ? <CSpinner color="primary" className='position-absolute' style={{right: "20px", top: "5px"}} /> : null }
                         </CButton>
+                        { state.visible && <CSpinner color="primary" className='position-absolute' style={{right: "20px", top: "5px"}} /> }
                       </CCol>
                     </CRow>
                   </CForm>

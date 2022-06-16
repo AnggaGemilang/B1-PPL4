@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import React, { useState, useEffect } from 'react'
 import {
   CCard,
   CCardBody,
@@ -18,168 +18,358 @@ import {
   CModalFooter,
   CModalHeader,
   CModalTitle,  
+  CAccordion,
+  CAccordionBody,
+  CAccordionHeader,
+  CAccordionItem, 
+  CFormLabel,
+  CAlert,
+  CForm,
+  CFormCheck,
+  CFormSelect,  
 } from '@coreui/react'
+import CIcon from '@coreui/icons-react'
+import { cilSearch, cilPlus } from '@coreui/icons'
 import url from "../../../config/setting"
 import { Link } from 'react-router-dom'
 import EmployeeAPI from '../../../config/admin/EmployeeAPI'
+import GradeAPI from '../../../config/admin/GradeAPI'
+import LevelAPI from '../../../config/admin/LevelAPI'
+import SubFieldAPI from '../../../config/admin/SubFieldAPI'
+import { useLocation } from "react-router-dom";
 
-export class Employee extends Component {
-  constructor(props) {
-    super(props)
-    this.state = {
-      employees: [],
-      urutan : 1,
-      filter_query: '',     
-      id: 0,
-      employee_name: '', 
+const Employee = () => {
+  const [employees, setEmployees] = useState([])
+  const [levels, setLevels] = useState([])
+  const [grades, setGrades] = useState([])
+  const [subfields, setSubfields] = useState([])
+  const [message, setMessage] = useState("");
+  const [chosenEmployee, setChosenEmployee] = useState({
+    visible: false,
+    name: "",
+    id: 0,
+  })
+
+  useEffect(() => {
+    setMessage(location?.state?.successMessage)
+    LevelAPI.get().then((res) => {
+      setLevels(res.data)
+    })
+    GradeAPI.get().then((res) => {
+      setGrades(res.data)
+    })
+    SubFieldAPI.get().then((res) => {
+      setSubfields(res.data)
+    })    
+    getData()
+  }, [])    
+
+  const filterSearch = (e) => {
+    e.preventDefault()
+
+    let query = ""
+    if(document.getElementById("filter_nip").value.length != 0){
+      query += `&filters[NIP][$contains]=${document.getElementById("filter_nip").value}`
     }
-    this.handlechange = this.handlechange.bind(this);
-  }
-  
-  handlechange = (event) => {
-    event.preventDefault()
-    this.setState({ filter_query: event.target.value, urutan: 1 }, () => {
-      EmployeeAPI.find(this.state.filter_query).then(
-        (res) => {
-          if(res.data.length != 0){
-            this.setState({
-              employees: res.data,
-              urutan: 1
-            });
-          }
+    if(document.getElementById("filter_nama").value.length != 0){
+      query += `&filters[Name][$contains]=${document.getElementById("filter_nama").value}`
+    }
+    if(document.querySelector('input[name="filter_gender"]:checked') != undefined){
+      query += `&filters[Gender][$contains]=${document.querySelector('input[name="filter_gender"]:checked').value}`
+    }
+    if(document.getElementById("filter_birthplace").value.length != 0){
+      query += `&filters[BirthPlace][$contains]=${document.getElementById("filter_birthplace").value}`
+    }        
+    if(document.querySelector('input[type="date"]').value.length != 0){
+      query += `&filters[BirthDate][$gte]=${document.querySelector('input[type="date"]').value}`
+    }
+    if(document.getElementById("filter_email").value.length != 0){
+      query += `&filters[Email][$contains]=${document.getElementById("filter_email").value}`
+    }
+    if(document.getElementById("filter_phonenumber").value.length != 0){
+      query += `&filters[PhoneNumber][$contains]=${document.getElementById("filter_phonenumber").value}`
+    }
+    if(document.getElementById("filter_religion").value.length != 0){
+      query += `&filters[Religion][$contains]=${document.getElementById("filter_religion").value}`
+    }
+    if(document.getElementById("filter_grade").value.length != 0){
+      query += `&filters[grades][id][$eq]=${document.getElementById("filter_grade").value}`
+    }
+    if(document.getElementById("filter_level").value.length != 0){
+      query += `&filters[levels][id][$eq]=${document.getElementById("filter_level").value}`
+    }
+    if(document.getElementById("filter_subfield").value.length != 0){
+      query += `&filters[sub_fields][id][$eq]=${document.getElementById("filter_subfield").value}`
+    }    
+
+    EmployeeAPI.find(query).then(
+      (res) => {
+        console.log(res.data)
+        if(res.data.length != 0){
+          setEmployees(res.data)
+        } else {
+          setEmployees([])
         }
-      )
-    });
-  };
-
-  componentDidMount(){
-    this.getData()
-  }
-
-  getData(){
-    EmployeeAPI.get().then((res) => {
-      console.log(res.data)
-      this.setState({
-        employees: res.data,
-        urutan: 1
-      })
-    })
-  }
-
-  deleteData(){
-    EmployeeAPI.delete(this.state.id).then((res) => {
-      this.setState({visible:false})
-      this.getData()
-    })
-  }
-
-  render(){
-    return (
-      <CRow>
-        <CCol xs={12}>
-          <CCard className="mb-4">
-            <CCardHeader>
-              <strong>Data Karyawan</strong>
-            </CCardHeader>
-            <CCardBody className='mt-3 w-100' style={{ overflowX: "auto"}}>
-              <CRow>
-                <CCol xs={9}>
-                  <CFormInput
-                    type="text"
-                    name='filter_query'
-                    id="filter_query"
-                    placeholder="Masukkan Kata Kunci Pencarian . . ."
-                    onChange={this.handlechange}
-                  />
-                </CCol>
-                <CCol>
-                  <Link to={'/employee/tambah'}>
-                    <CButton
-                      color='primary'
-                      style={{width:'100%'}}
-                      variant="outline" >
-                        Tambah Karyawan
-                    </CButton>
-                  </Link>
-                </CCol>
-              </CRow>
-              <CRow className='pl-2 mr-5'>
-                <CTable striped className='mt-3 text-center'>
-                  <CTableHead>
-                    <CTableRow>
-                      <CTableHeaderCell scope="col">No</CTableHeaderCell>
-                      <CTableHeaderCell scope="col">Photo</CTableHeaderCell>
-                      <CTableHeaderCell scope="col">NIP</CTableHeaderCell>
-                      <CTableHeaderCell scope="col">Name</CTableHeaderCell>
-                      <CTableHeaderCell scope="col">Gender</CTableHeaderCell>
-                      <CTableHeaderCell scope="col">Religion</CTableHeaderCell>
-                      <CTableHeaderCell scope="col">Place and Date Birth</CTableHeaderCell>
-                      <CTableHeaderCell scope="col">Email</CTableHeaderCell>
-                      <CTableHeaderCell scope="col">Phone Number</CTableHeaderCell>
-                      <CTableHeaderCell scope="col">Action</CTableHeaderCell>
-                    </CTableRow>
-                  </CTableHead>
-                  <CTableBody>
-                    { this.state.employees.map(employee =>
-                      <CTableRow key={employee.id}>
-                        <CTableHeaderCell scope="row">{ this.state.urutan ++ }</CTableHeaderCell>
-                        <CTableDataCell>
-                          {
-                            employee.attributes.Photo.data != null ?
-                              <img className='foto_karyawan' src={url + employee.attributes.Photo.data.attributes.formats.thumbnail.url} alt="Photo" />  :
-                              <h3>-</h3>
-                          }
-                        </CTableDataCell>
-                        <CTableDataCell>{employee.attributes.NIP}</CTableDataCell>
-                        <CTableDataCell>{employee.attributes.Name}</CTableDataCell>
-                        <CTableDataCell>{employee.attributes.Gender}</CTableDataCell>
-                        <CTableDataCell>{employee.attributes.Religion}</CTableDataCell>
-                        <CTableDataCell>{employee.attributes.BirthPlace}, {employee.attributes.BirthDate}</CTableDataCell>
-                        <CTableDataCell>{employee.attributes.Email}</CTableDataCell>
-                        <CTableDataCell>{employee.attributes.PhoneNumber}</CTableDataCell>
-                        <CTableDataCell>
-                          <Link 
-                            to={{
-                              pathname: `/employee/edit/${employee.id}`,
-                            }}>
-                            <CButton color={'warning'} variant="outline">Edit</CButton>
-                          </Link>
-                          <CButton 
-                            color={'danger'} 
-                            variant="outline" 
-                            style={{marginLeft: '10px'}}
-                            onClick={() => this.setState({ 
-                              visible: true, 
-                              id: employee.id, 
-                              employee_name: employee.attributes.Name, 
-                              urutan: 1 
-                            })}>Delete</CButton>
-                        </CTableDataCell>
-                      </CTableRow>
-                    )}
-                  </CTableBody>
-                </CTable>
-              </CRow>
-              <CModal backdrop="static" visible={this.state.visible} onClose={() => this.setState({ visible: false, urutan: 1 })}>
-                <CModalHeader>
-                  <CModalTitle>Are You Sure?</CModalTitle>
-                </CModalHeader>
-                <CModalBody>
-                  This will remove {this.state.employee_name} as registrant permanently
-                </CModalBody>
-                <CModalFooter>
-                  <CButton color="secondary" onClick={() => this.setState({ visible: false, urutan: 1 })}>
-                    Close
-                  </CButton>
-                  <CButton color="danger" onClick={() => this.deleteData()}>Delete</CButton>
-                </CModalFooter>
-              </CModal> 
-            </CCardBody>
-          </CCard>
-        </CCol>
-      </CRow>
+      }
     )
   }
+
+  const getData = () => {
+    EmployeeAPI.get().then((res) => {
+      console.log(res.data)
+      setEmployees(res.data)
+    })
+  }
+
+  const deleteData = () => {
+    EmployeeAPI.delete(chosenEmployee.id).then((res) => {
+      setChosenEmployee({visible:false})
+      getData()
+    })
+  }
+
+  return (
+    <CRow>
+      <CCol xs={12}>
+        <CAccordion>
+          <CAccordionItem itemKey={1}>
+            <CAccordionHeader><CIcon icon={cilSearch} style={{ marginRight: "10px" }}/>Pencarian Data</CAccordionHeader>
+            <CAccordionBody>
+              <CForm onSubmit={filterSearch}>
+                <CRow className='mt-2'>
+                  <CCol xs={6}>
+                    <CFormLabel htmlFor="exampleFormControlInput1">NIP</CFormLabel>
+                    <CFormInput
+                      type="text"
+                      name='filter_nip'
+                      id="filter_nip"
+                      placeholder="Enter NIP . . ."
+                    />
+                  </CCol>
+                  <CCol xs={6}>
+                    <CFormLabel htmlFor="exampleFormControlInput1">Nama Lengkap</CFormLabel>
+                    <CFormInput
+                      type="text"
+                      name='filter_nama'
+                      id="filter_nama"
+                      placeholder="Enter Full Name . . ."
+                    />
+                  </CCol>
+                </CRow>
+                <CRow className='mt-3'>
+                  <CCol xs={6}>
+                    <CFormLabel htmlFor="gender">Gender</CFormLabel>                      
+                    <CCol xs={12}>
+                      <CFormCheck
+                        inline
+                        type="radio"
+                        name="filter_gender"
+                        id="filter_gender1"
+                        value=""
+                        label="None"
+                      />
+                      <CFormCheck
+                        inline
+                        type="radio"
+                        name="filter_gender"
+                        id="filter_gender2"
+                        value="Male"
+                        label="Male"
+                      />
+                      <CFormCheck
+                        inline
+                        type="radio"
+                        name="filter_gender"
+                        id="filter_gender3"
+                        value="Female"
+                        label="Female"
+                      />
+                    </CCol>
+                  </CCol>
+                  <CCol xs={6}>
+                    <CFormLabel htmlFor="exampleFormControlInput1">Birth Place</CFormLabel>
+                    <CFormInput type="text" name="filter_birthplace" id="filter_birthplace" placeholder='Enter Birth Place . . .' />
+                  </CCol>
+                </CRow>
+                <CRow className='mt-3'>
+                  <CCol xs={6}>
+                    <CFormLabel htmlFor="exampleFormControlInput1">Birth Date</CFormLabel>
+                    <CFormInput type="date" name="filter_birthDate" id="filter_birthDate"/>
+                  </CCol>
+                  <CCol xs={6}>
+                    <CFormLabel htmlFor="exampleFormControlInput1">Email</CFormLabel>
+                    <CFormInput type="email" name="filter_email" id="filter_email" placeholder='Enter Email . . .'/>
+                  </CCol>
+                </CRow> 
+                <CRow className='mt-3'>
+                  <CCol xs={6}>
+                    <CFormLabel htmlFor="exampleFormControlInput1">Phone Number</CFormLabel>
+                    <CFormInput type="number" name="filter_phonenumber" id="filter_phonenumber" placeholder='Enter Phone Number . . .'/>
+                  </CCol>
+                  <CCol xs={6}>
+                    <CFormLabel htmlFor="exampleFormControlInput1">Religion</CFormLabel>
+                    <CFormSelect name="filter_religion" id="filter_religion" className="mb-3" aria-label="Large select example">
+                      <option value="">Choose Religion</option>
+                      <option value="Islam">Islam</option>
+                      <option value="Kristen">Kristen</option>
+                      <option value="Katolik">Katolik</option>
+                      <option value="Buddha">Buddha</option>
+                      <option value="Hindu">Hindu</option>
+                    </CFormSelect>
+                  </CCol>
+                </CRow> 
+                <CRow className='mt-3'>
+                  <CCol xs={6}>
+                    <CFormLabel htmlFor="exampleFormControlInput1">Grade</CFormLabel>
+                    <CFormSelect name="filter_grade" id="filter_grade" className="mb-3" aria-label="Large select example">
+                      <option value="">Choose Grade</option>
+                      { grades.map(grade =>
+                        <option key={ grade.id } value={ grade.id } >{ grade.attributes.grade_name }</option>
+                      )}
+                    </CFormSelect>
+                  </CCol>
+                  <CCol xs={6}>
+                    <CFormLabel htmlFor="exampleFormControlInput1">Level</CFormLabel>
+                    <CFormSelect name="filter_level" id="filter_level" className="mb-3" aria-label="Large select example">
+                      <option value="">Choose Level</option>
+                      { levels.map(level =>
+                        <option key={ level.id } value={ level.id } >{ level.attributes.functional_name } - { level.attributes.structural_name }</option>
+                      )}
+                    </CFormSelect>
+                  </CCol>
+                </CRow>
+                <CRow className='mt-3'>
+                  <CCol xs={6}>
+                    <CFormLabel htmlFor="exampleFormControlInput1">Subfied</CFormLabel>
+                    <CFormSelect name="filter_subfield" id="filter_subfield" className="mb-3" aria-label="Large select example">
+                      <option value="">Choose Subfield</option>
+                      { subfields.map(subfield =>
+                        <option key={ subfield.id } value={ subfield.id } >{ subfield.attributes.subfield_name }</option>
+                      )}
+                    </CFormSelect>
+                  </CCol>
+                </CRow>                
+                <CRow>
+                  <hr className='mt-4' style={{ marginLeft: "12px", width: "97.6%" }} />
+                </CRow>
+                <CRow>
+                  <CCol style={{ display: "flex", justifyContent: "right" }}>
+                    <CButton
+                      type='submit'
+                      color='primary'
+                      style={{ width:'10%', borderRadius: "50px", fontSize: "14px" }} >
+                        <CIcon icon={cilSearch} style={{ marginRight: "10px", color: "#FFFFFF" }}/>
+                        Cari
+                    </CButton>                                          
+                  </CCol>
+                </CRow>
+              </CForm>
+            </CAccordionBody>
+          </CAccordionItem>
+        </CAccordion>        
+        <CCol xs={12} className="mt-3">
+          { message && <CAlert color="success" dismissible onClose={() => { setMessage("") }}> { message } </CAlert> }
+        </CCol>          
+        <CCard className="mb-4 mt-3">
+          <CCardHeader>
+            <strong>Data Karyawan</strong>
+          </CCardHeader>
+          <CCardBody style={{ overflowX: "auto"}}>
+            <CRow>
+              <CCol>
+                <Link to={'/employee/tambah'}>
+                  <CButton
+                    color='primary'
+                    style={{width:'18%', borderRadius: "50px", fontSize: "14px"}} >
+                    <CIcon icon={cilPlus} style={{ marginRight: "10px", color: "#FFFFFF" }}/>
+                      Tambah Karyawan
+                  </CButton>
+                </Link>
+              </CCol>
+            </CRow>
+            <CRow className='pl-2 mr-5'>
+              <CTable striped className='mt-3 text-center'>
+                <CTableHead>
+                  <CTableRow>
+                    <CTableHeaderCell scope="col">No</CTableHeaderCell>
+                    <CTableHeaderCell scope="col">Photo</CTableHeaderCell>
+                    <CTableHeaderCell scope="col">NIP</CTableHeaderCell>
+                    <CTableHeaderCell scope="col">Name</CTableHeaderCell>
+                    <CTableHeaderCell scope="col">Gender</CTableHeaderCell>
+                    <CTableHeaderCell scope="col">Religion</CTableHeaderCell>
+                    <CTableHeaderCell scope="col">Place and Date Birth</CTableHeaderCell>
+                    <CTableHeaderCell scope="col">Email</CTableHeaderCell>
+                    <CTableHeaderCell scope="col">Phone Number</CTableHeaderCell>
+                    <CTableHeaderCell scope="col">Grade</CTableHeaderCell>
+                    <CTableHeaderCell scope="col">Level</CTableHeaderCell>
+                    <CTableHeaderCell scope="col">Subfield</CTableHeaderCell>
+                    <CTableHeaderCell scope="col">Action</CTableHeaderCell>
+                  </CTableRow>
+                </CTableHead>
+                <CTableBody>
+                  { employees.map((employee, index) =>
+                    <CTableRow key={employee.id}>
+                      <CTableHeaderCell scope="row">{ index+1 }</CTableHeaderCell>
+                      <CTableDataCell>
+                        {
+                          <img className='foto_karyawan' src={url + employee?.attributes?.Photo?.data?.attributes?.formats?.thumbnail?.url} alt="Photo" />
+                        }
+                      </CTableDataCell>
+                      <CTableDataCell>{employee.attributes.NIP}</CTableDataCell>
+                      <CTableDataCell>{employee.attributes.Name}</CTableDataCell>
+                      <CTableDataCell>{employee.attributes.Gender}</CTableDataCell>
+                      <CTableDataCell>{employee.attributes.Religion}</CTableDataCell>
+                      <CTableDataCell>{employee.attributes.BirthPlace}, {employee.attributes.BirthDate}</CTableDataCell>
+                      <CTableDataCell>{employee.attributes.Email}</CTableDataCell>
+                      <CTableDataCell>{employee.attributes.PhoneNumber}</CTableDataCell>
+                      <CTableDataCell>{employee?.attributes?.grades?.data[0]?.attributes?.grade_name}</CTableDataCell>
+                      <CTableDataCell>{employee?.attributes?.levels?.data[0]?.attributes?.functional_name} - {employee?.attributes?.levels?.data[0]?.attributes?.structural_name} </CTableDataCell>
+                      <CTableDataCell>{employee?.attributes?.sub_fields?.data[0]?.attributes?.subfield_name}</CTableDataCell>
+                      <CTableDataCell>
+                        <Link 
+                          to={{
+                            pathname: `/employee/edit/${employee.id}`,
+                          }}>
+                          <CButton 
+                            color={'warning'} 
+                            variant="outline"
+                            style={{width: '100%'}}>
+                              Edit</CButton>
+                        </Link>
+                        <CButton 
+                          color={'danger'} 
+                          variant="outline" 
+                          style={{marginTop: '10px'}}
+                          onClick={() => setChosenEmployee({ 
+                            visible: true, 
+                            id: employee.id, 
+                            name: employee.attributes.Name
+                          })}>Delete</CButton>
+                      </CTableDataCell>
+                    </CTableRow>
+                  )}
+                </CTableBody>
+              </CTable>
+            </CRow>
+            <CModal backdrop="static" visible={chosenEmployee.visible} onClose={() => setChosenEmployee({ visible: false })}>
+              <CModalHeader>
+                <CModalTitle>Are You Sure?</CModalTitle>
+              </CModalHeader>
+              <CModalBody>
+                This will remove {chosenEmployee.name} as employee permanently
+              </CModalBody>
+              <CModalFooter>
+                <CButton color="secondary" onClick={() => setChosenEmployee({ visible: false })}>
+                  Close
+                </CButton>
+                <CButton color="danger" onClick={() => deleteData()}>Delete</CButton>
+              </CModalFooter>
+            </CModal> 
+          </CCardBody>
+        </CCard>
+      </CCol>
+    </CRow>
+  )
 }
 
 export default Employee

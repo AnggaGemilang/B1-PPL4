@@ -51,7 +51,7 @@ export class TambahDirectorate extends Component {
     const body = {
       data: {
         directorate_name: this.state.directorate_name,
-        unit: this.state.unit
+        units: this.state.unit
       }
     };
 
@@ -66,11 +66,6 @@ export class TambahDirectorate extends Component {
   }
 
   render(){
-
-    if(localStorage.getItem("auth") == null){
-      window.location = "/#/login";
-    }
-
     return (
       <CRow>
         <CCol xs={12}>
