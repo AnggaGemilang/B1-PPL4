@@ -285,20 +285,8 @@ const Administrasi = () => {
             <strong>Data Administrasi</strong>
           </CCardHeader>
           <CCardBody style={{ overflowX: "auto"}}>
-            <CRow>
-              <CCol>
-                <Link to={'/employee/tambah'}>
-                  <CButton
-                    color='primary'
-                    style={{width:'20%', borderRadius: "50px", fontSize: "14px"}} >
-                    <CIcon icon={cilPlus} style={{ marginRight: "10px", color: "#FFFFFF" }}/>
-                      Tambah Administrasi
-                  </CButton>
-                </Link>
-              </CCol>
-            </CRow>
             <CRow className='pl-2 mr-5'>
-              <CTable striped className='mt-3 text-center'>
+              <CTable striped className='text-center'>
                 <CTableHead>
                   <CTableRow>
                     <CTableHeaderCell scope="col">No</CTableHeaderCell>

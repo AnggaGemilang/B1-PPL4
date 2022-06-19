@@ -30,14 +30,14 @@ import CIcon from '@coreui/icons-react'
 import { useLocation } from "react-router-dom";
 import { cilSearch, cilPlus } from '@coreui/icons'
 import url from "../../../config/setting"
-import DataPesertaAPI from '../../../config/user/DataPesertaAPI'
+import MappingAPI from '../../../config/user/MappingAPI'
 import { Link } from 'react-router-dom'
 
-const DataPeserta = () => {
+const DataPenilaian = () => {
   const location = useLocation();
-  const [registrants, setRegistrants] = useState([]);
+  const [mappings, setMappings] = useState([]);
   const [message, setMessage] = useState("");
-  const [chosenRegistrant, setChosenRegistrant] = useState({
+  const [chosenMapping, setChosenMapping] = useState({
     visible: false,
     name: "",
     id: 0    
@@ -71,18 +71,18 @@ const DataPeserta = () => {
   }
   
   const getData = () => {
-    DataPesertaAPI.get().then((res) => {
-      setRegistrants(res.data)
+    MappingAPI.get().then((res) => {
+      setMappings(res.data)
     })
   }
 
-  const deleteData = () => {
-    DataPesertaAPI.delete(chosenRegistrant.id).then((res) => {
-      setMessage("Registrant has deleted successfully")
-      setChosenRegistrant({ visible: false })
-      getData()
-    })
-  }
+  // const deleteData = () => {
+  //   DataPesertaAPI.delete(chosenMapping.id).then((res) => {
+  //     setMessage("Registrant has deleted successfully")
+  //     setChosenMapping({ visible: false })
+  //     getData()
+  //   })
+  // }
 
   return (
     <CRow>
@@ -135,17 +135,17 @@ const DataPeserta = () => {
         </CCol>                 
         <CCard className="mb-4 mt-3">
           <CCardHeader>
-            <strong>Data Peserta</strong>
+            <strong>Data Pendaftaran</strong>
           </CCardHeader>
           <CCardBody>
             <CRow>
               <CCol xs={12}>
-                <Link to={'/tambahpeserta'}>
+                <Link to={'/fitandproper/pendaftaran'}>
                   <CButton
                     color='primary'
-                    style={{width:'17%', borderRadius: "50px", fontSize: "14px"}} >
+                    style={{width:'19%', borderRadius: "50px", fontSize: "14px"}} >
                       <CIcon icon={cilPlus} style={{ marginRight: "10px", color: "#FFFFFF" }}/>
-                      Tambah Peserta
+                      Tambah Pendaftaran
                   </CButton>
                 </Link>
               </CCol>
@@ -154,26 +154,27 @@ const DataPeserta = () => {
                 <CTableHead>
                    <CTableRow>
                     <CTableHeaderCell scope="col">No</CTableHeaderCell>
-                    <CTableHeaderCell scope="col">Foto</CTableHeaderCell>
                     <CTableHeaderCell scope="col">Nama</CTableHeaderCell>
                     <CTableHeaderCell scope="col">NIP</CTableHeaderCell>
+                    <CTableHeaderCell scope="col">Jabatan</CTableHeaderCell>
+                    <CTableHeaderCell scope="col">Proyeksi</CTableHeaderCell>
+                    <CTableHeaderCell scope="col">Tanggal</CTableHeaderCell>
+                    <CTableHeaderCell scope="col">Penguji</CTableHeaderCell>
+                    <CTableHeaderCell scope="col">Lampiran File</CTableHeaderCell>
                     <CTableHeaderCell scope="col">Action</CTableHeaderCell>
                   </CTableRow>
                 </CTableHead>
                 <CTableBody>
-                  { registrants.map( (registrant, index) =>
-                    <CTableRow key={registrant.id}>
+                  { mappings.map( (mapping, index) =>
+                    <CTableRow key={mapping.id}>
                       <CTableHeaderCell scope="row">{ index+1 }</CTableHeaderCell>
-                      <CTableDataCell>
-                        <img className='foto_karyawan' src={url + registrant?.attributes?.employee?.data?.attributes?.Photo?.data?.attributes?.formats?.thumbnail?.url} alt="Photo" />
-                      </CTableDataCell>
-                      <CTableDataCell>{registrant?.attributes?.employee?.data?.attributes?.Name}</CTableDataCell>
-                      <CTableDataCell>{registrant?.attributes?.employee?.data?.attributes?.NIP}</CTableDataCell>
+                      <CTableDataCell>{mapping?.attributes?.registrants?.data[0]?.attributes?.employee?.data?.attributes.Name}</CTableDataCell>
+                      <CTableDataCell>{mapping?.attributes?.registrants?.data[0]?.attributes?.employee?.data?.attributes.NIP}</CTableDataCell>
                       <CTableDataCell>
                         <CButton
                           color='danger'
                           variant="outline" 
-                          onClick={() => setChosenRegistrant({ 
+                          onClick={() => setChosenMapping({ 
                             visible: true, 
                             name: registrant.attributes.employee.data.attributes.Name,
                             id: registrant.id
@@ -186,20 +187,20 @@ const DataPeserta = () => {
                   )}
                 </CTableBody>
               </CTable>
-            <CModal backdrop="static" visible={chosenRegistrant.visible} onClose={() => setChosenRegistrant({ visible: false })}>
+            {/* <CModal backdrop="static" visible={chosenMapping.visible} onClose={() => setChosenMapping({ visible: false })}>
               <CModalHeader>
                 <CModalTitle>Are You Sure?</CModalTitle>
               </CModalHeader>
               <CModalBody>
-                This will remove {chosenRegistrant.name} as registrant permanently
+                This will remove {chosenMapping.name} as registrant permanently
               </CModalBody>
               <CModalFooter>
-                <CButton color="secondary" onClick={() => setChosenRegistrant({ visible: false })}>
+                <CButton color="secondary" onClick={() => setChosenMapping({ visible: false })}>
                   Close
                 </CButton>
                 <CButton color="danger" onClick={() => deleteData()}>Delete</CButton>
               </CModalFooter>
-            </CModal>
+            </CModal> */}
           </CCardBody>
         </CCard>
       </CCol>
@@ -207,4 +208,4 @@ const DataPeserta = () => {
   )
 }
 
-export default DataPeserta
+export default DataPenilaian

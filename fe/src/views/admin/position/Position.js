@@ -28,12 +28,15 @@ import {
   CFormSelect  
 } from '@coreui/react'
 import CIcon from '@coreui/icons-react'
+import { useLocation, useNavigate } from "react-router-dom";
 import { cilSearch, cilPlus } from '@coreui/icons'
-import { Link } from 'react-router-dom'
 import GradeAPI from '../../../config/admin/GradeAPI'
 import PositionAPI from '../../../config/admin/PositionAPI'
 
 const Grade = () => {
+  const location = useLocation(); 
+  const navigate = useNavigate();
+
   const [grades, setGrades] = useState([])
   const [positions, setPositions] = useState([])
   const [message, setMessage] = useState("");
@@ -80,8 +83,9 @@ const Grade = () => {
   }
 
   const deleteData = () => {
-    PositionAPI.delete(state.id).then((res) => {
+    PositionAPI.delete(chosenPosition.id).then((res) => {
       setChosenPosition({ visible:false })
+      setMessage("Position has deleted successfully")        
       getData()
     })
   }
@@ -142,14 +146,13 @@ const Grade = () => {
             <CCardBody>
               <CRow>
                 <CCol>
-                  <Link to={'/directorate/tambah'}>
-                    <CButton
-                      color='primary'
-                      style={{width:'18%', borderRadius: "50px", fontSize: "14px"}} >
-                      <CIcon icon={cilPlus} style={{ marginRight: "10px", color: "#FFFFFF" }} />
-                        Tambah Position
-                    </CButton>
-                  </Link>
+                  <CButton
+                    color='primary'
+                    style={{width:'18%', borderRadius: "50px", fontSize: "14px"}}
+                    onClick={() => navigate('/position/tambah', {state: { status: 'tambah' } }) } >
+                    <CIcon icon={cilPlus} style={{ marginRight: "10px", color: "#FFFFFF" }} />
+                    Tambah Position
+                  </CButton>
                 </CCol>
               </CRow>
               <CRow className='pl-2 mr-5'>
@@ -166,15 +169,16 @@ const Grade = () => {
                     { positions.map( (position, index) =>
                       <CTableRow key={position.id}>
                         <CTableHeaderCell scope="row">{ index+1 }</CTableHeaderCell>
-                        <CTableDataCell>{position.attributes.position_name}</CTableDataCell>
-                        <CTableDataCell>{position?.attributes?.grades?.data[0]?.attributes?.grade_name}</CTableDataCell>
+                        <CTableDataCell>{position?.attributes?.position_name}</CTableDataCell>
+                        <CTableDataCell>{position?.attributes?.grade?.data?.attributes?.grade_name}</CTableDataCell>
                         <CTableDataCell>
-                          <Link 
-                            to={{
-                              pathname: `/grade/edit/${position.id}`,
-                            }}>
-                            <CButton color={'warning'} variant="outline">Edit</CButton>
-                          </Link>
+                          <CButton 
+                            color={'warning'} 
+                            variant="outline"
+                            onClick={() => navigate(
+                              '/position/edit', 
+                              {state: { data: position, status: 'edit' }})}>
+                            Edit</CButton>
                           <CButton 
                             color={'danger'} 
                             variant="outline" 

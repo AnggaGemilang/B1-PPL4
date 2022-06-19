@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import React, { useState, useEffect } from 'react'
 import {
   CButton,
   CCard,
@@ -9,74 +9,97 @@ import {
   CFormInput,
   CFormLabel,
   CRow,
+  CCallout,
+  CAlert         
 } from '@coreui/react'
+import {useNavigate, useLocation} from 'react-router-dom'
 import GradeAPI from '../../../config/admin/GradeAPI'
 
-export class TambahGrade extends Component {
-  constructor(props) {
-    super(props)
-    this.state = {
-      grade_name: '',
-    }
-    this.handlechange= this.handlechange.bind(this);    
-  }
+const TambahGrade = () => {
+  const location = useLocation();
+  const navigate = useNavigate();
 
-  handlechange = (e) => {
-    this.setState({grade_name: e.target.value});
-  };
+  const [message, setMessage] = useState("");
+  const [state, setState] = useState({
+    status: location.state.status,
+    data: location?.state?.data
+  });  
 
-  postData = (event) => {
+  const postData = (event) => {
     event.preventDefault()
-
-    var name = this.state.grade_name
-
+    var name = document.getElementById("grade_name").value
     const body = {
       data: {
         grade_name: name,
       }
     };
 
-    GradeAPI.add(body).then(
-      (res) => {
-          window.location = "http://localhost:3000/admin#/grade";
-      },
-      (err) => {
-        console.log("err", err);
-      }
-    );    
+    if(state.status == "tambah"){
+      GradeAPI.add(body).then(
+        (res) => {
+          navigate('/grade', {state: { successMessage: 'Grade has added successfully' } }); 
+        },
+        (err) => {
+          console.log("err", err);
+        }
+      );    
+    } else {
+      GradeAPI.edit(state.data.id, body).then(
+        (res) => {
+          navigate('/grade', {state: { successMessage: 'Grade has updated successfully' } }); 
+        },
+        (err) => {
+          console.log("err", err);
+        }
+      );
+    }
   }
 
-  render(){
-
-    if(localStorage.getItem("auth") == null){
-      window.location = "/#/login";
-    }
-
-    return (
-      <CRow>
+  return (
+    <CRow>
+      <CCol xs={12}>
+        <CCol xs={12} >
+          <CCallout color="info" className="bg-white">
+            <p style={{ fontSize: "18px", marginBottom: "0px" }}><b>Catatan</b></p>
+            <ul className='catatan' style={{ marginBottom: "0px" }}>
+              <li>Lorem Ipsum is simply dummy text of the printing and typesetting industry</li>
+              <li>Contrary to popular belief, Lorem Ipsum is not simply random text</li>
+              <li>It is a long established fact that a reader will be distracted by the</li>
+              <li>There are many variations of passages of Lorem Ipsum available</li>
+            </ul>
+          </CCallout>
+        </CCol>
+        <CCol xs={12}>
+          { message && <CAlert color="danger" dismissible onClose={() => { setMessage("") }}> { message } </CAlert> }
+        </CCol>     
         <CCol xs={12}>
           <CCard className="mb-4">
             <CCardHeader>
-              <strong>Tambah Grade</strong>
+              <strong>{ state.status == "tambah" ? "Tambah" : "Edit"} Grade</strong>
             </CCardHeader>
             <CCardBody>
-              <CForm onSubmit={this.postData} method="post">
+              <CForm onSubmit={postData} method="post">
                 <CRow className="mb-3">
                   <CFormLabel htmlFor="grade_name" className="col-sm-2 col-form-label" placeholder='Masukkan NIK'>
                     Nama Grade
                   </CFormLabel>
                   <CCol sm={10}>
-                    <CFormInput type="text" name="grade_name" id="grade_name" onChange={this.handlechange}/>
+                    <CFormInput
+                      type="text"
+                      name="grade_name"
+                      id="grade_name"
+                      placeholder='Enter Grade Name . . .'
+                      defaultValue={ state.status == "tambah" ? "" : state.data.attributes.grade_name } />
                   </CCol>
                 </CRow>
                 <CButton type="submit" style={{width:'100%'}}>Submit</CButton>
               </CForm>
             </CCardBody>
           </CCard>
-        </CCol>
-      </CRow>        
-    )    
-  }
+        </CCol>  
+      </CCol>
+    </CRow>        
+  )  
 }
 
 export default TambahGrade

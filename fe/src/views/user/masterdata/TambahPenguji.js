@@ -25,7 +25,6 @@ const TambahPenguji = () => {
   });
 
   useEffect(() => {
-    console.log(nipValue)
     if (nipValue.length > 1) {
       DataPengujiAPI.findEmployee(nipValue).then(
       (res) => {

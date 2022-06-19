@@ -24,17 +24,19 @@ import {
   CAccordionItem, 
   CFormLabel,
   CAlert,
-  CForm,
-  CFormSelect  
+  CForm
 } from '@coreui/react'
 import CIcon from '@coreui/icons-react'
+import { useLocation, useNavigate } from "react-router-dom"
 import { cilSearch, cilPlus } from '@coreui/icons'
-import { Link } from 'react-router-dom'
 import UnitAPI from '../../../config/admin/UnitAPI'
 
-const Grade = () => {
+const Unit = () => {
+  const location = useLocation()
+  const navigate = useNavigate()
+
   const [units, setUnits] = useState([])
-  const [message, setMessage] = useState("");
+  const [message, setMessage] = useState("")
   const [chosenUnit, setChosenUnit] = useState({
     visible: false,
     name: "",
@@ -75,8 +77,9 @@ const Grade = () => {
   }
 
   const deleteData = () => {
-    UnitAPI.delete(state.id).then((res) => {
+    UnitAPI.delete(chosenUnit.id).then((res) => {
       setChosenUnit({ visible:false })
+      setMessage("Unit has deleted successfully")        
       getData()
     })
   }
@@ -137,14 +140,13 @@ const Grade = () => {
             <CCardBody>
               <CRow>
                 <CCol>
-                  <Link to={'/directorate/tambah'}>
-                    <CButton
-                      color='primary'
-                      style={{width:'18%', borderRadius: "50px", fontSize: "14px"}} >
-                      <CIcon icon={cilPlus} style={{ marginRight: "10px", color: "#FFFFFF" }} />
-                        Tambah Unit
-                    </CButton>
-                  </Link>
+                  <CButton
+                    color='primary'
+                    style={{width:'18%', borderRadius: "50px", fontSize: "14px"}}
+                    onClick={() => navigate('/unit/tambah', {state: { status: 'tambah' } }) } >
+                    <CIcon icon={cilPlus} style={{ marginRight: "10px", color: "#FFFFFF" }} />
+                    Tambah Unit
+                  </CButton>
                 </CCol>
               </CRow>
               <CRow className='pl-2 mr-5'>
@@ -164,16 +166,18 @@ const Grade = () => {
                         <CTableDataCell>{unit.attributes.unit_name}</CTableDataCell>
                         <CTableDataCell>{unit.attributes.address}</CTableDataCell>
                         <CTableDataCell>
-                          <Link 
-                            to={{
-                              pathname: `/unit/edit/${unit.id}`,
-                            }}>
-                            <CButton color={'warning'} variant="outline">Edit</CButton>
-                          </Link>
+                          <CButton 
+                            color={'warning'} 
+                            variant="outline"
+                            style={{width: '75px'}}                            
+                            onClick={() => navigate(
+                              '/unit/edit', 
+                              {state: { data: unit, status: 'edit' }})}>
+                            Edit</CButton>
                           <CButton 
                             color={'danger'} 
                             variant="outline" 
-                            style={{marginLeft: '10px'}}
+                            style={{marginTop: '10px'}}
                             onClick={() => setChosenUnit({ 
                               visible: true, 
                               id: unit.id, 
@@ -206,4 +210,4 @@ const Grade = () => {
     )
 }
 
-export default Grade
+export default Unit

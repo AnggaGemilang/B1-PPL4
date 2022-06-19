@@ -22,12 +22,12 @@ const EditEmployee = () => {
 
   const { id } = useParams();
   const [gradesData, setGrades] = useState([])
-  const [gradeData, setGrade] = useState(0)
+  const [gradeData, setGrade] = useState("")
   const [levelsData, setLevels] = useState([])
-  const [levelData, setLevel] = useState(0)
+  const [levelData, setLevel] = useState("")
   const [subFieldsData, setSubfields] = useState([])
-  const [subFieldData, setSubfield] = useState(0)
-  const [nipData, setNip] = useState(0)
+  const [subFieldData, setSubfield] = useState("")
+  const [nipData, setNip] = useState("")
   const [nameData, setName] = useState("")
   const [genderData, setGender] = useState("")
   const [birthDateData, setBirthDate] = useState("")
@@ -44,14 +44,10 @@ const EditEmployee = () => {
     getLevelData()
   }, [])  
 
-  if(localStorage.getItem("auth") == null){
-    window.location = "/#/login";
-  }
-
   const getEmployeeData = () => {
     EmployeeAPI.findById(id).then(
       (res) => {
-        setNip(parseInt(res.data[0].attributes.NIP))
+        setNip(res.data[0].attributes.NIP)
         setName(res.data[0].attributes.Name)
         setGender(res.data[0].attributes.Gender)
         setBirthDate(res.data[0].attributes.BirthDate)
@@ -59,9 +55,10 @@ const EditEmployee = () => {
         setEmail(res.data[0].attributes.Email)
         setReligion(res.data[0].attributes.Religion)
         setPhoneNumber(res.data[0].attributes.PhoneNumber)
-        setLevel(res.data[0].attributes.level.data.id)
-        setGrade(res.data[0].attributes.grade.data.id)
-        setSubfield(res.data[0].attributes.sub_field.data.id)
+        setLevel(res.data[0].attributes.levels.data[0].id)
+        setGrade(res.data[0].attributes.grades.data[0].id)
+        setSubfield(res.data[0].attributes.sub_fields.data[0].id)
+        console.log(nipData)
       },
       (err) => {
         console.log("err", err);
@@ -89,36 +86,46 @@ const EditEmployee = () => {
 
   const postData = (event) => {
     event.preventDefault();
-    const body = {
-      data: {
-        Name: nameData,
-        Gender: genderData,
-        BirthDate: birthDateData,
-        BirthPlace: birthPlaceData,
-        Email: emailData,
-        Religion: religionData,
-        PhoneNumber: phoneNumberData,
-        level: levelData,
-        grade: gradeData,
-        sub_field: subFieldData,
+    let body = {
+      data: {   
+        Name: document.getElementById("name").value,
+        Gender: document.getElementById("gender").value,
+        BirthDate: document.getElementById("birth_date").value,
+        BirthPlace: document.getElementById("birth_place").value,
+        Email: document.getElementById("email").value,
+        Religion: document.getElementById("religion").value,
+        PhoneNumber: document.getElementById("phone_number").value,
+        levels: document.getElementById("level").value,
+        grades: document.getElementById("grade").value,
+        sub_fields: document.getElementById("sub_field").value,
       }
     };
-    console.log(body)
-    EmployeeAPI.edit(id, body).then(
+    EmployeeAPI.edit(state.data.id, body).then(
       (res) => {
-        let formData = new FormData()
-        formData.append('files', photoData)
-        formData.append('ref', 'api::employee.employee')
-        formData.append('refId', res.data.id)
-        formData.append('field', 'Photo')
-        EmployeeAPI.addPhoto(formData).then(
-          (res) => {
-            window.location = 'http://localhost:3000/admin#/employee';
-          },
-          (err) => {
-            console.log("err", err);
-          }
-        );  
+        if(state.photo != null){
+          EmployeeAPI.add(body).then(
+            (res) => {
+              console.log(res.data.id)
+              let formData = new FormData()
+              formData.append('files', state.photo)
+              formData.append('ref', 'api::employee.employee')
+              formData.append('refId', res.data.id)
+              formData.append('field', 'Photo')
+              EmployeeAPI.addPhoto(formData).then(
+                (res) => {
+                  navigate('/employee', {state: { successMessage: 'Employee has updated successfully' } });            
+                },
+                (err) => {
+                  console.log("err", err);
+                }
+              );  
+            },
+            (err) => {
+              console.log("err", err);
+            }
+          );             
+        }
+        navigate('/employee', {state: { successMessage: 'Employee has updated successfully' } });                      
       },
       (err) => {
         console.log("err", err);
@@ -140,7 +147,7 @@ const EditEmployee = () => {
                   NIP
                 </CFormLabel>
                 <CCol sm={10}>
-                  <CFormInput type="number" name="nip" id="nip" value={nipData} disabled/>
+                  <CFormInput type="text" name="nip" id="nip" value={nipData} disabled/>
                 </CCol>
               </CRow>
               <CRow className="mb-3">
