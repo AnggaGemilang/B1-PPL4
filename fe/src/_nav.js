@@ -21,7 +21,7 @@ let _nav
     {
       component: CNavItem,
       name: 'Dashboard',
-      to: '/dashboard',
+      to: '/',
       icon: <CIcon icon={cilSpeedometer} customClassName="nav-icon" />,
     },
     {
@@ -54,13 +54,13 @@ let _nav
       items: [
         {
           component: CNavItem,
-          name: 'Pendaftaran',
-          to: '/fitandproper/pendaftaran',
+          name: 'Data Pendaftaran',
+          to: '/fitandproper/datapendaftaran',
         },
         {
           component: CNavItem,
-          name: 'Penilaian',
-          to: '/fitandproper/penilaian',
+          name: 'Data Penilaian',
+          to: '/fitandproper/datapenilaian',
         },
       ],
     },
@@ -72,13 +72,8 @@ let _nav
       items: [
         {
           component: CNavItem,
-          name: 'Pendaftaran',
-          to: '/wawancara/pendaftaran',
-        },
-        {
-          component: CNavItem,
-          name: 'Penilaian',
-          to: '/wawancara/penilaian',
+          name: 'Data Penilaian',
+          to: '/wawancara/datapenilaian',
         },
       ],
     },

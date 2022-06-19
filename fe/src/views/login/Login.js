@@ -35,14 +35,14 @@ const Login = () => {
     LoginAPI.login(data).then((res) => {
         sessionStorage.setItem("auth", JSON.stringify(res))
         setState({visible: false})
-        navigate('/dashboard');
+        navigate('/');
     }).catch((err) => {
         setState({errorMessage:"Invalid email or password", visible: false})
     })
   }
 
   if(sessionStorage.getItem("auth") != null){
-      navigate('/dashboard');
+      navigate('/');
   }
 
   return (

@@ -27,13 +27,16 @@ import {
   CForm,
   CFormSelect  
 } from '@coreui/react'
-import CIcon from '@coreui/icons-react'
 import { cilSearch, cilPlus } from '@coreui/icons'
-import { Link } from 'react-router-dom'
+import { useNavigate, useLocation } from 'react-router-dom'
+import CIcon from '@coreui/icons-react'
 import DirectorateAPI from '../../../config/admin/DirectorateAPI'
 import UnitAPI from '../../../config/admin/UnitAPI'
 
 const Directorate = () => {
+  const location = useLocation(); 
+  const navigate = useNavigate(); 
+  
   const [directorates, setDirectorates] = useState([])
   const [units, setUnits] = useState([])
   const [message, setMessage] = useState("");
@@ -81,8 +84,9 @@ const Directorate = () => {
   }
 
   const deleteData = () => {
-    DirectorateAPI.delete(state.id).then((res) => {
-      setState({visible:false})
+    DirectorateAPI.delete(chosenDirectorate.id).then((res) => {
+      setChosenDirectorate({visible:false})
+      setMessage("Directorate has deleted successfully")      
       getData()
     })
   }
@@ -143,14 +147,13 @@ const Directorate = () => {
             <CCardBody>
               <CRow>
                 <CCol>
-                  <Link to={'/directorate/tambah'}>
-                    <CButton
-                      color='primary'
-                      style={{width:'18%', borderRadius: "50px", fontSize: "14px"}} >
-                      <CIcon icon={cilPlus} style={{ marginRight: "10px", color: "#FFFFFF" }} />
-                        Tambah Direktorat
-                    </CButton>
-                  </Link>
+                  <CButton
+                    color='primary'
+                    style={{width:'18%', borderRadius: "50px", fontSize: "14px"}}
+                    onClick={() => navigate('/directorate/tambah', {state: { status: 'tambah' } }) }>
+                    <CIcon icon={cilPlus} style={{ marginRight: "10px", color: "#FFFFFF" }} />
+                      Tambah Direktorat
+                  </CButton>
                 </CCol>
               </CRow>
               <CRow className='pl-2 mr-5'>
@@ -167,15 +170,16 @@ const Directorate = () => {
                     { directorates.map( (directorate, index) =>
                       <CTableRow key={directorate.id}>
                         <CTableHeaderCell scope="row">{ index+1 }</CTableHeaderCell>
-                        <CTableDataCell>{directorate.attributes.directorate_name}</CTableDataCell>
-                        <CTableDataCell>{directorate?.attributes?.units?.data[0]?.attributes?.unit_name}</CTableDataCell>
+                        <CTableDataCell>{directorate?.attributes?.directorate_name}</CTableDataCell>
+                        <CTableDataCell>{directorate?.attributes?.unit?.data?.attributes?.unit_name}</CTableDataCell>
                         <CTableDataCell>
-                          <Link 
-                            to={{
-                              pathname: `/directorate/edit/${directorate.id}`,
-                            }}>
-                            <CButton color={'warning'} variant="outline">Edit</CButton>
-                          </Link>
+                          <CButton 
+                            color={'warning'} 
+                            variant="outline" 
+                            onClick={() => navigate(
+                              '/directorate/edit', 
+                              {state: { data: directorate, status: 'edit' }})}>
+                            Edit</CButton>
                           <CButton 
                             color={'danger'} 
                             variant="outline" 
@@ -183,8 +187,8 @@ const Directorate = () => {
                             onClick={() => setChosenDirectorate({ 
                               visible: true, 
                               id: directorate.id, 
-                              name: directorate.attributes.directorate_name, 
-                            })}>Delete</CButton>
+                              name: directorate.attributes.directorate_name, })}>
+                            Delete</CButton>
                         </CTableDataCell>
                       </CTableRow>
                     )}

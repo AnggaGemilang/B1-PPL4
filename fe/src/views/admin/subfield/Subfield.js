@@ -28,12 +28,15 @@ import {
   CFormSelect  
 } from '@coreui/react'
 import CIcon from '@coreui/icons-react'
+import { useLocation, useNavigate } from "react-router-dom";
 import { cilSearch, cilPlus } from '@coreui/icons'
-import { Link } from 'react-router-dom'
 import SubFieldAPI from '../../../config/admin/SubFieldAPI'
 import FieldAPI from '../../../config/admin/FieldAPI'
 
 const SubField = () => {
+  const location = useLocation(); 
+  const navigate = useNavigate();
+
   const [subFields, setSubFields] = useState([])
   const [fields, setFields] = useState([])
   const [message, setMessage] = useState("");
@@ -42,6 +45,7 @@ const SubField = () => {
     name: "",
     id: 0,
   })
+
   useEffect(() => {
     setMessage(location?.state?.successMessage)
     FieldAPI.get().then((res) => {
@@ -52,7 +56,6 @@ const SubField = () => {
 
   const filterSearch = (e) => {
     e.preventDefault()
-
     let query = ""
     if(document.getElementById("filter_nama").value.length != 0){
       query += `&filters[subfield_name][$contains]=${document.getElementById("filter_nama").value}`
@@ -60,7 +63,6 @@ const SubField = () => {
     if(document.getElementById("filter_field").value.length != 0){
       query += `&filters[fields][id][$eq]=${document.getElementById("filter_field").value}`
     }
-
     SubFieldAPI.find(query).then(
       (res) => {
         if(res.data.length != 0){
@@ -79,8 +81,9 @@ const SubField = () => {
   }
 
   const deleteData = () => {
-    SubFieldAPI.delete(state.id).then((res) => {
+    SubFieldAPI.delete(chosenSubField.id).then((res) => {
       setChosenSubField({ visible:false })
+      setMessage("Sub field has deleted successfully")        
       getData()
     })
   }
@@ -141,14 +144,13 @@ const SubField = () => {
             <CCardBody>
               <CRow>
                 <CCol>
-                  <Link to={'/directorate/tambah'}>
-                    <CButton
-                      color='primary'
-                      style={{width:'18%', borderRadius: "50px", fontSize: "14px"}} >
-                      <CIcon icon={cilPlus} style={{ marginRight: "10px", color: "#FFFFFF" }} />
-                        Tambah Sub Field
-                    </CButton>
-                  </Link>
+                  <CButton
+                    color='primary'
+                    style={{width:'18%', borderRadius: "50px", fontSize: "14px"}}
+                    onClick={() => navigate('/subfield/tambah', {state: { status: 'tambah' } }) } >
+                    <CIcon icon={cilPlus} style={{ marginRight: "10px", color: "#FFFFFF" }} />
+                    Tambah Sub field
+                  </CButton>
                 </CCol>
               </CRow>
               <CRow className='pl-2 mr-5'>
@@ -165,15 +167,16 @@ const SubField = () => {
                     { subFields.map( (subField, index) =>
                       <CTableRow key={subField.id}>
                         <CTableHeaderCell scope="row">{ index+1 }</CTableHeaderCell>
-                        <CTableDataCell>{subField.attributes.subfield_name}</CTableDataCell>
-                        <CTableDataCell>{subField?.attributes?.fields?.data[0]?.attributes?.field_name}</CTableDataCell>
+                        <CTableDataCell>{subField?.attributes?.subfield_name}</CTableDataCell>
+                        <CTableDataCell>{subField?.attributes?.field?.data?.attributes?.field_name}</CTableDataCell>
                         <CTableDataCell>
-                          <Link 
-                            to={{
-                              pathname: `/subField/edit/${subField.id}`,
-                            }}>
-                            <CButton color={'warning'} variant="outline">Edit</CButton>
-                          </Link>
+                          <CButton 
+                            color={'warning'} 
+                            variant="outline" 
+                            onClick={() => navigate(
+                              '/subfield/edit', 
+                              {state: { data: subField, status: 'edit' }})}>
+                            Edit</CButton>
                           <CButton 
                             color={'danger'} 
                             variant="outline" 

@@ -27,12 +27,15 @@ import {
   CForm,
   CFormSelect  
 } from '@coreui/react'
-import CIcon from '@coreui/icons-react'
+import { useLocation, useNavigate } from "react-router-dom";
 import { cilSearch, cilPlus } from '@coreui/icons'
-import { Link } from 'react-router-dom'
+import CIcon from '@coreui/icons-react'
 import LevelAPI from '../../../config/admin/LevelAPI'
 
 const Level = () => {
+  const location = useLocation(); 
+  const navigate = useNavigate();
+
   const [levels, setLevels] = useState([])
   const [message, setMessage] = useState("");
   const [chosenLevel, setChosenLevel] = useState({
@@ -76,8 +79,9 @@ const Level = () => {
   }
 
   const deleteData = () => {
-    LevelAPI.delete(state.id).then((res) => {
+    LevelAPI.delete(chosenLevel.id).then((res) => {
       setChosenLevel({ visible:false })
+      setMessage("Level has deleted successfully")  
       getData()
     })
   }
@@ -138,14 +142,13 @@ const Level = () => {
             <CCardBody>
               <CRow>
                 <CCol>
-                  <Link to={'/directorate/tambah'}>
-                    <CButton
-                      color='primary'
-                      style={{width:'18%', borderRadius: "50px", fontSize: "14px"}} >
-                      <CIcon icon={cilPlus} style={{ marginRight: "10px", color: "#FFFFFF" }} />
-                        Tambah Level
-                    </CButton>
-                  </Link>
+                  <CButton
+                    color='primary'
+                    style={{width:'18%', borderRadius: "50px", fontSize: "14px"}}
+                    onClick={() => navigate('/level/tambah', {state: { status: 'tambah' } }) } >
+                    <CIcon icon={cilPlus} style={{ marginRight: "10px", color: "#FFFFFF" }} />
+                    Tambah Level
+                  </CButton>
                 </CCol>
               </CRow>
               <CRow className='pl-2 mr-5'>
@@ -162,15 +165,16 @@ const Level = () => {
                     { levels.map( (level, index) =>
                       <CTableRow key={level.id}>
                         <CTableHeaderCell scope="row">{ index+1 }</CTableHeaderCell>
-                        <CTableDataCell>{level.attributes.structural_name}</CTableDataCell>
-                        <CTableDataCell>{level.attributes.functional_name}</CTableDataCell>
+                        <CTableDataCell>{level?.attributes?.structural_name}</CTableDataCell>
+                        <CTableDataCell>{level?.attributes?.functional_name}</CTableDataCell>
                         <CTableDataCell>
-                          <Link 
-                            to={{
-                              pathname: `/level/edit/${level.id}`,
-                            }}>
-                            <CButton color={'warning'} variant="outline">Edit</CButton>
-                          </Link>
+                          <CButton 
+                            color={'warning'} 
+                            variant="outline"
+                            onClick={() => navigate(
+                              '/level/edit', 
+                              {state: { data: level, status: 'edit' }})}>
+                            Edit</CButton>
                           <CButton 
                             color={'danger'} 
                             variant="outline" 

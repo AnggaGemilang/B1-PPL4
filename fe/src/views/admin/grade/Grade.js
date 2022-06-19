@@ -26,12 +26,15 @@ import {
   CAlert,
   CForm
 } from '@coreui/react'
-import CIcon from '@coreui/icons-react'
 import { cilSearch, cilPlus } from '@coreui/icons'
-import { Link } from 'react-router-dom'
+import { useLocation, useNavigate } from "react-router-dom";
+import CIcon from '@coreui/icons-react'
 import GradeAPI from '../../../config/admin/GradeAPI'
 
 const Grade = () => {
+  const location = useLocation(); 
+  const navigate = useNavigate();
+
   const [grades, setGrades] = useState([])
   const [message, setMessage] = useState("");
   const [chosenGrade, setChosenGrade] = useState({
@@ -41,6 +44,7 @@ const Grade = () => {
   })
 
   useEffect(() => {
+    setMessage(location?.state?.successMessage)
     getData()
   }, [])    
 
@@ -71,8 +75,9 @@ const Grade = () => {
   }
 
   const deleteData = () => {
-    GradeAPI.delete(state.id).then((res) => {
+    GradeAPI.delete(chosenGrade.id).then((res) => {
       setChosenGrade({ visible:false })
+      setMessage("Grade has deleted successfully")  
       getData()
     })
   }
@@ -124,14 +129,13 @@ const Grade = () => {
             <CCardBody>
               <CRow>
                 <CCol>
-                  <Link to={'/directorate/tambah'}>
-                    <CButton
-                      color='primary'
-                      style={{width:'18%', borderRadius: "50px", fontSize: "14px"}} >
-                      <CIcon icon={cilPlus} style={{ marginRight: "10px", color: "#FFFFFF" }} />
-                        Tambah Grade
-                    </CButton>
-                  </Link>
+                  <CButton
+                    color='primary'
+                    style={{width:'18%', borderRadius: "50px", fontSize: "14px"}}
+                    onClick={() => navigate('/grade/tambah', {state: { status: 'tambah' } }) } >
+                    <CIcon icon={cilPlus} style={{ marginRight: "10px", color: "#FFFFFF" }} />
+                    Tambah Grade
+                  </CButton>
                 </CCol>
               </CRow>
               <CRow className='pl-2 mr-5'>
@@ -147,14 +151,15 @@ const Grade = () => {
                     { grades.map( (grade, index) =>
                       <CTableRow key={grade.id}>
                         <CTableHeaderCell scope="row">{ index+1 }</CTableHeaderCell>
-                        <CTableDataCell>{grade.attributes.grade_name}</CTableDataCell>
+                        <CTableDataCell>{grade?.attributes?.grade_name}</CTableDataCell>
                         <CTableDataCell>
-                          <Link 
-                            to={{
-                              pathname: `/grade/edit/${grade.id}`,
-                            }}>
-                            <CButton color={'warning'} variant="outline">Edit</CButton>
-                          </Link>
+                          <CButton 
+                            color={'warning'} 
+                            variant="outline" 
+                            onClick={() => navigate(
+                              '/grade/edit', 
+                              {state: { data: grade, status: 'edit' }})}>
+                            Edit</CButton>
                           <CButton 
                             color={'danger'} 
                             variant="outline" 

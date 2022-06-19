@@ -28,20 +28,22 @@ import {
   CFormCheck,
   CFormSelect,  
 } from '@coreui/react'
-import CIcon from '@coreui/icons-react'
+import { useLocation, useNavigate } from "react-router-dom";
 import { cilSearch, cilPlus } from '@coreui/icons'
+import CIcon from '@coreui/icons-react'
 import url from "../../../config/setting"
-import { Link } from 'react-router-dom'
 import EmployeeAPI from '../../../config/admin/EmployeeAPI'
-import GradeAPI from '../../../config/admin/GradeAPI'
+import PositionAPI from '../../../config/admin/PositionAPI'
 import LevelAPI from '../../../config/admin/LevelAPI'
 import SubFieldAPI from '../../../config/admin/SubFieldAPI'
-import { useLocation } from "react-router-dom";
 
 const Employee = () => {
+  const location = useLocation(); 
+  const navigate = useNavigate(); 
+
   const [employees, setEmployees] = useState([])
   const [levels, setLevels] = useState([])
-  const [grades, setGrades] = useState([])
+  const [positions, setPositions] = useState([])
   const [subfields, setSubfields] = useState([])
   const [message, setMessage] = useState("");
   const [chosenEmployee, setChosenEmployee] = useState({
@@ -55,8 +57,8 @@ const Employee = () => {
     LevelAPI.get().then((res) => {
       setLevels(res.data)
     })
-    GradeAPI.get().then((res) => {
-      setGrades(res.data)
+    PositionAPI.get().then((res) => {
+      setPositions(res.data)
     })
     SubFieldAPI.get().then((res) => {
       setSubfields(res.data)
@@ -220,11 +222,11 @@ const Employee = () => {
                 </CRow> 
                 <CRow className='mt-3'>
                   <CCol xs={6}>
-                    <CFormLabel htmlFor="exampleFormControlInput1">Grade</CFormLabel>
+                    <CFormLabel htmlFor="exampleFormControlInput1">Position</CFormLabel>
                     <CFormSelect name="filter_grade" id="filter_grade" className="mb-3" aria-label="Large select example">
-                      <option value="">Choose Grade</option>
-                      { grades.map(grade =>
-                        <option key={ grade.id } value={ grade.id } >{ grade.attributes.grade_name }</option>
+                      <option value="">Choose Position</option>
+                      { positions.map(position =>
+                        <option key={ position.id } value={ position.id } >{ position.attributes.position_name }</option>
                       )}
                     </CFormSelect>
                   </CCol>
@@ -277,14 +279,13 @@ const Employee = () => {
           <CCardBody style={{ overflowX: "auto"}}>
             <CRow>
               <CCol>
-                <Link to={'/employee/tambah'}>
-                  <CButton
-                    color='primary'
-                    style={{width:'18%', borderRadius: "50px", fontSize: "14px"}} >
-                    <CIcon icon={cilPlus} style={{ marginRight: "10px", color: "#FFFFFF" }}/>
-                      Tambah Karyawan
-                  </CButton>
-                </Link>
+                <CButton
+                  color='primary'
+                  style={{width:'18%', borderRadius: "50px", fontSize: "14px"}}
+                  onClick={() => navigate('/employee/tambah', {state: { status: 'tambah' } }) } >
+                  <CIcon icon={cilPlus} style={{ marginRight: "10px", color: "#FFFFFF" }} />
+                  Tambah Employee
+                </CButton>
               </CCol>
             </CRow>
             <CRow className='pl-2 mr-5'>
@@ -300,7 +301,7 @@ const Employee = () => {
                     <CTableHeaderCell scope="col">Place and Date Birth</CTableHeaderCell>
                     <CTableHeaderCell scope="col">Email</CTableHeaderCell>
                     <CTableHeaderCell scope="col">Phone Number</CTableHeaderCell>
-                    <CTableHeaderCell scope="col">Grade</CTableHeaderCell>
+                    <CTableHeaderCell scope="col">Position</CTableHeaderCell>
                     <CTableHeaderCell scope="col">Level</CTableHeaderCell>
                     <CTableHeaderCell scope="col">Subfield</CTableHeaderCell>
                     <CTableHeaderCell scope="col">Action</CTableHeaderCell>
@@ -315,27 +316,25 @@ const Employee = () => {
                           <img className='foto_karyawan' src={url + employee?.attributes?.Photo?.data?.attributes?.formats?.thumbnail?.url} alt="Photo" />
                         }
                       </CTableDataCell>
-                      <CTableDataCell>{employee.attributes.NIP}</CTableDataCell>
-                      <CTableDataCell>{employee.attributes.Name}</CTableDataCell>
-                      <CTableDataCell>{employee.attributes.Gender}</CTableDataCell>
-                      <CTableDataCell>{employee.attributes.Religion}</CTableDataCell>
-                      <CTableDataCell>{employee.attributes.BirthPlace}, {employee.attributes.BirthDate}</CTableDataCell>
-                      <CTableDataCell>{employee.attributes.Email}</CTableDataCell>
-                      <CTableDataCell>{employee.attributes.PhoneNumber}</CTableDataCell>
-                      <CTableDataCell>{employee?.attributes?.grades?.data[0]?.attributes?.grade_name}</CTableDataCell>
-                      <CTableDataCell>{employee?.attributes?.levels?.data[0]?.attributes?.functional_name} - {employee?.attributes?.levels?.data[0]?.attributes?.structural_name} </CTableDataCell>
-                      <CTableDataCell>{employee?.attributes?.sub_fields?.data[0]?.attributes?.subfield_name}</CTableDataCell>
+                      <CTableDataCell>{employee?.attributes?.NIP}</CTableDataCell>
+                      <CTableDataCell>{employee?.attributes?.Name}</CTableDataCell>
+                      <CTableDataCell>{employee?.attributes?.Gender}</CTableDataCell>
+                      <CTableDataCell>{employee?.attributes?.Religion}</CTableDataCell>
+                      <CTableDataCell>{employee?.attributes?.BirthPlace}, {employee?.attributes?.BirthDate}</CTableDataCell>
+                      <CTableDataCell>{employee?.attributes?.Email}</CTableDataCell>
+                      <CTableDataCell>{employee?.attributes?.PhoneNumber}</CTableDataCell>
+                      <CTableDataCell>{employee?.attributes?.position?.data?.attributes?.position_name}</CTableDataCell>
+                      <CTableDataCell>{employee?.attributes?.level?.data?.attributes?.functional_name} - {employee?.attributes?.level?.data?.attributes?.structural_name} </CTableDataCell>
+                      <CTableDataCell>{employee?.attributes?.sub_field?.data?.attributes?.subfield_name}</CTableDataCell>
                       <CTableDataCell>
-                        <Link 
-                          to={{
-                            pathname: `/employee/edit/${employee.id}`,
-                          }}>
-                          <CButton 
-                            color={'warning'} 
-                            variant="outline"
-                            style={{width: '100%'}}>
-                              Edit</CButton>
-                        </Link>
+                        <CButton 
+                          color={'warning'} 
+                          variant="outline" 
+                          style={{width: '75px'}}
+                          onClick={() => navigate(
+                            `/employee/edit/${employee.id}`, 
+                          )}>
+                          Edit</CButton>
                         <CButton 
                           color={'danger'} 
                           variant="outline" 

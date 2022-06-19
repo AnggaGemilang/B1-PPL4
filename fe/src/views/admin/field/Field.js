@@ -25,15 +25,18 @@ import {
   CFormLabel,
   CAlert,
   CForm,
-  CFormSelect  
+  CFormSelect
 } from '@coreui/react'
-import CIcon from '@coreui/icons-react'
+import { useLocation, useNavigate } from "react-router-dom";
 import { cilSearch, cilPlus } from '@coreui/icons'
-import { Link } from 'react-router-dom'
+import CIcon from '@coreui/icons-react'
 import FieldAPI from '../../../config/admin/FieldAPI'
 import DivisionAPI from '../../../config/admin/DivisionAPI'
 
 const Field = () => {
+  const location = useLocation(); 
+  const navigate = useNavigate();
+  
   const [fields, setFields] = useState([])
   const [divisions, setDivisions] = useState([])
   const [message, setMessage] = useState("");
@@ -42,6 +45,7 @@ const Field = () => {
     name: "",
     id: 0,
   })
+  
   useEffect(() => {
     setMessage(location?.state?.successMessage)
     DivisionAPI.get().then((res) => {
@@ -79,8 +83,9 @@ const Field = () => {
   }
 
   const deleteData = () => {
-    FieldAPI.delete(state.id).then((res) => {
+    FieldAPI.delete(chosenField.id).then((res) => {
       setChosenField({ visible:false })
+      setMessage("Field has deleted successfully")         
       getData()
     })
   }
@@ -141,14 +146,13 @@ const Field = () => {
             <CCardBody>
               <CRow>
                 <CCol>
-                  <Link to={'/directorate/tambah'}>
-                    <CButton
-                      color='primary'
-                      style={{width:'18%', borderRadius: "50px", fontSize: "14px"}} >
-                      <CIcon icon={cilPlus} style={{ marginRight: "10px", color: "#FFFFFF" }} />
-                        Tambah Field
-                    </CButton>
-                  </Link>
+                  <CButton
+                    color='primary'
+                    style={{width:'18%', borderRadius: "50px", fontSize: "14px"}}
+                    onClick={() => navigate('/field/tambah', {state: { status: 'tambah' } }) } >
+                    <CIcon icon={cilPlus} style={{ marginRight: "10px", color: "#FFFFFF" }} />
+                    Tambah Field
+                  </CButton>
                 </CCol>
               </CRow>
               <CRow className='pl-2 mr-5'>
@@ -165,15 +169,16 @@ const Field = () => {
                     { fields.map( (field, index) =>
                       <CTableRow key={field.id}>
                         <CTableHeaderCell scope="row">{ index+1 }</CTableHeaderCell>
-                        <CTableDataCell>{field.attributes.field_name}</CTableDataCell>
-                        <CTableDataCell>{field?.attributes?.divisions?.data[0]?.attributes?.division_name}</CTableDataCell>
+                        <CTableDataCell>{field?.attributes?.field_name}</CTableDataCell>
+                        <CTableDataCell>{field?.attributes?.division?.data?.attributes?.division_name}</CTableDataCell>
                         <CTableDataCell>
-                          <Link 
-                            to={{
-                              pathname: `/field/edit/${field.id}`,
-                            }}>
-                            <CButton color={'warning'} variant="outline">Edit</CButton>
-                          </Link>
+                          <CButton 
+                            color={'warning'} 
+                            variant="outline" 
+                            onClick={() => navigate(
+                              '/field/edit', 
+                              {state: { data: field, status: 'edit' }})}>
+                            Edit</CButton>
                           <CButton 
                             color={'danger'} 
                             variant="outline" 

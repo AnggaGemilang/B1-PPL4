@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState, useEffect } from 'react'
 import {
   CCard,
   CCardBody,
@@ -7,7 +7,6 @@ import {
   CRow,
   CTable,
   CTableBody,
-  CTableCaption,
   CTableDataCell,
   CTableHead,
   CTableHeaderCell,
@@ -16,52 +15,78 @@ import {
   CFormInput,
   CFormLabel,
   CForm,
+  CAccordion,
+  CAccordionBody,
+  CAccordionHeader,
+  CAccordionItem,
+  CAlert,
+  CFormSelect    
 } from '@coreui/react'
-import { DocsCallout, DocsExample } from 'src/components'
-import { Link } from 'react-router-dom'
+import { useLocation, useNavigate } from "react-router-dom"
+import { cilSearch, cilPlus } from '@coreui/icons'
+import CIcon from '@coreui/icons-react'
 
 
-const Tables = () => {
+const RekapMFitAndProper = () => {
+  const [chosenCriteria, setChosenCriteria] = useState({
+    visible: false,
+    name: "",
+    id: 0,
+  })
+
   return (
     <CRow>
       <CCol xs={12}>
-        <Link to={'/dashboard'}>
-            <CButton
-              color='dark'
-              style={{width:'10%'}}
-              variant="outline" >
-              Kembali
-            </CButton>
-        </Link>
-        <CCard className="mb-4">
-        <CCardHeader>
-              <strong>Rekap Penilaian Manual Peserta Fit Proper</strong>
-            </CCardHeader>  
+        <CCol xs={12} className="mt-3">
+          <CAccordion>
+            <CAccordionItem itemKey={1}>
+              <CAccordionHeader><CIcon icon={cilSearch} style={{ marginRight: "10px" }}/>Pencarian Data</CAccordionHeader>
+              <CAccordionBody>
+                <CForm>
+                  <CRow className='mt-2'>
+                    <CCol xs={6}>
+                      <CFormLabel htmlFor="filter_nama">NIP</CFormLabel>
+                      <CFormInput
+                        type="text"
+                        name='filter_nip'
+                        id="filter_nip"
+                        placeholder="Enter NIP . . ."
+                      />
+                    </CCol>
+                    <CCol xs={6}>
+                      <CFormLabel htmlFor="filter_usefor">Use For</CFormLabel>
+                      <CFormSelect name="filter_usefor" id="filter_usefor" className="mb-3" aria-label="Large select example">
+                        <option value="">Choose Use For</option>
+                        <option value="am">Ahli Madya</option>
+                        <option value="md">Modern Madya</option>
+                      </CFormSelect>
+                    </CCol>
+                  </CRow>                            
+                  <CRow>
+                    <hr className='mt-4' style={{ marginLeft: "12px", width: "97.6%" }} />
+                  </CRow>
+                  <CRow>
+                    <CCol style={{ display: "flex", justifyContent: "right" }}>
+                      <CButton
+                          type='submit'
+                          color='primary'
+                          style={{ width:'10%', borderRadius: "50px", fontSize: "14px" }} >
+                          <CIcon icon={cilSearch} style={{ marginRight: "10px", color: "#FFFFFF" }}/>
+                            Cari
+                      </CButton>                                          
+                    </CCol>
+                  </CRow>
+                </CForm>
+              </CAccordionBody>
+            </CAccordionItem>
+          </CAccordion> 
+        </CCol>           
+        <CCard className="mt-3">
+          <CCardHeader>
+            <strong>Rekap Penilaian Manual Peserta Fit Proper</strong>
+          </CCardHeader>  
           <CCardBody>
-          <CForm>
-                <CRow className="mb-3">
-                  <CFormLabel htmlFor="inputEmail3" className="col-sm-1 col-form-label" placeholder='Masukkan NIK'>
-                    NIK
-                  </CFormLabel>
-                  <CCol sm={3}>
-                    <CFormInput type="text" id="inputEmail3" />
-                  </CCol>
-                  <CFormLabel htmlFor="inputEmail3" className="col-sm-1 col-form-label" placeholder='Masukkan NIK'>
-                    Jabatan Proyeksi
-                  </CFormLabel>
-                  <CCol sm={3}>
-                    <CFormInput type="text" id="inputEmail3" />
-                  </CCol>
-                  <CCol sm={2}>
-                    <CFormInput type="text" id="inputEmail3" />
-                  </CCol>  
-                  <CButton type="submit" style={{width:'10%'}}>Cek</CButton>
-                </CRow>
-              </CForm>
-              <CFormLabel htmlFor="inputEmail3" className="col-sm-1 col-form-label" placeholder='Masukkan NIK'>
-                    REPORT
-              </CFormLabel>
-              <CTable striped style={{ display:'block', 'overflow-x':'scroll'}}>
+            <CTable align="center" striped style={{ display:'block', 'overflow-x':'auto'}}>
               <CTableHead>
                   <CTableRow>
                     <CTableHeaderCell rowSpan={2}>No</CTableHeaderCell>
@@ -132,4 +157,4 @@ const Tables = () => {
     </CRow>
   )
 }
-export default Tables
+export default RekapMFitAndProper

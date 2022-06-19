@@ -40,8 +40,7 @@ const DataPenguji = () => {
   const [chosenExaminer, setChosenExaminer] = useState({
     visible: false,
     name: "",
-    id: 0,
-    successMessage:"", 
+    id: 0
   })
 
   useEffect(() => {
@@ -167,10 +166,10 @@ const DataPenguji = () => {
                   <CTableRow key={examiner.id}>
                     <CTableHeaderCell scope="row">{ index+1 }</CTableHeaderCell>
                     <CTableDataCell>
-                      <img className='foto_karyawan' src={url + examiner.attributes.employee.data.attributes.Photo.data.attributes.formats.thumbnail.url} alt="Photo" />
+                      <img className='foto_karyawan' src={url + examiner?.attributes?.employee?.data?.attributes?.Photo?.data?.attributes?.formats?.thumbnail?.url} alt="Photo" />
                     </CTableDataCell>
-                    <CTableDataCell>{examiner.attributes.employee.data.attributes.Name}</CTableDataCell>
-                    <CTableDataCell>{examiner.attributes.employee.data.attributes.NIP}</CTableDataCell>
+                    <CTableDataCell>{examiner?.attributes?.employee?.data?.attributes?.Name}</CTableDataCell>
+                    <CTableDataCell>{examiner?.attributes?.employee?.data?.attributes?.NIP}</CTableDataCell>
                     <CTableDataCell>
                       <CButton
                         color='danger'

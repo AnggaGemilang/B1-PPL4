@@ -27,12 +27,15 @@ import {
   CForm,
   CFormSelect  
 } from '@coreui/react'
-import CIcon from '@coreui/icons-react'
+import { useLocation, useNavigate } from "react-router-dom"
 import { cilSearch, cilPlus } from '@coreui/icons'
-import { Link } from 'react-router-dom'
+import CIcon from '@coreui/icons-react'
 import CriteriaAPI from '../../../config/admin/CriteriaAPI'
 
 const Criteria = () => {
+  const location = useLocation()
+  const navigate = useNavigate()
+  
   const [criterias, setCriterias] = useState([])
   const [message, setMessage] = useState("");
   const [chosenCriteria, setChosenCriteria] = useState({
@@ -78,8 +81,9 @@ const Criteria = () => {
   }
 
   const deleteData = () => {
-    CriteriaAPI.delete(state.id).then((res) => {
+    CriteriaAPI.delete(chosenCriteria.id).then((res) => {
       setChosenCriteria({visible:false})
+      setMessage("Criteria has deleted successfully")
       getData()
     })
   }
@@ -117,8 +121,8 @@ const Criteria = () => {
                     <CFormLabel htmlFor="filter_usefor">Use For</CFormLabel>
                     <CFormSelect name="filter_usefor" id="filter_usefor" className="mb-3" aria-label="Large select example">
                       <option value="">Choose Use For</option>
-                      <option value="am">Ahli Madya</option>
-                      <option value="md">Modern Madya</option>
+                      <option value="am">Manajemen Atas</option>
+                      <option value="md">Manajemen Dasar</option>
                     </CFormSelect>
                   </CCol>
                 </CRow>                
@@ -150,14 +154,13 @@ const Criteria = () => {
             <CCardBody>
               <CRow>
                 <CCol>
-                  <Link to={'/criteria/tambah'}>
-                    <CButton
-                      color='primary'
-                      style={{width:'18%', borderRadius: "50px", fontSize: "14px"}} >
-                      <CIcon icon={cilPlus} style={{ marginRight: "10px", color: "#FFFFFF" }} />
-                        Tambah Criteria
-                    </CButton>
-                  </Link>
+                  <CButton
+                    color='primary'
+                    style={{width:'18%', borderRadius: "50px", fontSize: "14px"}}
+                    onClick={() => navigate('/criteria/tambah', {state: { status: 'tambah' } }) } >
+                    <CIcon icon={cilPlus} style={{ marginRight: "10px", color: "#FFFFFF" }} />
+                    Tambah Criteria
+                  </CButton>
                 </CCol>
               </CRow>
               <CRow className='pl-2 mr-5'>
@@ -177,14 +180,15 @@ const Criteria = () => {
                         <CTableHeaderCell scope="row">{ index+1 }</CTableHeaderCell>
                         <CTableDataCell>{criteria.attributes.criteria}</CTableDataCell>
                         <CTableDataCell>{criteria.attributes.value}</CTableDataCell>
-                        <CTableDataCell>{criteria.attributes.useFor == "am" ? "Ahli Madya" : "Modern Madya"}</CTableDataCell>
+                        <CTableDataCell>{criteria.attributes.useFor == "am" ? "Manajemen Atas" : "Manajemen Dasar"}</CTableDataCell>
                         <CTableDataCell>
-                          <Link 
-                            to={{
-                              pathname: `/criteria/edit/${criteria.id}`,
-                            }}>
-                            <CButton color={'warning'} variant="outline">Edit</CButton>
-                          </Link>
+                          <CButton 
+                            color={'warning'} 
+                            variant="outline"
+                            onClick={() => navigate(
+                              '/criteria/edit', 
+                              {state: { data: criteria, status: 'edit' }})}>
+                            Edit</CButton>
                           <CButton 
                             color={'danger'} 
                             variant="outline" 

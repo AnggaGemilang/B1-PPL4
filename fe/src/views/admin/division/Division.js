@@ -27,30 +27,29 @@ import {
   CForm,
   CFormSelect  
 } from '@coreui/react'
-import CIcon from '@coreui/icons-react'
+import { useLocation, useNavigate } from "react-router-dom";
 import { cilSearch, cilPlus } from '@coreui/icons'
-import { Link } from 'react-router-dom'
+import CIcon from '@coreui/icons-react'
 import DivisionAPI from '../../../config/admin/DivisionAPI'
-import FieldAPI from '../../../config/admin/FieldAPI'
 import DirectorateAPI from '../../../config/admin/DirectorateAPI'
 
 const Division = () => {
+  const location = useLocation(); 
+  const navigate = useNavigate(); 
+   
   const [divisions, setDivisions] = useState([])
   const [directorates, setDirectorates] = useState([])
-  const [fields, setFields] = useState([])
   const [message, setMessage] = useState("");
   const [chosenDivision, setChosenDivision] = useState({
     visible: false,
     name: "",
     id: 0,
   })
+  
   useEffect(() => {
     setMessage(location?.state?.successMessage)
     DirectorateAPI.get().then((res) => {
       setDirectorates(res.data)
-    })
-    FieldAPI.get().then((res) => {
-      setFields(res.data)
     })
     getData()
   }, [])    
@@ -80,13 +79,13 @@ const Division = () => {
   const getData = () => {
     DivisionAPI.get().then((res) => {
       setDivisions(res.data)
-      console.log(res.data)
     })
   }
 
   const deleteData = () => {
-    DivisionAPI.delete(state.id).then((res) => {
+    DivisionAPI.delete(chosenDivision.id).then((res) => {
       setChosenDivision({visible:false})
+      setMessage("Division has deleted successfully")        
       getData()
     })
   }
@@ -147,14 +146,13 @@ const Division = () => {
             <CCardBody>
               <CRow>
                 <CCol>
-                  <Link to={'/directorate/tambah'}>
-                    <CButton
-                      color='primary'
-                      style={{width:'18%', borderRadius: "50px", fontSize: "14px"}} >
-                      <CIcon icon={cilPlus} style={{ marginRight: "10px", color: "#FFFFFF" }} />
-                        Tambah Division
-                    </CButton>
-                  </Link>
+                  <CButton
+                    color='primary'
+                    style={{width:'18%', borderRadius: "50px", fontSize: "14px"}}
+                    onClick={() => navigate('/division/tambah', {state: { status: 'tambah' } }) } >
+                    <CIcon icon={cilPlus} style={{ marginRight: "10px", color: "#FFFFFF" }} />
+                    Tambah Division
+                  </CButton>
                 </CCol>
               </CRow>
               <CRow className='pl-2 mr-5'>
@@ -171,15 +169,16 @@ const Division = () => {
                     { divisions.map( (division, index) =>
                       <CTableRow key={division.id}>
                         <CTableHeaderCell scope="row">{ index+1 }</CTableHeaderCell>
-                        <CTableDataCell>{division.attributes.division_name}</CTableDataCell>
-                        <CTableDataCell>{division?.attributes?.directorates?.data[0]?.attributes?.directorate_name}</CTableDataCell>
+                        <CTableDataCell>{division?.attributes?.division_name}</CTableDataCell>
+                        <CTableDataCell>{division?.attributes?.directorate?.data?.attributes?.directorate_name}</CTableDataCell>
                         <CTableDataCell>
-                          <Link 
-                            to={{
-                              pathname: `/division/edit/${division.id}`,
-                            }}>
-                            <CButton color={'warning'} variant="outline">Edit</CButton>
-                          </Link>
+                          <CButton 
+                            color={'warning'} 
+                            variant="outline" 
+                            onClick={() => navigate(
+                              '/division/edit', 
+                              {state: { data: division, status: 'edit' }})}>
+                            Edit</CButton>
                           <CButton 
                             color={'danger'} 
                             variant="outline" 
