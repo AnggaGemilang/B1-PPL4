@@ -90,25 +90,25 @@ const TambahPenguji = () => {
               <strong>Tambah Penguji</strong>
             </CCardHeader>
             <CCardBody>
-                <CForm onSubmit={postData}>
-                  <CRow className="mb-3">
-                    <CFormLabel htmlFor="nip_value" className="col-sm-2 col-form-label" placeholder='Masukkan NIK'>
-                      NIP
-                    </CFormLabel>
-                    <CCol sm={10}>
-                      <CFormInput type="text" id="nip_value" name="nip_value" onChange={(e) => setNipValue(e.target.value )} />
-                    </CCol>
-                  </CRow>
-                  <CRow className="mb-3">
-                    <CFormLabel htmlFor="nama_karyawan" className="col-sm-2 col-form-label" >
-                      Nama
-                    </CFormLabel>
-                    <CCol sm={10}>
-                      <CFormInput type="text" id="nama_karyawan" name="nama_karyawan"  value={state.namaKaryawan} placeholder='Nama Pegawai Akan Muncul Disini' disabled />
-                    </CCol>
-                  </CRow>
-                  <CButton type="submit" style={{width:'100%'}}>Submit</CButton>
-                </CForm>
+              <CForm onSubmit={postData}>
+                <CRow className="mb-3">
+                  <CFormLabel htmlFor="nip_value" className="col-sm-2 col-form-label" placeholder='Masukkan NIK'>
+                    NIP
+                  </CFormLabel>
+                  <CCol sm={10}>
+                    <CFormInput type="text" id="nip_value" name="nip_value" onChange={(e) => setNipValue(e.target.value )} />
+                  </CCol>
+                </CRow>
+                <CRow className="mb-3">
+                  <CFormLabel htmlFor="nama_karyawan" className="col-sm-2 col-form-label" >
+                    Nama
+                  </CFormLabel>
+                  <CCol sm={10}>
+                    <CFormInput type="text" id="nama_karyawan" name="nama_karyawan"  value={state.namaKaryawan} placeholder='Nama Pegawai Akan Muncul Disini' disabled />
+                  </CCol>
+                </CRow>
+                <CButton type="submit" style={{width:'100%'}}>Submit</CButton>
+              </CForm>
             </CCardBody>
           </CCard>
         </CCol>

@@ -29,15 +29,17 @@ import {
   CLink
 } from '@coreui/react'
 import { Link } from 'react-router-dom'
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { cilSearch, cilPlus } from '@coreui/icons'
 import CIcon from '@coreui/icons-react'
-import WawancaraAPI from '../../../config/user/WawancaraAPI'
+import MappingAPI from '../../../config/user/MappingAPI'
 import url from "../../../config/setting"
 import logoPDF from 'src/assets/images/pdf-icon.png'
 
-const DataPenilaian = () => {
+const DataPendaftaran = () => {
   const location = useLocation();
+  const navigate = useNavigate(); 
+
   const [mappings, setMappings] = useState([]);
   const [message, setMessage] = useState("");
   const [chosenMapping, setChosenMapping] = useState({
@@ -74,8 +76,16 @@ const DataPenilaian = () => {
   }
   
   const getData = () => {
-    WawancaraAPI.get().then((res) => {
+    MappingAPI.get().then((res) => {
       setMappings(res.data)
+    })
+  }
+
+  const deleteData = () => {
+    MappingAPI.delete(chosenMapping.id).then((res) => {
+      setMessage("Pendaftaran Telah Dihapus")
+      setChosenMapping({ visible: false })
+      getData()
     })
   }
 
@@ -130,9 +140,21 @@ const DataPenilaian = () => {
         </CCol>                 
         <CCard className="mb-4 mt-3">
           <CCardHeader>
-            <strong>Data Penilaian Wawancara</strong>
+            <strong>Data Pendaftaran Fit & Proper</strong>
           </CCardHeader>
           <CCardBody>
+            <CRow>
+              <CCol xs={12}>
+                <Link to={'/fitandproper/daftar'}>
+                  <CButton
+                    color='primary'
+                    style={{width:'19%', borderRadius: "50px", fontSize: "14px"}} >
+                      <CIcon icon={cilPlus} style={{ marginRight: "10px", color: "#FFFFFF" }}/>
+                      Tambah Pendaftaran
+                  </CButton>
+                </Link>
+              </CCol>
+            </CRow>
               <CTable striped className='mt-3 text-center'>
                 <CTableHead>
                    <CTableRow>
@@ -143,6 +165,7 @@ const DataPenilaian = () => {
                     <CTableHeaderCell scope="col">Proyeksi</CTableHeaderCell>
                     <CTableHeaderCell scope="col">Tanggal</CTableHeaderCell>
                     <CTableHeaderCell scope="col">Penguji</CTableHeaderCell>
+                    <CTableHeaderCell scope="col">Status</CTableHeaderCell>
                     <CTableHeaderCell scope="col">Lampiran File</CTableHeaderCell>
                     <CTableHeaderCell scope="col">Action</CTableHeaderCell>
                   </CTableRow>
@@ -155,7 +178,7 @@ const DataPenilaian = () => {
                       <CTableDataCell>{mapping?.attributes?.registrant?.data?.attributes?.employee?.data?.attributes.NIP}</CTableDataCell>
                       <CTableDataCell>{mapping?.attributes?.registrant?.data?.attributes?.employee?.data?.attributes?.position?.data?.attributes?.position_name}</CTableDataCell>
                       <CTableDataCell>{mapping?.attributes?.position?.data?.attributes?.position_name}</CTableDataCell>
-                      <CTableDataCell>{mapping?.attributes?.interview_schedule}</CTableDataCell>
+                      <CTableDataCell>{mapping?.attributes?.schedule}</CTableDataCell>
                       <CTableDataCell>
                         <ul>
                           { mapping.attributes.examiners.data.map(examiner  => (
@@ -163,6 +186,7 @@ const DataPenilaian = () => {
                           ))}
                         </ul>
                       </CTableDataCell>
+                      <CTableDataCell>{mapping?.attributes?.status ? "Sudah Dinilai" : "Belum Dinilai"}</CTableDataCell>
                       <CTableDataCell>
                         <ul>
                             <li style={{ textAlign: "left", marginBottom: "4px" }}>
@@ -176,16 +200,42 @@ const DataPenilaian = () => {
                         </ul>
                       </CTableDataCell>
                       <CTableDataCell>
+                        { (mapping?.attributes?.status && !mapping?.attributes?.status_interview) ? 
+                          <CButton
+                            color='primary'
+                            variant="outline" 
+                            onClick={() => setChosenMapping({ 
+                              visible: true, 
+                              id: mapping.id
+                            })}
+                            style={{marginLeft: '10px', marginBottom: '10px'}} >
+                              Ajukan
+                          </CButton>
+                          : null
+                        }
+                        { (mapping?.attributes?.status) ? 
+                          <CButton
+                            color='success'
+                            variant="outline"
+                            onClick={() => navigate(
+                              '/fitandproper/datapenilaian/datanilai', 
+                              { state: { position: mapping?.attributes?.position?.data?.id, registrant: mapping?.attributes?.registrant?.data?.id } }
+                            )}
+                            style={{marginLeft: '10px', marginBottom: '10px'}} >
+                              Lihat Nilai
+                          </CButton>
+                          : null
+                        }                  
                         <CButton
-                          color='primary'
+                          color='danger'
                           variant="outline" 
                           onClick={() => setChosenMapping({ 
                             visible: true, 
                             id: mapping.id
                           })}
-                          style={{marginLeft: '10px', marginBottom: '10px'}} >
-                            Nilai
-                        </CButton>
+                          style={{marginLeft: '10px', width: '78px'}} >
+                            Hapus
+                        </CButton>                        
                       </CTableDataCell>
                     </CTableRow>
                   )}
@@ -204,7 +254,7 @@ const DataPenilaian = () => {
                 </CButton>
                 <CButton color="danger" onClick={() => deleteData()}>Delete</CButton>
               </CModalFooter>
-            </CModal>
+            </CModal>           
           </CCardBody>
         </CCard>
       </CCol>
@@ -212,4 +262,4 @@ const DataPenilaian = () => {
   )
 }
 
-export default DataPenilaian
+export default DataPendaftaran
