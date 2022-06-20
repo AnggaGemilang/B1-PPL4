@@ -84,23 +84,23 @@ const TambahUnit = () => {
               <CForm onSubmit={postData} method="post">
                 <CRow className="mb-3" style={{ alignItem: "center" }}>
                   <CFormLabel htmlFor="unit_name" className="col-sm-2 col-form-label">
-                    Name Unit
+                    Nama Unit
                   </CFormLabel>
                   <CCol sm={10}>
                     <CFormInput 
                       type="text" 
                       name="unit_name" 
                       id="unit_name" 
-                      placeholder='Enter Unit Name . . .'
+                      placeholder='Masukkan Nama Unit . . .'
                       defaultValue={ state.status == "tambah" ? "" : state.data.attributes.unit_name } />
                   </CCol>
                 </CRow>
                 <CRow className="mb-3">
-                  <CFormLabel htmlFor="functional_name" className="col-sm-2 col-form-label">
-                    Address
+                  <CFormLabel htmlFor="address" className="col-sm-2 col-form-label">
+                    Alamat Unit
                   </CFormLabel>
                   <CCol sm={10}>
-                    <CFormTextarea name="address" id="address" rows="3" placeholder='Enter Address Unit . . .'>
+                    <CFormTextarea name="address" id="address" rows="3" placeholder='Masukkan Alamat Unit . . .'>
                       { state.status == "tambah" ? "" : state.data.attributes.address }
                     </CFormTextarea>
                   </CCol>

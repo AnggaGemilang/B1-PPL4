@@ -100,18 +100,18 @@ const Division = () => {
               <CForm onSubmit={filterSearch}>
                 <CRow className='mt-2'>
                   <CCol xs={6}>
-                    <CFormLabel htmlFor="exampleFormControlInput1">Division Name</CFormLabel>
+                    <CFormLabel htmlFor="exampleFormControlInput1">Nama Divisi</CFormLabel>
                     <CFormInput
                       type="text"
                       name='filter_nama'
                       id="filter_nama"
-                      placeholder="Enter Division Name . . ."
+                      placeholder="Masukkan Nama Divisi . . ."
                     />
                   </CCol>
                   <CCol xs={6}>
-                    <CFormLabel htmlFor="exampleFormControlInput1">Directorate</CFormLabel>
+                    <CFormLabel htmlFor="exampleFormControlInput1">Direktorat</CFormLabel>
                     <CFormSelect name="filter_directorate" id="filter_directorate" className="mb-3" aria-label="Large select example">
-                      <option value="">Choose Directorate</option>
+                      <option value="">Pilih Direktorat</option>
                       { directorates.map(directorate =>
                         <option key={ directorate.id } value={ directorate.id } >{ directorate.attributes.directorate_name }</option>
                       )}
@@ -141,7 +141,7 @@ const Division = () => {
           </CCol> 
           <CCard className="mb-4 mt-3">
             <CCardHeader>
-              <strong>Data Division</strong>
+              <strong>Data Divisi</strong>
             </CCardHeader>
             <CCardBody>
               <CRow>
@@ -151,7 +151,7 @@ const Division = () => {
                     style={{width:'18%', borderRadius: "50px", fontSize: "14px"}}
                     onClick={() => navigate('/division/tambah', {state: { status: 'tambah' } }) } >
                     <CIcon icon={cilPlus} style={{ marginRight: "10px", color: "#FFFFFF" }} />
-                    Tambah Division
+                    Tambah Divisi
                   </CButton>
                 </CCol>
               </CRow>
@@ -160,9 +160,9 @@ const Division = () => {
                   <CTableHead>
                     <CTableRow>
                       <CTableHeaderCell scope="col">No</CTableHeaderCell>
-                      <CTableHeaderCell scope="col">Name</CTableHeaderCell>
-                      <CTableHeaderCell scope="col">Directorate Name</CTableHeaderCell>
-                      <CTableHeaderCell scope="col">Action</CTableHeaderCell>
+                      <CTableHeaderCell scope="col">Nama Divisi</CTableHeaderCell>
+                      <CTableHeaderCell scope="col">Nama Direktorat</CTableHeaderCell>
+                      <CTableHeaderCell scope="col">Aksi</CTableHeaderCell>
                     </CTableRow>
                   </CTableHead>
                   <CTableBody>
@@ -175,6 +175,7 @@ const Division = () => {
                           <CButton 
                             color={'warning'} 
                             variant="outline" 
+                            style={{width: '75px', marginBottom: '10px'}}                            
                             onClick={() => navigate(
                               '/division/edit', 
                               {state: { data: division, status: 'edit' }})}>
@@ -182,7 +183,6 @@ const Division = () => {
                           <CButton 
                             color={'danger'} 
                             variant="outline" 
-                            style={{marginLeft: '10px'}}
                             onClick={() => setChosenDivision({ 
                               visible: true, 
                               id: division.id, 

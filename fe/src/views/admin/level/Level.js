@@ -96,21 +96,21 @@ const Level = () => {
               <CForm onSubmit={filterSearch}>
                 <CRow className='mt-2'>
                   <CCol xs={6}>
-                    <CFormLabel htmlFor="exampleFormControlInput1">Structural Name</CFormLabel>
+                    <CFormLabel htmlFor="exampleFormControlInput1">Nama Struktural</CFormLabel>
                     <CFormInput
                       type="text"
                       name='filter_snama'
                       id="filter_snama"
-                      placeholder="Enter Structural Name . . ."
+                      placeholder="Masukkan Nama Struktural . . ."
                     />
                   </CCol>
                   <CCol xs={6}>
-                    <CFormLabel htmlFor="exampleFormControlInput1">Functional Name</CFormLabel>
+                    <CFormLabel htmlFor="exampleFormControlInput1">Nama Fungsional</CFormLabel>
                     <CFormInput
                       type="text"
                       name='filter_fnama'
                       id="filter_fnama"
-                      placeholder="Enter Functional Name . . ."
+                      placeholder="Masukkan Nama Fungsional . . ."
                     />
                   </CCol>
                 </CRow>                     
@@ -137,7 +137,7 @@ const Level = () => {
           </CCol> 
           <CCard className="mb-4 mt-3">
             <CCardHeader>
-              <strong>Data Level</strong>
+              <strong>Data Jenjang</strong>
             </CCardHeader>
             <CCardBody>
               <CRow>
@@ -147,7 +147,7 @@ const Level = () => {
                     style={{width:'18%', borderRadius: "50px", fontSize: "14px"}}
                     onClick={() => navigate('/level/tambah', {state: { status: 'tambah' } }) } >
                     <CIcon icon={cilPlus} style={{ marginRight: "10px", color: "#FFFFFF" }} />
-                    Tambah Level
+                    Tambah Jenjang
                   </CButton>
                 </CCol>
               </CRow>
@@ -156,9 +156,9 @@ const Level = () => {
                   <CTableHead>
                     <CTableRow>
                       <CTableHeaderCell scope="col">No</CTableHeaderCell>
-                      <CTableHeaderCell scope="col">Structural Name</CTableHeaderCell>
-                      <CTableHeaderCell scope="col">Functional Name</CTableHeaderCell>
-                      <CTableHeaderCell scope="col">Action</CTableHeaderCell>
+                      <CTableHeaderCell scope="col">Nama Struktural</CTableHeaderCell>
+                      <CTableHeaderCell scope="col">Nama Fungsional</CTableHeaderCell>
+                      <CTableHeaderCell scope="col">Aksi</CTableHeaderCell>
                     </CTableRow>
                   </CTableHead>
                   <CTableBody>

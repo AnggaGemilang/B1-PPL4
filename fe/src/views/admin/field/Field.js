@@ -100,18 +100,18 @@ const Field = () => {
               <CForm onSubmit={filterSearch}>
                 <CRow className='mt-2'>
                   <CCol xs={6}>
-                    <CFormLabel htmlFor="exampleFormControlInput1">Field Name</CFormLabel>
+                    <CFormLabel htmlFor="exampleFormControlInput1">Name Bidang</CFormLabel>
                     <CFormInput
                       type="text"
                       name='filter_nama'
                       id="filter_nama"
-                      placeholder="Enter Field Name . . ."
+                      placeholder="Masukkan Nama Bidang . . ."
                     />
                   </CCol>
                   <CCol xs={6}>
-                    <CFormLabel htmlFor="exampleFormControlInput1">Division</CFormLabel>
+                    <CFormLabel htmlFor="exampleFormControlInput1">Divisi</CFormLabel>
                     <CFormSelect name="filter_division" id="filter_division" className="mb-3" aria-label="Large select example">
-                      <option value="">Choose Division</option>
+                      <option value="">Pilih Divisi</option>
                       { divisions.map(division =>
                         <option key={ division.id } value={ division.id } >{ division.attributes.division_name }</option>
                       )}
@@ -141,7 +141,7 @@ const Field = () => {
           </CCol> 
           <CCard className="mb-4 mt-3">
             <CCardHeader>
-              <strong>Data Field</strong>
+              <strong>Data Bidang</strong>
             </CCardHeader>
             <CCardBody>
               <CRow>
@@ -151,7 +151,7 @@ const Field = () => {
                     style={{width:'18%', borderRadius: "50px", fontSize: "14px"}}
                     onClick={() => navigate('/field/tambah', {state: { status: 'tambah' } }) } >
                     <CIcon icon={cilPlus} style={{ marginRight: "10px", color: "#FFFFFF" }} />
-                    Tambah Field
+                    Tambah Bidang
                   </CButton>
                 </CCol>
               </CRow>
@@ -160,9 +160,9 @@ const Field = () => {
                   <CTableHead>
                     <CTableRow>
                       <CTableHeaderCell scope="col">No</CTableHeaderCell>
-                      <CTableHeaderCell scope="col">Name</CTableHeaderCell>
-                      <CTableHeaderCell scope="col">Division Name</CTableHeaderCell>
-                      <CTableHeaderCell scope="col">Action</CTableHeaderCell>
+                      <CTableHeaderCell scope="col">Nama Bidang</CTableHeaderCell>
+                      <CTableHeaderCell scope="col">Nama Divisi</CTableHeaderCell>
+                      <CTableHeaderCell scope="col">Aksi</CTableHeaderCell>
                     </CTableRow>
                   </CTableHead>
                   <CTableBody>
@@ -175,6 +175,7 @@ const Field = () => {
                           <CButton 
                             color={'warning'} 
                             variant="outline" 
+                            style={{width: '75px', marginBottom: '10px'}}
                             onClick={() => navigate(
                               '/field/edit', 
                               {state: { data: field, status: 'edit' }})}>
@@ -182,7 +183,6 @@ const Field = () => {
                           <CButton 
                             color={'danger'} 
                             variant="outline" 
-                            style={{marginLeft: '10px'}}
                             onClick={() => setChosenField({ 
                               visible: true, 
                               id: field.id, 

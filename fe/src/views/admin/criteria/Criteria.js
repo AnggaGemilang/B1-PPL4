@@ -98,29 +98,29 @@ const Criteria = () => {
               <CForm onSubmit={filterSearch}>
                 <CRow className='mt-2'>
                   <CCol xs={6}>
-                    <CFormLabel htmlFor="filter_nama">Criteria Name</CFormLabel>
+                    <CFormLabel htmlFor="filter_nama">Nama Kriteria</CFormLabel>
                     <CFormInput
                       type="text"
                       name='filter_nama'
                       id="filter_nama"
-                      placeholder="Enter Criteria Name . . ."
+                      placeholder="Masukkan Nama Kriteria . . ."
                     />
                   </CCol>
                   <CCol xs={6}>
-                    <CFormLabel htmlFor="filter_value">Value</CFormLabel>
+                    <CFormLabel htmlFor="filter_value">Bobot</CFormLabel>
                     <CFormInput
                       type="text"
                       name='filter_value'
                       id="filter_value"
-                      placeholder="Enter Value . . ."
+                      placeholder="Masukkan Bobot . . ."
                     />
                   </CCol>
                 </CRow>             
                 <CRow className='mt-3'>
                   <CCol xs={12}>
-                    <CFormLabel htmlFor="filter_usefor">Use For</CFormLabel>
+                    <CFormLabel htmlFor="filter_usefor">Penggunaan</CFormLabel>
                     <CFormSelect name="filter_usefor" id="filter_usefor" className="mb-3" aria-label="Large select example">
-                      <option value="">Choose Use For</option>
+                      <option value="">Pilih Penggunaan</option>
                       <option value="am">Manajemen Atas</option>
                       <option value="md">Manajemen Dasar</option>
                     </CFormSelect>
@@ -149,7 +149,7 @@ const Criteria = () => {
           </CCol> 
           <CCard className="mb-4 mt-3">
             <CCardHeader>
-              <strong>Data Criteria</strong>
+              <strong>Data Kriteria</strong>
             </CCardHeader>
             <CCardBody>
               <CRow>
@@ -168,10 +168,10 @@ const Criteria = () => {
                   <CTableHead>
                     <CTableRow>
                       <CTableHeaderCell scope="col">No</CTableHeaderCell>
-                      <CTableHeaderCell scope="col">Criteria Name</CTableHeaderCell>
-                      <CTableHeaderCell scope="col">Value</CTableHeaderCell>
-                      <CTableHeaderCell scope="col">Use For</CTableHeaderCell>
-                      <CTableHeaderCell scope="col">Action</CTableHeaderCell>
+                      <CTableHeaderCell scope="col">Nama Kriteria</CTableHeaderCell>
+                      <CTableHeaderCell scope="col">Bobot</CTableHeaderCell>
+                      <CTableHeaderCell scope="col">Penggunaan</CTableHeaderCell>
+                      <CTableHeaderCell scope="col">Aksi</CTableHeaderCell>
                     </CTableRow>
                   </CTableHead>
                   <CTableBody>
@@ -185,6 +185,7 @@ const Criteria = () => {
                           <CButton 
                             color={'warning'} 
                             variant="outline"
+                            style={{width: '75px'}}
                             onClick={() => navigate(
                               '/criteria/edit', 
                               {state: { data: criteria, status: 'edit' }})}>
@@ -192,12 +193,12 @@ const Criteria = () => {
                           <CButton 
                             color={'danger'} 
                             variant="outline" 
-                            style={{marginLeft: '10px'}}
+                            style={{marginTop: '10px'}}
                             onClick={() => setChosenCriteria({ 
                               visible: true, 
                               id: criteria.id, 
                               name: criteria.attributes.criteria, 
-                            })}>Delete</CButton>
+                            })}>Hapus</CButton>
                         </CTableDataCell>
                       </CTableRow>
                     )}
