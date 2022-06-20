@@ -109,6 +109,7 @@ const Pendaftaran = () => {
         position: document.getElementById("projection").value,        
         is_interview: false,
         status: false,
+        status_intervie: false
       }
     };  
     MappingAPI.add(body).then(
@@ -127,7 +128,7 @@ const Pendaftaran = () => {
             formData.append('field', 'cv')
             DataPesertaAPI.addFile(formData).then(
               (res) => {
-                navigate('/fitandproper', {state: { successMessage: 'Pendaftaran Berhasil' } });
+                navigate('/fitandproper/datapendaftaran', {state: { successMessage: 'Pendaftaran Berhasil' } });
               },
               (err) => {
                 console.log("err", err);
@@ -138,7 +139,7 @@ const Pendaftaran = () => {
             console.log("err", err);
           }
         );  
-          navigate('/fitandproper', {state: { successMessage: 'Pendaftaran Telah Berhasil' } });
+          navigate('/fitandproper/datapendaftaran', {state: { successMessage: 'Pendaftaran Telah Berhasil' } });
       },
       (err) => {
         console.log("err", err);
