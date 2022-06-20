@@ -160,7 +160,7 @@ const Employee = () => {
                 </CRow>
                 <CRow className='mt-3'>
                   <CCol xs={6}>
-                    <CFormLabel htmlFor="gender">Gender</CFormLabel>                      
+                    <CFormLabel htmlFor="gender">Jenis Kelamin</CFormLabel>                      
                     <CCol xs={12}>
                       <CFormCheck
                         inline
@@ -189,13 +189,13 @@ const Employee = () => {
                     </CCol>
                   </CCol>
                   <CCol xs={6}>
-                    <CFormLabel htmlFor="exampleFormControlInput1">Birth Place</CFormLabel>
+                    <CFormLabel htmlFor="exampleFormControlInput1">Tempat Lahir</CFormLabel>
                     <CFormInput type="text" name="filter_birthplace" id="filter_birthplace" placeholder='Enter Birth Place . . .' />
                   </CCol>
                 </CRow>
                 <CRow className='mt-3'>
                   <CCol xs={6}>
-                    <CFormLabel htmlFor="exampleFormControlInput1">Birth Date</CFormLabel>
+                    <CFormLabel htmlFor="exampleFormControlInput1">Tanggal Lahir</CFormLabel>
                     <CFormInput type="date" name="filter_birthDate" id="filter_birthDate"/>
                   </CCol>
                   <CCol xs={6}>
@@ -205,11 +205,11 @@ const Employee = () => {
                 </CRow> 
                 <CRow className='mt-3'>
                   <CCol xs={6}>
-                    <CFormLabel htmlFor="exampleFormControlInput1">Phone Number</CFormLabel>
+                    <CFormLabel htmlFor="exampleFormControlInput1">Nomor Handphone</CFormLabel>
                     <CFormInput type="number" name="filter_phonenumber" id="filter_phonenumber" placeholder='Enter Phone Number . . .'/>
                   </CCol>
                   <CCol xs={6}>
-                    <CFormLabel htmlFor="exampleFormControlInput1">Religion</CFormLabel>
+                    <CFormLabel htmlFor="exampleFormControlInput1">Agama</CFormLabel>
                     <CFormSelect name="filter_religion" id="filter_religion" className="mb-3" aria-label="Large select example">
                       <option value="">Choose Religion</option>
                       <option value="Islam">Islam</option>
@@ -222,18 +222,18 @@ const Employee = () => {
                 </CRow> 
                 <CRow className='mt-3'>
                   <CCol xs={6}>
-                    <CFormLabel htmlFor="exampleFormControlInput1">Position</CFormLabel>
+                    <CFormLabel htmlFor="exampleFormControlInput1">Jabatan</CFormLabel>
                     <CFormSelect name="filter_grade" id="filter_grade" className="mb-3" aria-label="Large select example">
-                      <option value="">Choose Position</option>
+                      <option value="">Pilih Jabatan</option>
                       { positions.map(position =>
                         <option key={ position.id } value={ position.id } >{ position.attributes.position_name }</option>
                       )}
                     </CFormSelect>
                   </CCol>
                   <CCol xs={6}>
-                    <CFormLabel htmlFor="exampleFormControlInput1">Level</CFormLabel>
+                    <CFormLabel htmlFor="exampleFormControlInput1">Jenjang</CFormLabel>
                     <CFormSelect name="filter_level" id="filter_level" className="mb-3" aria-label="Large select example">
-                      <option value="">Choose Level</option>
+                      <option value="">Pilih Jenjang</option>
                       { levels.map(level =>
                         <option key={ level.id } value={ level.id } >{ level.attributes.functional_name } - { level.attributes.structural_name }</option>
                       )}
@@ -242,9 +242,9 @@ const Employee = () => {
                 </CRow>
                 <CRow className='mt-3'>
                   <CCol xs={6}>
-                    <CFormLabel htmlFor="exampleFormControlInput1">Subfied</CFormLabel>
+                    <CFormLabel htmlFor="exampleFormControlInput1">Sub Bidang</CFormLabel>
                     <CFormSelect name="filter_subfield" id="filter_subfield" className="mb-3" aria-label="Large select example">
-                      <option value="">Choose Subfield</option>
+                      <option value="">Pilih Sub Bidang</option>
                       { subfields.map(subfield =>
                         <option key={ subfield.id } value={ subfield.id } >{ subfield.attributes.subfield_name }</option>
                       )}
@@ -282,9 +282,11 @@ const Employee = () => {
                 <CButton
                   color='primary'
                   style={{width:'18%', borderRadius: "50px", fontSize: "14px"}}
-                  onClick={() => navigate('/employee/tambah', {state: { status: 'tambah' } }) } >
+                  onClick={() => 
+                    navigate('/employee/tambah', {state: { status: 'tambah' } })
+                  } >
                   <CIcon icon={cilPlus} style={{ marginRight: "10px", color: "#FFFFFF" }} />
-                  Tambah Employee
+                  Tambah Karyawan
                 </CButton>
               </CCol>
             </CRow>
@@ -293,18 +295,18 @@ const Employee = () => {
                 <CTableHead>
                   <CTableRow>
                     <CTableHeaderCell scope="col">No</CTableHeaderCell>
-                    <CTableHeaderCell scope="col">Photo</CTableHeaderCell>
+                    <CTableHeaderCell scope="col">Foto</CTableHeaderCell>
                     <CTableHeaderCell scope="col">NIP</CTableHeaderCell>
-                    <CTableHeaderCell scope="col">Name</CTableHeaderCell>
-                    <CTableHeaderCell scope="col">Gender</CTableHeaderCell>
-                    <CTableHeaderCell scope="col">Religion</CTableHeaderCell>
-                    <CTableHeaderCell scope="col">Place and Date Birth</CTableHeaderCell>
+                    <CTableHeaderCell scope="col">Nama</CTableHeaderCell>
+                    <CTableHeaderCell scope="col">Jenis Kelamin</CTableHeaderCell>
+                    <CTableHeaderCell scope="col">Agama</CTableHeaderCell>
+                    <CTableHeaderCell scope="col">Tempat Tanggal Lahir</CTableHeaderCell>
                     <CTableHeaderCell scope="col">Email</CTableHeaderCell>
-                    <CTableHeaderCell scope="col">Phone Number</CTableHeaderCell>
-                    <CTableHeaderCell scope="col">Position</CTableHeaderCell>
-                    <CTableHeaderCell scope="col">Level</CTableHeaderCell>
-                    <CTableHeaderCell scope="col">Subfield</CTableHeaderCell>
-                    <CTableHeaderCell scope="col">Action</CTableHeaderCell>
+                    <CTableHeaderCell scope="col">Nomor HP</CTableHeaderCell>
+                    <CTableHeaderCell scope="col">Jabatan</CTableHeaderCell>
+                    <CTableHeaderCell scope="col">Jenjang</CTableHeaderCell>
+                    <CTableHeaderCell scope="col">Sub Bidang</CTableHeaderCell>
+                    <CTableHeaderCell scope="col">Aksi</CTableHeaderCell>
                   </CTableRow>
                 </CTableHead>
                 <CTableBody>
@@ -330,15 +332,14 @@ const Employee = () => {
                         <CButton 
                           color={'warning'} 
                           variant="outline" 
-                          style={{width: '75px'}}
-                          onClick={() => navigate(
-                            `/employee/edit/${employee.id}`, 
-                          )}>
+                          style={{width: '75px', marginBottom: '10px'}}
+                          onClick={() => 
+                            navigate('/employee/edit', {state: { data: employee, status: 'edit' } })
+                          }>
                           Edit</CButton>
                         <CButton 
                           color={'danger'} 
                           variant="outline" 
-                          style={{marginTop: '10px'}}
                           onClick={() => setChosenEmployee({ 
                             visible: true, 
                             id: employee.id, 

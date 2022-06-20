@@ -24,7 +24,7 @@ import {
   CAccordionItem, 
   CFormLabel,
   CAlert,
-  CForm
+  CForm,
 } from '@coreui/react'
 import { cilSearch, cilPlus } from '@coreui/icons'
 import { useLocation, useNavigate } from "react-router-dom";
@@ -92,12 +92,12 @@ const Grade = () => {
               <CForm onSubmit={filterSearch}>
                 <CRow className='mt-2'>
                   <CCol xs={12}>
-                    <CFormLabel htmlFor="exampleFormControlInput1">Grade Name</CFormLabel>
+                    <CFormLabel htmlFor="exampleFormControlInput1">Nama Grade</CFormLabel>
                     <CFormInput
                       type="text"
                       name='filter_nama'
                       id="filter_nama"
-                      placeholder="Enter Grade Name . . ."
+                      placeholder="Masukkan Nama Grade . . ."
                     />
                   </CCol>
                 </CRow>                     
@@ -143,8 +143,8 @@ const Grade = () => {
                   <CTableHead>
                     <CTableRow>
                       <CTableHeaderCell scope="col">No</CTableHeaderCell>
-                      <CTableHeaderCell scope="col">Name</CTableHeaderCell>
-                      <CTableHeaderCell scope="col">Action</CTableHeaderCell>
+                      <CTableHeaderCell scope="col">Nama Grade</CTableHeaderCell>
+                      <CTableHeaderCell scope="col">Aksi</CTableHeaderCell>
                     </CTableRow>
                   </CTableHead>
                   <CTableBody>

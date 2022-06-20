@@ -101,18 +101,18 @@ const Directorate = () => {
               <CForm onSubmit={filterSearch}>
                 <CRow className='mt-2'>
                   <CCol xs={6}>
-                    <CFormLabel htmlFor="exampleFormControlInput1">Directorate Name</CFormLabel>
+                    <CFormLabel htmlFor="exampleFormControlInput1">Nama Direktorat</CFormLabel>
                     <CFormInput
                       type="text"
                       name='filter_nama'
                       id="filter_nama"
-                      placeholder="Enter Directorate Name . . ."
+                      placeholder="Masukkan Nama Direktorat . . ."
                     />
                   </CCol>
                   <CCol xs={6}>
                     <CFormLabel htmlFor="exampleFormControlInput1">Unit</CFormLabel>
                     <CFormSelect name="filter_unit" id="filter_unit" className="mb-3" aria-label="Large select example">
-                      <option value="">Choose Unit</option>
+                      <option value="">Pilih Unit</option>
                       { units.map(unit =>
                         <option key={ unit.id } value={ unit.id } >{ unit.attributes.unit_name }</option>
                       )}
@@ -161,9 +161,9 @@ const Directorate = () => {
                   <CTableHead>
                     <CTableRow>
                       <CTableHeaderCell scope="col">No</CTableHeaderCell>
-                      <CTableHeaderCell scope="col">Name</CTableHeaderCell>
-                      <CTableHeaderCell scope="col">Unit</CTableHeaderCell>
-                      <CTableHeaderCell scope="col">Action</CTableHeaderCell>
+                      <CTableHeaderCell scope="col">Nama Direktorat</CTableHeaderCell>
+                      <CTableHeaderCell scope="col">Nama Unit</CTableHeaderCell>
+                      <CTableHeaderCell scope="col">Aksi</CTableHeaderCell>
                     </CTableRow>
                   </CTableHead>
                   <CTableBody>
@@ -176,6 +176,7 @@ const Directorate = () => {
                           <CButton 
                             color={'warning'} 
                             variant="outline" 
+                            style={{width: '75px', marginBottom: '10px'}}
                             onClick={() => navigate(
                               '/directorate/edit', 
                               {state: { data: directorate, status: 'edit' }})}>
@@ -183,7 +184,6 @@ const Directorate = () => {
                           <CButton 
                             color={'danger'} 
                             variant="outline" 
-                            style={{marginLeft: '10px'}}
                             onClick={() => setChosenDirectorate({ 
                               visible: true, 
                               id: directorate.id, 

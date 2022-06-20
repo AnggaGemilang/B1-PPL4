@@ -43,7 +43,7 @@ const TambahField = () => {
     const body = {
       data: {
         field_name: document.getElementById("field_name").value,
-        divisions: document.getElementById("division").value
+        division: document.getElementById("division").value
       }
     };
 
@@ -88,30 +88,30 @@ const TambahField = () => {
         <CCol xs={12}>      
           <CCard className="mb-4">
             <CCardHeader>
-              <strong>{ state.status == "tambah" ? "Tambah" : "Edit"} Field</strong>
+              <strong>{ state.status == "tambah" ? "Tambah" : "Edit"} Bidang</strong>
             </CCardHeader>
             <CCardBody>
               <CForm onSubmit={postData} method="post">
                 <CRow className="mb-3">
                   <CFormLabel htmlFor="field_name" className="col-sm-2 col-form-label">
-                    Nama Field
+                    Nama Bidang
                   </CFormLabel>
                   <CCol sm={10}>
                     <CFormInput 
                       type="text"
                       name="field_name"
                       id="field_name"
-                      placeholder='Enter Field Name . . .'
+                      placeholder='Masukkan Nama Bidang . . .'
                       defaultValue={ state.status == "tambah" ? "" : state.data.attributes.field_name } />
                   </CCol>
                 </CRow>
                 <CRow className="mb-3">
                   <CFormLabel htmlFor="division" className="col-sm-2 col-form-label">
-                    Division
+                    Divisi
                   </CFormLabel>
                   <CCol sm={10}>
                     <CFormSelect name="division" id="division" className="mb-3" aria-label="Large select example">
-                      <option>Choose Division</option>
+                      <option>Pilih Divisi</option>
                       { divisions.map(division =>
                         <option selected={division.id == state?.data?.attributes?.divisions?.data[0]?.id} key={ division.id } value={ division.id } >{ division.attributes.division_name }</option>
                       )}

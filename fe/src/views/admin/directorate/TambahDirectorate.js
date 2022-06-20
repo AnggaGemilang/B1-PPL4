@@ -43,7 +43,7 @@ const TambahDirectorate = () => {
     const body = {
       data: {
         directorate_name: document.getElementById("directorate_name").value,
-        units: document.getElementById("unit").value
+        unit: document.getElementById("unit").value
       }
     };
 
@@ -101,7 +101,7 @@ const TambahDirectorate = () => {
                       type="text" 
                       name="directorate_name"
                       id="directorate_name"
-                      placeholder='Enter Directorate Name . . .'
+                      placeholder='Masukkan Nama Direktorat . . .'
                       defaultValue={ state.status == "tambah" ? "" : state.data.attributes.directorate_name } />
                   </CCol>
                 </CRow>
@@ -111,7 +111,7 @@ const TambahDirectorate = () => {
                   </CFormLabel>
                   <CCol sm={10}>
                     <CFormSelect name="unit" id="unit" className="mb-3" aria-label="Large select example">
-                      <option>Choose Unit</option>
+                      <option>Pilih Unit</option>
                       { units.map(unit =>
                         <option selected={unit.id == state?.data?.attributes?.units?.data[0]?.id} key={ unit.id } value={ unit.id } >{ unit.attributes.unit_name }</option>
                       )}

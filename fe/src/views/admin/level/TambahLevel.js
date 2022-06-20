@@ -77,33 +77,33 @@ const TambahLevel = () => {
         <CCol xs={12}>
           <CCard className="mb-4">
             <CCardHeader>
-              <strong>{ state.status == "tambah" ? "Tambah" : "Edit"} Level</strong>
+              <strong>{ state.status == "tambah" ? "Tambah" : "Edit"} Jenjang</strong>
             </CCardHeader>
             <CCardBody>
               <CForm onSubmit={postData} method="post">
                 <CRow className="mb-3">
                   <CFormLabel htmlFor="structural_name" className="col-sm-2 col-form-label">
-                    Structural Name
+                    Nama Struktural
                   </CFormLabel>
                   <CCol sm={10}>
                     <CFormInput 
                       type="text"
                       name="structural_name"
                       id="structural_name"
-                      placeholder='Enter Structural Name . . .'
+                      placeholder='Masukkan Nama Struktural . . .'
                       defaultValue={ state.status == "tambah" ? "" : state.data.attributes.structural_name }/>
                   </CCol>
                 </CRow>
                 <CRow className="mb-3">
                   <CFormLabel htmlFor="functional_name" className="col-sm-2 col-form-label">
-                    Functional Name
+                    Nama Fungsional
                   </CFormLabel>
                   <CCol sm={10}>
                     <CFormInput 
                       type="text"
                       name="functional_name"
                       id="functional_name"
-                      placeholder='Enter Functional Name . . .'
+                      placeholder='Masukkan Nama Fungsional . . .'
                       defaultValue={ state.status == "tambah" ? "" : state.data.attributes.functional_name } />
                   </CCol>
                 </CRow>              

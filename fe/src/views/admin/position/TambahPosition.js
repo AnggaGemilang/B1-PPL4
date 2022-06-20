@@ -43,7 +43,7 @@ const TambahPosition = () => {
     const body = {
       data: {
         position_name: document.getElementById("position_name").value,
-        grades: document.getElementById("grade").value
+        grade: document.getElementById("grade").value
       }
     };
 
@@ -88,20 +88,20 @@ const TambahPosition = () => {
         <CCol xs={12}>       
           <CCard className="mb-4">
             <CCardHeader>
-              <strong>{ state.status == "tambah" ? "Tambah" : "Edit"} Position</strong>
+              <strong>{ state.status == "tambah" ? "Tambah" : "Edit"} Jabatan</strong>
             </CCardHeader>
             <CCardBody>
               <CForm onSubmit={postData} method="post">
                 <CRow className="mb-3">
                   <CFormLabel htmlFor="position_name" className="col-sm-2 col-form-label">
-                    Nama Position
+                    Nama Jabatan
                   </CFormLabel>
                   <CCol sm={10}>
                     <CFormInput 
                       type="text" 
                       name="position_name" 
                       id="position_name"
-                      placeholder='Enter Position Name . . .'
+                      placeholder='Masukkan Nama Jabatan . . .'
                       defaultValue={ state.status == "tambah" ? "" : state.data.attributes.position_name } />
                   </CCol>
                 </CRow>
@@ -111,7 +111,7 @@ const TambahPosition = () => {
                   </CFormLabel>
                   <CCol sm={10}>
                     <CFormSelect name="grade" id="grade" className="mb-3" aria-label="Large select example">
-                      <option>Choose Grade</option>
+                      <option>Pilih Grade</option>
                       { grades.map(grade =>
                         <option selected={grade.id == state?.data?.attributes?.grades?.data[0]?.id} key={ grade.id } value={ grade.id } >{ grade.attributes.grade_name }</option>
                       )}

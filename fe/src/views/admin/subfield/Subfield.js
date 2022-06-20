@@ -98,18 +98,18 @@ const SubField = () => {
               <CForm onSubmit={filterSearch}>
                 <CRow className='mt-2'>
                   <CCol xs={6}>
-                    <CFormLabel htmlFor="exampleFormControlInput1">Sub Field Name</CFormLabel>
+                    <CFormLabel htmlFor="exampleFormControlInput1">Sub Bidang</CFormLabel>
                     <CFormInput
                       type="text"
                       name='filter_nama'
                       id="filter_nama"
-                      placeholder="Enter Sub Field Name . . ."
+                      placeholder="Nama Sub Bidang . . ."
                     />
                   </CCol>
                   <CCol xs={6}>
-                    <CFormLabel htmlFor="exampleFormControlInput1">Field</CFormLabel>
+                    <CFormLabel htmlFor="exampleFormControlInput1">Bidang</CFormLabel>
                     <CFormSelect name="filter_field" id="filter_field" className="mb-3" aria-label="Large select example">
-                      <option value="">Choose Field</option>
+                      <option value="">Pilih Bidang</option>
                       { fields.map(field =>
                         <option key={ field.id } value={ field.id } >{ field.attributes.field_name }</option>
                       )}
@@ -139,17 +139,17 @@ const SubField = () => {
           </CCol> 
           <CCard className="mb-4 mt-3">
             <CCardHeader>
-              <strong>Data Sub Field</strong>
+              <strong>Data Sub Bidang</strong>
             </CCardHeader>
             <CCardBody>
               <CRow>
                 <CCol>
                   <CButton
                     color='primary'
-                    style={{width:'18%', borderRadius: "50px", fontSize: "14px"}}
+                    style={{width:'20%', borderRadius: "50px", fontSize: "14px"}}
                     onClick={() => navigate('/subfield/tambah', {state: { status: 'tambah' } }) } >
                     <CIcon icon={cilPlus} style={{ marginRight: "10px", color: "#FFFFFF" }} />
-                    Tambah Sub field
+                    Tambah Sub Bidang
                   </CButton>
                 </CCol>
               </CRow>
@@ -158,9 +158,9 @@ const SubField = () => {
                   <CTableHead>
                     <CTableRow>
                       <CTableHeaderCell scope="col">No</CTableHeaderCell>
-                      <CTableHeaderCell scope="col">Name</CTableHeaderCell>
-                      <CTableHeaderCell scope="col">Field Name</CTableHeaderCell>
-                      <CTableHeaderCell scope="col">Action</CTableHeaderCell>
+                      <CTableHeaderCell scope="col">Nama Sub Bidang</CTableHeaderCell>
+                      <CTableHeaderCell scope="col">Nama Bidang</CTableHeaderCell>
+                      <CTableHeaderCell scope="col">Aksi</CTableHeaderCell>
                     </CTableRow>
                   </CTableHead>
                   <CTableBody>

@@ -100,18 +100,18 @@ const Grade = () => {
               <CForm onSubmit={filterSearch}>
                 <CRow className='mt-2'>
                   <CCol xs={6}>
-                    <CFormLabel htmlFor="exampleFormControlInput1">Position Name</CFormLabel>
+                    <CFormLabel htmlFor="exampleFormControlInput1">Jabatan</CFormLabel>
                     <CFormInput
                       type="text"
                       name='filter_nama'
                       id="filter_nama"
-                      placeholder="Enter Position Name . . ."
+                      placeholder="Masukkan Nama Jabatan . . ."
                     />
                   </CCol>
                   <CCol xs={6}>
                     <CFormLabel htmlFor="exampleFormControlInput1">Grade</CFormLabel>
                     <CFormSelect name="filter_grade" id="filter_grade" className="mb-3" aria-label="Large select example">
-                      <option value="">Choose Grade</option>
+                      <option value="">Pilih Grade</option>
                       { grades.map(grade =>
                         <option key={ grade.id } value={ grade.id } >{ grade.attributes.grade_name}</option>
                       )}
@@ -141,7 +141,7 @@ const Grade = () => {
           </CCol> 
           <CCard className="mb-4 mt-3">
             <CCardHeader>
-              <strong>Data Position</strong>
+              <strong>Data Jabatan</strong>
             </CCardHeader>
             <CCardBody>
               <CRow>
@@ -151,7 +151,7 @@ const Grade = () => {
                     style={{width:'18%', borderRadius: "50px", fontSize: "14px"}}
                     onClick={() => navigate('/position/tambah', {state: { status: 'tambah' } }) } >
                     <CIcon icon={cilPlus} style={{ marginRight: "10px", color: "#FFFFFF" }} />
-                    Tambah Position
+                    Tambah Jabatan
                   </CButton>
                 </CCol>
               </CRow>
@@ -160,9 +160,9 @@ const Grade = () => {
                   <CTableHead>
                     <CTableRow>
                       <CTableHeaderCell scope="col">No</CTableHeaderCell>
-                      <CTableHeaderCell scope="col">Name</CTableHeaderCell>
-                      <CTableHeaderCell scope="col">Grade Name</CTableHeaderCell>
-                      <CTableHeaderCell scope="col">Action</CTableHeaderCell>
+                      <CTableHeaderCell scope="col">Nama Jabatan</CTableHeaderCell>
+                      <CTableHeaderCell scope="col">Grade</CTableHeaderCell>
+                      <CTableHeaderCell scope="col">Aksi</CTableHeaderCell>
                     </CTableRow>
                   </CTableHead>
                   <CTableBody>

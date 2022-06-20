@@ -88,7 +88,7 @@ const TambahGrade = () => {
                       type="text"
                       name="grade_name"
                       id="grade_name"
-                      placeholder='Enter Grade Name . . .'
+                      placeholder='Masukkan Nama Grade . . .'
                       defaultValue={ state.status == "tambah" ? "" : state.data.attributes.grade_name } />
                   </CCol>
                 </CRow>

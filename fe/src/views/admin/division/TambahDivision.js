@@ -42,7 +42,7 @@ const TambahDivision = () => {
     const body = {
       data: {
         division_name: document.getElementById("division_name").value,
-        directorates: document.getElementById("directorate").value
+        directorate: document.getElementById("directorate").value
       }
     };
 
@@ -87,30 +87,30 @@ const TambahDivision = () => {
         <CCol xs={12}>      
           <CCard className="mb-4">
             <CCardHeader>
-              <strong>{ state.status == "tambah" ? "Tambah" : "Edit"} Division</strong>
+              <strong>{ state.status == "tambah" ? "Tambah" : "Edit"} Divisi</strong>
             </CCardHeader>
             <CCardBody>
               <CForm onSubmit={postData} method="post">
                 <CRow className="mb-3">
                   <CFormLabel htmlFor="division_name" className="col-sm-2 col-form-label">
-                    Nama Division
+                    Nama Divisi
                   </CFormLabel>
                   <CCol sm={10}>
                     <CFormInput 
                       type="text"
                       name="division_name"
                       id="division_name"
-                      placeholder='Enter Division Name . . .'
+                      placeholder='Masukkan Nama Division . . .'
                       defaultValue={ state.status == "tambah" ? "" : state.data.attributes.division_name } />
                   </CCol>
                 </CRow>
                 <CRow className="mb-3">
                   <CFormLabel htmlFor="directorate" className="col-sm-2 col-form-label">
-                    Directorate
+                    Direktorat
                   </CFormLabel>
                   <CCol sm={10}>
                     <CFormSelect name="directorate" id="directorate" className="mb-3" aria-label="Large select example">
-                      <option>Choose Directorate</option>
+                      <option>Pilih Direktorat</option>
                       { directorates.map(directorate =>
                         <option selected={directorate.id == state?.data?.attributes?.directorates?.data[0]?.id} key={ directorate.id } value={ directorate.id } >{ directorate.attributes.directorate_name }</option>
                       )}

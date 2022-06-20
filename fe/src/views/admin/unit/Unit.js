@@ -94,21 +94,21 @@ const Unit = () => {
               <CForm onSubmit={filterSearch}>
                 <CRow className='mt-2'>
                   <CCol xs={6}>
-                    <CFormLabel htmlFor="exampleFormControlInput1">Name</CFormLabel>
+                    <CFormLabel htmlFor="exampleFormControlInput1">Nama Unit</CFormLabel>
                     <CFormInput
                       type="text"
                       name='filter_nama'
                       id="filter_nama"
-                      placeholder="Enter Unit Name . . ."
+                      placeholder="Masukkan Nama Unit . . ."
                     />
                   </CCol>
                   <CCol xs={6}>
-                    <CFormLabel htmlFor="exampleFormControlInput1">Address</CFormLabel>
+                    <CFormLabel htmlFor="exampleFormControlInput1">Alamat Unit</CFormLabel>
                     <CFormInput
                       type="text"
                       name='filter_address'
                       id="filter_address"
-                      placeholder="Enter Address . . ."
+                      placeholder="Masukkan Alamat Unit . . ."
                     />
                   </CCol>
                 </CRow>
@@ -154,9 +154,9 @@ const Unit = () => {
                   <CTableHead>
                     <CTableRow>
                       <CTableHeaderCell scope="col">No</CTableHeaderCell>
-                      <CTableHeaderCell scope="col">Name</CTableHeaderCell>
-                      <CTableHeaderCell scope="col">Address</CTableHeaderCell>
-                      <CTableHeaderCell scope="col">Action</CTableHeaderCell>
+                      <CTableHeaderCell scope="col">Nama Unit</CTableHeaderCell>
+                      <CTableHeaderCell scope="col">Alamat</CTableHeaderCell>
+                      <CTableHeaderCell scope="col">Aksi</CTableHeaderCell>
                     </CTableRow>
                   </CTableHead>
                   <CTableBody>

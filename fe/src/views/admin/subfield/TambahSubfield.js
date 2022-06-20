@@ -43,7 +43,7 @@ const TambahSubfield = () => {
     const body = {
       data: {
         subfield_name: document.getElementById("subfield_name").value,
-        fields: document.getElementById("field").value,
+        field: document.getElementById("field").value,
       }
     };
     if(state.status == "tambah"){
@@ -87,30 +87,30 @@ const TambahSubfield = () => {
         <CCol xs={12}>    
           <CCard className="mb-4">
             <CCardHeader>
-              <strong>{ state.status == "tambah" ? "Tambah" : "Edit"} Sub Field</strong>
+              <strong>{ state.status == "tambah" ? "Tambah" : "Edit"} Sub Bidang</strong>
             </CCardHeader>
             <CCardBody>
               <CForm onSubmit={postData} method="post">
                 <CRow className="mb-3">
                   <CFormLabel htmlFor="subfield_name" className="col-sm-2 col-form-label">
-                    Sub Field Name
+                    Sub Bidang
                   </CFormLabel>
                   <CCol sm={10}>
                     <CFormInput 
                       type="text" 
                       name="subfield_name"
                       id="subfield_name"
-                      placeholder='Enter Sub field . . .'
+                      placeholder='Masukkan Nama Sub Bidang . . .'
                       defaultValue={ state.status == "tambah" ? "" : state.data.attributes.subfield_name } />
                   </CCol>
                 </CRow>
                 <CRow className="mb-3">
                   <CFormLabel htmlFor="field" className="col-sm-2 col-form-label">
-                    Field
+                    Bidang
                   </CFormLabel>
                   <CCol sm={10}>
                     <CFormSelect name="field" id="field" className="mb-3" aria-label="Large select example">
-                      <option>Choose Field</option>
+                      <option>Pilih Bidang</option>
                       { fields.map(field =>
                         <option selected={field.id == state?.data?.attributes?.fields?.data[0]?.id} key={ field.id } value={ field.id } >{ field.attributes.field_name }</option>
                       )}

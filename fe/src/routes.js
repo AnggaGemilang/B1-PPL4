@@ -10,7 +10,6 @@ const Division = React.lazy(() => import('./views/admin/division/Division'))
 const TambahDivision = React.lazy(() => import('./views/admin/division/TambahDivision'))
 const Employee = React.lazy(() => import('./views/admin/employee/Employee'))
 const TambahEmployee = React.lazy(() => import('./views/admin/employee/TambahEmployee'))
-const EditEmployee = React.lazy(() => import('./views/admin/employee/EditEmployee'))
 const Field = React.lazy(() => import('./views/admin/field/Field'))
 const TambahField = React.lazy(() => import('./views/admin/field/TambahField'))
 const Grade = React.lazy(() => import('./views/admin/grade/Grade'))
@@ -66,7 +65,7 @@ const routes = [
   { path: '/division/edit', exact: true, name: 'Edit Division', element: TambahDivision },
   { path: '/employee', exact: true, name: 'Employee', element: Employee },
   { path: '/employee/tambah', exact: true, name: 'Tambah Employee', element: TambahEmployee },
-  { path: '/employee/edit/:id', exact: true, name: 'Edit Employee', element: EditEmployee },
+  { path: '/employee/edit', exact: true, name: 'Edit Employee', element: TambahEmployee },
   { path: '/field', exact: true, name: 'Field', element: Field },
   { path: '/field/tambah', exact: true, name: 'Tambah Field', element: TambahField },
   { path: '/field/edit', exact: true, name: 'Edit Field', element: TambahField },
