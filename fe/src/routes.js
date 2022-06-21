@@ -93,6 +93,7 @@ const routes = [
 
   { path: '/fitandproper/', exact: true, name: 'Data Pendaftaran Fit & Proper', element: DataFitAndProper },
   { path: '/fitandproper/daftar', exact: true, name: 'Pendaftaran Fit & Proper', element: PendaftaranFitAndProper },
+  { path: '/fitandproper/edit', exact: true, name: 'Pendaftaran Fit & Proper', element: PendaftaranFitAndProper },
   { path: '/fitandproper/datapenilaian', exact: true, name: 'Data Penilaian Fit & Proper', element: DataPenilaianFitAndProper },
   { path: '/fitandproper/datapenilaian/nilai', exact: true, name: 'Penilaian Fit & Proper', element: PenilaianFitAndProper },
   { path: '/fitandproper/datapenilaian/datanilai', exact: true, name: 'Penilaian Fit & Proper', element: DataNilaiFitAndProper },
