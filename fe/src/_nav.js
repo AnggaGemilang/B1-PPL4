@@ -14,6 +14,8 @@ let _nav
   // 3 = hr specialist
   // 4 = penguji
 
+  console.log(JSON.parse(sessionStorage.getItem("auth")).user.employee.NIP)
+
   if(JSON.parse(sessionStorage.getItem("auth")).user.cp_role == 1){
     _nav = [
       {
@@ -541,33 +543,10 @@ let _nav
       },
       {
         component: CNavGroup,
-        name: 'Master Data',
-        to: '/base',
-        icon: <CIcon icon={cilPuzzle} customClassName="nav-icon" />,
-        items: [
-          {
-            component: CNavItem,
-            name: 'Data Peserta',
-            to: '/datapeserta',
-          },
-          {
-            component: CNavItem,
-            name: 'Data Penguji',
-            to: '/datapenguji',
-          },
-        ],
-      },
-      {
-        component: CNavGroup,
         name: 'Fit & Proper',
         to: '/base',
         icon: <CIcon icon={cilPuzzle} customClassName="nav-icon" />,
         items: [
-          {
-            component: CNavItem,
-            name: 'Data Fit & Proper',
-            to: '/fitandproper/',
-          },
           {
             component: CNavItem,
             name: 'Data Penilaian',
@@ -581,11 +560,6 @@ let _nav
         to: '/base',
         icon: <CIcon icon={cilPuzzle} customClassName="nav-icon" />,
         items: [
-          {
-            component: CNavItem,
-            name: 'Data Wawancara',
-            to: '/wawancara/',
-          },
           {
             component: CNavItem,
             name: 'Data Penilaian',
@@ -603,11 +577,6 @@ let _nav
             component: CNavItem,
             name: 'Fit & Proper',
             to: '/report/reportfit',
-          },
-          {
-            component: CNavItem,
-            name: 'Manual Fit & Proper',
-            to: '/report/reportmfit',
           },
           {
             component: CNavItem,
@@ -634,74 +603,6 @@ let _nav
           },
         ],
       },    
-      {
-        component: CNavTitle,
-        name: 'Master Admin',
-      },
-      {
-        component: CNavGroup,
-        name: 'Master Data',
-        to: '/base',
-        icon: <CIcon icon={cilPuzzle} customClassName="nav-icon" />,
-        items: [
-          {
-            component: CNavItem,
-            name: 'Employee',
-            to: 'employee',
-          },
-          {
-            component: CNavItem,
-            name: 'Directorate',
-            to: 'directorate',
-          },
-          {
-            component: CNavItem,
-            name: 'Division',
-            to: 'division',
-          },
-          {
-            component: CNavItem,
-            name: 'Field',
-            to: 'field',
-          },
-          {
-            component: CNavItem,
-            name: 'Sub Field',
-            to: 'subfield',
-          },
-          {
-            component: CNavItem,
-            name: 'Grade',
-            to: 'grade',
-          },
-          {
-            component: CNavItem,
-            name: 'Level',
-            to: 'level',
-          },
-          {
-            component: CNavItem,
-            name: 'Position',
-            to: 'position',
-          },
-          {
-            component: CNavItem,
-            name: 'Unit',
-            to: 'unit',
-          },
-          {
-            component: CNavItem,
-            name: 'Criteria',
-            to: 'criteria',
-          },
-        ],
-      },
-      {
-        component: CNavItem,
-        name: 'Administrasi User',
-        to: '/administrasi',
-        icon: <CIcon icon={cilDrop} customClassName="nav-icon" />,
-      },
     ]
   }
 

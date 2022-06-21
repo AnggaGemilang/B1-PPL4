@@ -27,10 +27,11 @@ import {
   CForm,
   CImage,
 } from '@coreui/react'
-import { Link } from 'react-router-dom'
 import { useLocation, useNavigate } from "react-router-dom";
-import { cilSearch, cilPlus } from '@coreui/icons'
+import { cilSearch } from '@coreui/icons'
 import CIcon from '@coreui/icons-react'
+import FitAndProperAPI from '../../../config/user/FitAndProperAPI'
+import WawancaraAPI from '../../../config/user/WawancaraAPI'
 import MappingAPI from '../../../config/user/MappingAPI'
 import url from "../../../config/setting"
 import logoPDF from 'src/assets/images/pdf-icon.png'
@@ -39,12 +40,12 @@ const DataPenilaian = () => {
   const location = useLocation();
   const navigate = useNavigate(); 
 
-  const [mappings, setMappings] = useState([]);
+  const [lineMappings, setLineMappings] = useState([]);
   const [message, setMessage] = useState("");
-  const [chosenMapping, setChosenMapping] = useState({
+  const [chosenLineMapping, setChosenLineMapping] = useState({
     visible: false,
     name: "",
-    id: 0    
+    lineMapping: 0    
   })
 
   useEffect(() => {
@@ -75,9 +76,33 @@ const DataPenilaian = () => {
   }
   
   const getData = () => {
-    MappingAPI.get().then((res) => {
-      setMappings(res.data)
-      console.log(res.data)
+    FitAndProperAPI.getLineMapping().then((res) => {
+      setLineMappings(res.data)
+    })
+  }
+
+  const daftarWawancara = () => {
+    const body = {
+      data: {
+        schedule_interview: document.getElementById("schedule").value,
+        is_interview: true
+      }
+    }
+    WawancaraAPI.edit(chosenLineMapping?.lineMapping?.id, body).then(res => {
+      let examiners = 
+        (chosenLineMapping?.lineMapping?.attributes?.mapping?.data?.attributes?.examiners_interview == null) ? 
+        [] : chosenLineMapping?.lineMapping?.attributes?.mapping?.data?.attributes?.examiners_interview
+      examiners.push(chosenLineMapping?.lineMapping?.attributes?.examiner?.data?.id)
+      const body = {
+        data: {
+          is_interview: true,
+          examiners_interview: examiners
+        }
+      }
+      MappingAPI.edit(chosenLineMapping?.lineMapping?.attributes?.mapping?.data?.id, body).then(res => {
+        setChosenLineMapping({ ...chosenLineMapping, visible: false })
+        getData()
+      })      
     })
   }
 
@@ -144,75 +169,80 @@ const DataPenilaian = () => {
                   <CTableHeaderCell scope="col">Jabatan</CTableHeaderCell>
                   <CTableHeaderCell scope="col">Proyeksi</CTableHeaderCell>
                   <CTableHeaderCell scope="col">Tanggal</CTableHeaderCell>
-                  <CTableHeaderCell scope="col">Penguji</CTableHeaderCell>
                   <CTableHeaderCell scope="col">Status</CTableHeaderCell>
                   <CTableHeaderCell scope="col">Lampiran File</CTableHeaderCell>
                   <CTableHeaderCell scope="col">Action</CTableHeaderCell>
                 </CTableRow>
               </CTableHead>
               <CTableBody>
-                { mappings.map( (mapping, index) =>
-                  <CTableRow key={mapping.id}>
+                { lineMappings.map( (linemapping, index) =>
+                  <CTableRow key={linemapping.id}>
                     <CTableHeaderCell scope="row">{ index+1 }</CTableHeaderCell>
-                    <CTableDataCell>{mapping?.attributes?.registrant?.data?.attributes?.employee?.data?.attributes.Name}</CTableDataCell>
-                    <CTableDataCell>{mapping?.attributes?.registrant?.data?.attributes?.employee?.data?.attributes.NIP}</CTableDataCell>
-                    <CTableDataCell>{mapping?.attributes?.registrant?.data?.attributes?.employee?.data?.attributes?.position?.data?.attributes?.position_name}</CTableDataCell>
-                    <CTableDataCell>{mapping?.attributes?.position?.data?.attributes?.position_name}</CTableDataCell>
-                    <CTableDataCell>{mapping?.attributes?.schedule}</CTableDataCell>
-                    <CTableDataCell>
-                      <ul>
-                        { mapping.attributes.examiners.data.map(examiner  => (
-                          <li style={{ textAlign: "left", marginBottom: "4px" }} key={examiner.id}>{examiner.attributes.employee.data.attributes.Name}</li>
-                        ))}
-                      </ul>
-                    </CTableDataCell>
-                    <CTableDataCell>{mapping?.attributes?.status ? "Sudah Dinilai" : "Belum Dinilai"}</CTableDataCell>
+                    <CTableDataCell>{linemapping?.attributes?.mapping?.data?.attributes?.registrant?.data?.attributes?.employee?.data?.attributes.Name}</CTableDataCell>
+                    <CTableDataCell>{linemapping?.attributes?.mapping?.data?.attributes?.registrant?.data?.attributes?.employee?.data?.attributes.NIP}</CTableDataCell>
+                    <CTableDataCell>{linemapping?.attributes?.mapping?.data?.attributes?.registrant?.data?.attributes?.employee?.data?.attributes?.position?.data?.attributes?.position_name}</CTableDataCell>
+                    <CTableDataCell>{linemapping?.attributes?.mapping?.data?.attributes?.position?.data?.attributes?.position_name}</CTableDataCell>
+                    <CTableDataCell>{linemapping?.attributes?.mapping?.data?.attributes?.schedule}</CTableDataCell>
+                    <CTableDataCell>{linemapping?.attributes?.status_fitproper ? "Sudah Dinilai" : "Belum Dinilai"}</CTableDataCell>
                     <CTableDataCell>
                       <ul>
                           <li style={{ textAlign: "left", marginBottom: "4px" }}>
                             <p>CV</p>
-                            <a target="_blank" href={url + mapping?.attributes?.registrant?.data?.attributes?.cv?.data?.attributes?.url }><CImage style={{ marginTop: "-10px", marginLeft: "-5px" }} src={logoPDF} height={35} /></a>
+                            <a target="_blank" href={url + linemapping?.attributes?.mapping?.data?.attributes?.registrant?.data?.attributes?.cv?.data?.attributes?.url }><CImage style={{ marginTop: "-10px", marginLeft: "-5px" }} src={logoPDF} height={35} /></a>
                           </li>
                           <li style={{ textAlign: "left" }}>
                             <p>PPT</p>
-                            <a target="_blank" href={ url + mapping?.attributes?.registrant?.data?.attributes?.ppt?.data?.attributes?.url }><CImage style={{ marginTop: "-10px", marginLeft: "-5px" }} src={logoPDF} height={35} /></a>
+                            <a target="_blank" href={ url + linemapping?.attributes?.mapping?.data?.attributes?.registrant?.data?.attributes?.ppt?.data?.attributes?.url }><CImage style={{ marginTop: "-10px", marginLeft: "-5px" }} src={logoPDF} height={35} /></a>
                           </li>                            
                       </ul>
                     </CTableDataCell>
                     <CTableDataCell>
-                      { (mapping?.attributes?.status && !mapping?.attributes?.status_interview) ? 
+                      { (linemapping?.attributes?.status_fitproper && !linemapping?.attributes?.is_interview) ? 
                         <CButton
                           color='primary'
                           variant="outline" 
-                          onClick={() => setChosenMapping({ 
+                          onClick={() => setChosenLineMapping({ 
                             visible: true, 
-                            id: mapping.id
+                            lineMapping: linemapping
                           })}
                           style={{marginLeft: '10px', marginBottom: '10px'}} >
                             Ajukan
                         </CButton>
                         : null
                       }
-                      { (mapping?.attributes?.status) ? 
+                      { (linemapping?.attributes?.status_fitproper) ? 
                         <CButton
                           color='success'
                           variant="outline"
                           onClick={() => navigate(
                             '/fitandproper/datapenilaian/datanilai', 
-                            { state: { position: mapping?.attributes?.position?.data?.id, registrant: mapping?.attributes?.registrant?.data?.id } }
+                            { state: { data: linemapping }}
                           )}
-                          style={{marginLeft: '10px', marginBottom: '10px'}} >
+                          style={{marginLeft: '10px', marginBottom: '10px', width: "80px"}} >
                             Lihat Nilai
                         </CButton>
                         : null
-                      }    
-                      { (!mapping?.attributes?.status) ?                         
+                      }
+                      { (linemapping?.attributes?.status_fitproper) ? 
+                        <CButton
+                          color='warning'
+                          variant="outline"
+                          onClick={() => navigate(
+                            '/fitandproper/datapenilaian/edit', 
+                            { state: { data: linemapping }}
+                          )}
+                          style={{marginLeft: '10px', marginBottom: '10px', width: "80px"}} >
+                            Edit
+                        </CButton>
+                        : null
+                      }                      
+                      { (!linemapping?.attributes?.status_fitproper) ?
                         <CButton
                           color='primary'
                           variant="outline" 
                           onClick={() => navigate(
                             '/fitandproper/datapenilaian/nilai', 
-                            { state: { mapping: mapping.id, registrant: mapping?.attributes?.registrant?.data?.id } }
+                            { state: { data: linemapping } }
                           )}
                           style={{marginLeft: '10px', marginBottom: '10px'}} >
                             Nilai
@@ -224,6 +254,29 @@ const DataPenilaian = () => {
                 )}
               </CTableBody>
             </CTable>
+            <CModal backdrop="static" visible={chosenLineMapping.visible} onClose={() => setChosenLineMapping({ visible: false })}>
+              <CModalHeader>
+                <CModalTitle>Apakah Anda Yakin?</CModalTitle>
+              </CModalHeader>
+              <CModalBody>
+                Dengan ini peserta akan melanjutkan penilaian ke tahap wawancara, yang akan dilaksanakan pada:
+                <CRow className='mt-2'>
+                  <CCol>
+                    <CFormInput 
+                      type="date" 
+                      id="schedule" 
+                      name="schedule"
+                      placeholder='Masukkan Tanggal'/>                    
+                  </CCol>
+                </CRow>
+              </CModalBody>
+              <CModalFooter>
+                <CButton color="secondary" onClick={() => setChosenLineMapping({ visible: false })}>
+                  Close
+                </CButton>
+                <CButton color="primary" onClick={() => daftarWawancara()}>Submit</CButton>
+              </CModalFooter>
+            </CModal>             
           </CCardBody>
         </CCard>
       </CCol>

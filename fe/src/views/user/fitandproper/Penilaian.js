@@ -18,7 +18,6 @@ import {
   CForm
 } from '@coreui/react'
 import { useLocation, useNavigate } from "react-router-dom";
-import MappingAPI from '../../../config/user/MappingAPI'
 import CriteriaAPI from '../../../config/admin/CriteriaAPI'
 import FitAndProperAPI from '../../../config/user/FitAndProperAPI'
 
@@ -28,10 +27,7 @@ const Penilaian = () => {
 
   const [criterias, setCriterias] = useState([])
   const [message, setMessage] = useState("")
-  const [state, setState] = useState({
-    registrant: location?.state?.registrant,
-    mapping: location?.state?.mapping
-  })
+  const [lineMapping, setLineMapping] = useState(location?.state?.data)
 
   useEffect(() => {
     getData()
@@ -44,10 +40,10 @@ const Penilaian = () => {
     for (let i = 0; i < data.length; i++) {
       const body = {
         data : {
-          mapping: state.mapping,
-          registrant: state.registrant,
+          mapping: lineMapping?.attributes?.mapping?.data?.id,
+          registrant: lineMapping?.attributes?.mapping?.data?.attributes?.registrant?.data?.id,
+          examiner: lineMapping.attributes?.examiner?.data?.id,
           criterion: data[i].querySelector('.criteria').getAttribute('id_val'),
-          examiner: 34,
           score: data[i].querySelector('#nilai').value,
           type: 1
         }
@@ -55,10 +51,10 @@ const Penilaian = () => {
       FitAndProperAPI.nilai(body).then((res) => {
         const body = {
           data : {
-            status: true
+            status_fitproper: true
           }
         }
-        MappingAPI.edit(state.mapping, body).then((res) => {
+        FitAndProperAPI.editLineMapping(lineMapping?.id, body).then((res) => {
           navigate('/fitandproper/datapenilaian', {state: { successMessage: 'Penilaian Berhasil' } });        
         })
       })

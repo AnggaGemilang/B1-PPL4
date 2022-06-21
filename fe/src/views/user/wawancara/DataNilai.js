@@ -30,7 +30,7 @@ const DataNilai = () => {
   
   const getDataPenguji = () => {
     MappingAPI.getPenguji(state.registrant, state.position).then((res) => {
-      setExaminers(res.data[0].attributes.examiners.data)
+      setExaminers(res?.data[0]?.attributes?.examiners?.data)
     })
   }
 

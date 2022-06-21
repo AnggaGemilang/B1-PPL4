@@ -103,41 +103,23 @@ const TambahEmployee = () => {
         (res) => {
           if(state.photo != null){
             if(state?.data?.attributes?.Photo?.data != null){
-              EmployeeAPI.deletePhoto(state?.data?.attributes?.Photo?.data?.id).then(
-                (res) => {
-                  let formData = new FormData()
-                  formData.append('files', state?.photo)
-                  formData.append('ref', 'api::employee.employee')
-                  formData.append('refId', state?.data?.id)
-                  formData.append('field', 'Photo')
-                  EmployeeAPI.addPhoto(formData).then(
-                    (res) => {
-                      navigate('/employee', {state: { successMessage: 'Pegawai telah berhasil diperbaharui' } });            
-                    },
-                    (err) => {
-                      console.log("err", err);
-                    }
-                  ); 
-                },
-                (err) => {
-                  console.log("err", err);
-                }
-              );
-            } else {
-              let formData = new FormData()
-              formData.append('files', state?.photo)
-              formData.append('ref', 'api::employee.employee')
-              formData.append('refId', state?.data?.id)
-              formData.append('field', 'Photo')
-              EmployeeAPI.addPhoto(formData).then(
-                (res) => {
-                  navigate('/employee', {state: { successMessage: 'Pegawai telah berhasil diperbaharui' } });            
-                },
-                (err) => {
-                  console.log("err", err);
-                }
-              );               
+              EmployeeAPI.deletePhoto(state?.data?.attributes?.Photo?.data?.id).then(res => {
+                console.log("Foto Berhasil Dihapus")
+              });
             }
+            let formData = new FormData()
+            formData.append('files', state?.photo)
+            formData.append('ref', 'api::employee.employee')
+            formData.append('refId', state?.data?.id)
+            formData.append('field', 'Photo')
+            EmployeeAPI.addPhoto(formData).then(
+              (res) => {
+                navigate('/employee', {state: { successMessage: 'Pegawai telah berhasil diperbaharui' } });            
+              },
+              (err) => {
+                console.log("err", err);
+              }
+            );               
           }
         },
         (err) => {
