@@ -43,6 +43,7 @@ const PenilaianFitAndProper = React.lazy(() => import('./views/user/fitandproper
 const DataWawancara = React.lazy(() => import('./views/user/wawancara/DataWawancara'))
 const DataPenilaianWawancara = React.lazy(() => import('./views/user/wawancara/DataPenilaian'))
 const PenilaianWawancara = React.lazy(() => import('./views/user/wawancara/Penilaian'))
+const DataNilaiWawancara = React.lazy(() => import('./views/user/wawancara/DataNilai'))
 
 //User Report
 const ReportFit = React.lazy(() => import ('./views/user/report/RekapFitAndProper'))
@@ -96,11 +97,14 @@ const routes = [
   { path: '/fitandproper/edit', exact: true, name: 'Pendaftaran Fit & Proper', element: PendaftaranFitAndProper },
   { path: '/fitandproper/datapenilaian', exact: true, name: 'Data Penilaian Fit & Proper', element: DataPenilaianFitAndProper },
   { path: '/fitandproper/datapenilaian/nilai', exact: true, name: 'Penilaian Fit & Proper', element: PenilaianFitAndProper },
+  { path: '/fitandproper/datapenilaian/nilai/edit', exact: true, name: 'Penilaian Fit & Proper', element: PenilaianFitAndProper },
   { path: '/fitandproper/datapenilaian/datanilai', exact: true, name: 'Penilaian Fit & Proper', element: DataNilaiFitAndProper },
 
-  { path: '/wawancara', exact: true, name: 'Data Penilaian Wawancara', element: DataWawancara },
+  { path: '/wawancara/', exact: true, name: 'Data Wawancara', element: DataWawancara },
   { path: '/wawancara/datapenilaian', exact: true, name: 'Data Penilaian Wawancara', element: DataPenilaianWawancara },
   { path: '/wawancara/datapenilaian/nilai', exact: true, name: 'Penilaian Wawancara', element: PenilaianWawancara },
+  { path: '/wawancara/datapenilaian/nilai/edit', exact: true, name: 'Penilaian Wawancara', element: PenilaianWawancara },
+  { path: '/wawancara/datapenilaian/datanilai', exact: true, name: 'Penilaian Wawancara', element: DataNilaiWawancara },
 
   { path: 'report/reportfit', exact: true, name: 'Report Fit And Proper', element: ReportFit },
   { path: 'report/reportmfit', exact: true, name: 'Report NM Fit And Proper', element: ReportMFit },

@@ -17,6 +17,7 @@ import {
 } from '@coreui/react'
 import {useNavigate, useLocation} from 'react-router-dom'
 import MappingAPI from '../../../config/user/MappingAPI'
+import FitAndProperAPI from '../../../config/user/FitAndProperAPI'
 import DataPengujiAPI from '../../../config/user/DataPengujiAPI'
 import DataPesertaAPI from '../../../config/user/DataPesertaAPI'
 import LevelAPI from '../../../config/admin/LevelAPI'
@@ -130,8 +131,7 @@ const Pendaftaran = () => {
                 status_interview: false
               }
             }; 
-            console.log(body)
-            MappingAPI.addLineMapping(body).then(
+            FitAndProperAPI.addLineMapping(body).then(
               (res) => {
                 console.log("success", res)
               }, 
@@ -294,7 +294,7 @@ const Pendaftaran = () => {
                           id="nip" 
                           name="nip" 
                           disabled={ state.status == "edit" }
-                          value={ state.status == "edit" ? state?.data?.attributes?.registrant?.data?.attributes?.employee?.data?.attributes.NIP : ""}
+                          defaultValue={ state.status == "edit" ? state?.data?.attributes?.registrant?.data?.attributes?.employee?.data?.attributes.NIP : ""}
                           onChange={(e) => setNipValue(e.target.value)} placeholder="Masukkan NIP . . ." />
                       </div>
                     </CInputGroup>
@@ -409,7 +409,7 @@ const Pendaftaran = () => {
                     <CInputGroup>
                       <CFormLabel htmlFor="input" className="col-sm-2 col-form-label">Upload PPT *.ppt/.pptx</CFormLabel>
                         <div className="col-sm-10">
-                          <a target="_blank" href={url + state?.data?.attributes?.registrant?.data?.attributes?.ppt?.data?.attributes?.url }><CImage style={{ marginTop: "-10px", marginLeft: "-5px", marginBottom: "10px", width: "70px", height: "70px" }} src={logoPDF} height={35} /></a>                          
+                          { state.status == "edit" ? <a target="_blank" href={url + state?.data?.attributes?.registrant?.data?.attributes?.ppt?.data?.attributes?.url }><CImage style={{ marginTop: "-10px", marginLeft: "-5px", marginBottom: "10px", width: "70px", height: "70px" }} src={logoPDF} height={35} /></a> : null }                         
                           <CFormInput type="file" id="ppt" name="ppt" onChange={ (e) => setState({ ...state, ppt: e.target.files[0] }) } />
                         </div>
                     </CInputGroup>
@@ -418,7 +418,7 @@ const Pendaftaran = () => {
                     <CInputGroup>
                       <CFormLabel htmlFor="input" className="col-sm-2 col-form-label">Upload CV *.doc/.docs</CFormLabel>
                         <div className="col-sm-10">
-                          <a target="_blank" href={url + state?.data?.attributes?.registrant?.data?.attributes?.cv?.data?.attributes?.url }><CImage style={{ marginTop: "-10px", marginLeft: "-5px", marginBottom: "10px", width: "70px", height: "70px" }} src={logoPDF} height={35} /></a>                          
+                          { state.status == "edit" ? <a target="_blank" href={url + state?.data?.attributes?.registrant?.data?.attributes?.cv?.data?.attributes?.url }><CImage style={{ marginTop: "-10px", marginLeft: "-5px", marginBottom: "10px", width: "70px", height: "70px" }} src={logoPDF} height={35} /></a> : null }
                           <CFormInput type="file" id="cv" name="cv" onChange={ (e) => setState({ ...state, cv: e.target.files[0] }) } />
                         </div>
                     </CInputGroup>
@@ -436,7 +436,7 @@ const Pendaftaran = () => {
                           }>
                           <option value="0">Pilih Penguji 1</option>
                           { examiners1.map(examiner =>
-                            <option selected={state.status == "edit" && state?.data?.attributes?.examiners?.data[0]?.id == examiner.id } value={examiner.id} key={examiner.id}>{examiner.attributes.employee.data.attributes.Name}</option>                      
+                            <option selected={state.status == "edit" && state?.data?.attributes?.examiners?.data[0]?.id == examiner?.id } value={examiner?.id} key={examiner?.id}>{examiner?.attributes?.employee?.data?.attributes?.Name}</option>                      
                           )}
                         </CFormSelect>
                       </div>
@@ -455,7 +455,7 @@ const Pendaftaran = () => {
                           }>
                           <option value="0">Pilih Penguji 2</option>
                           { examiners2.map(examiner =>
-                            <option selected={state.status == "edit" && state?.data?.attributes?.examiners?.data[1]?.id == examiner.id } value={examiner.id} key={examiner.id}>{examiner.attributes.employee.data.attributes.Name}</option>                      
+                            <option selected={state.status == "edit" && state?.data?.attributes?.examiners?.data[1]?.id == examiner?.id } value={examiner?.id} key={examiner?.id}>{examiner?.attributes?.employee?.data?.attributes?.Name}</option>                      
                           )}
                         </CFormSelect>
                       </div>
@@ -468,7 +468,7 @@ const Pendaftaran = () => {
                         <CFormSelect name="penguji3" id="penguji3" aria-label="Large select example">
                           <option value="0">Pilih Penguji 3</option>
                           { examiners3.map(examiner =>
-                            <option selected={state.status == "edit" && state?.data?.attributes?.examiners?.data[2]?.id == examiner.id } value={examiner.id} key={examiner.id}>{examiner.attributes.employee.data.attributes.Name}</option>                      
+                            <option selected={state.status == "edit" && state?.data?.attributes?.examiners?.data[2]?.id == examiner?.id } value={examiner?.id} key={examiner?.id}>{examiner?.attributes?.employee?.data?.attributes?.Name}</option>                      
                           )}
                         </CFormSelect>
                       </div>

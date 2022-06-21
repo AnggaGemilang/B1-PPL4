@@ -34,7 +34,7 @@ import MappingAPI from '../../../config/user/MappingAPI'
 import url from "../../../config/setting"
 import logoPDF from 'src/assets/images/pdf-icon.png'
 
-const DataPendaftaran = () => {
+const DataFitProper = () => {
   const location = useLocation();
   const navigate = useNavigate(); 
 
@@ -140,7 +140,7 @@ const DataPendaftaran = () => {
           <CCardHeader>
             <strong>Data Pendaftaran Fit & Proper</strong>
           </CCardHeader>
-          <CCardBody>
+          <CCardBody style={{ overflowX: "auto"}}>
             <CRow>
               <CCol xs={12}>
                 <CButton
@@ -254,4 +254,4 @@ const DataPendaftaran = () => {
   )
 }
 
-export default DataPendaftaran
+export default DataFitProper

@@ -26,18 +26,18 @@ import {
   CAlert,
   CForm,
   CImage,
-  CLink
 } from '@coreui/react'
-import { Link } from 'react-router-dom'
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { cilSearch, cilPlus } from '@coreui/icons'
 import CIcon from '@coreui/icons-react'
-import WawancaraAPI from '../../../config/user/WawancaraAPI'
+import MappingAPI from '../../../config/user/MappingAPI'
 import url from "../../../config/setting"
 import logoPDF from 'src/assets/images/pdf-icon.png'
 
 const DataWawancara = () => {
   const location = useLocation();
+  const navigate = useNavigate(); 
+
   const [mappings, setMappings] = useState([]);
   const [message, setMessage] = useState("");
   const [chosenMapping, setChosenMapping] = useState({
@@ -74,8 +74,16 @@ const DataWawancara = () => {
   }
   
   const getData = () => {
-    WawancaraAPI.get().then((res) => {
+    MappingAPI.getWawancara().then((res) => {
       setMappings(res.data)
+    })
+  }
+
+  const deleteData = () => {
+    MappingAPI.delete(chosenMapping.id).then((res) => {
+      setMessage("Pendaftaran Telah Dihapus")
+      setChosenMapping({ visible: false })
+      getData()
     })
   }
 
@@ -130,9 +138,9 @@ const DataWawancara = () => {
         </CCol>                 
         <CCard className="mb-4 mt-3">
           <CCardHeader>
-            <strong>Data Penilaian Wawancara</strong>
+            <strong>Data Wawancara</strong>
           </CCardHeader>
-          <CCardBody>
+          <CCardBody style={{ overflowX: "auto"}}>
               <CTable striped className='mt-3 text-center'>
                 <CTableHead>
                    <CTableRow>
@@ -141,9 +149,8 @@ const DataWawancara = () => {
                     <CTableHeaderCell scope="col">NIP</CTableHeaderCell>
                     <CTableHeaderCell scope="col">Jabatan</CTableHeaderCell>
                     <CTableHeaderCell scope="col">Proyeksi</CTableHeaderCell>
-                    <CTableHeaderCell scope="col">Tanggal</CTableHeaderCell>
+                    <CTableHeaderCell scope="col">Uraian Jabatan</CTableHeaderCell>
                     <CTableHeaderCell scope="col">Penguji</CTableHeaderCell>
-                    <CTableHeaderCell scope="col">Lampiran File</CTableHeaderCell>
                     <CTableHeaderCell scope="col">Action</CTableHeaderCell>
                   </CTableRow>
                 </CTableHead>
@@ -155,56 +162,30 @@ const DataWawancara = () => {
                       <CTableDataCell>{mapping?.attributes?.registrant?.data?.attributes?.employee?.data?.attributes.NIP}</CTableDataCell>
                       <CTableDataCell>{mapping?.attributes?.registrant?.data?.attributes?.employee?.data?.attributes?.position?.data?.attributes?.position_name}</CTableDataCell>
                       <CTableDataCell>{mapping?.attributes?.position?.data?.attributes?.position_name}</CTableDataCell>
-                      <CTableDataCell>{mapping?.attributes?.interview_schedule}</CTableDataCell>
+                      <CTableDataCell>{mapping?.attributes?.jobdesc}</CTableDataCell>
                       <CTableDataCell>
                         <ul>
-                          { mapping.attributes.examiners.data.map(examiner  => (
+                          { mapping?.attributes?.examiners_interview?.data?.map(examiner  => (
                               <li style={{ textAlign: "left", marginBottom: "4px" }} key={examiner.id}>{examiner.attributes.employee.data.attributes.Name}</li>
                           ))}
                         </ul>
                       </CTableDataCell>
                       <CTableDataCell>
-                        <ul>
-                            <li style={{ textAlign: "left", marginBottom: "4px" }}>
-                              <p>CV</p>
-                              <a target="_blank" href={url + mapping?.attributes?.registrant?.data?.attributes?.cv?.data?.attributes?.url }><CImage style={{ marginTop: "-10px", marginLeft: "-5px" }} src={logoPDF} height={35} /></a>
-                            </li>
-                            <li style={{ textAlign: "left" }}>
-                              <p>PPT</p>
-                              <a target="_blank" href={ url + mapping?.attributes?.registrant?.data?.attributes?.ppt?.data?.attributes?.url }><CImage style={{ marginTop: "-10px", marginLeft: "-5px" }} src={logoPDF} height={35} /></a>
-                            </li>                            
-                        </ul>
-                      </CTableDataCell>
-                      <CTableDataCell>
                         <CButton
-                          color='primary'
-                          variant="outline" 
-                          onClick={() => setChosenMapping({ 
-                            visible: true, 
-                            id: mapping.id
-                          })}
-                          style={{marginLeft: '10px', marginBottom: '10px'}} >
-                            Nilai
-                        </CButton>
+                          color='success'
+                          variant="outline"
+                          onClick={() => navigate(
+                            '/wawancara/datapenilaian/datanilai', 
+                            { state: { position: mapping?.attributes?.position?.data?.id, registrant: mapping?.attributes?.registrant?.data?.id } }
+                          )}
+                          style={{width: '75px', marginBottom: '10px'}} >
+                            Lihat Nilai
+                        </CButton>                   
                       </CTableDataCell>
                     </CTableRow>
                   )}
                 </CTableBody>
-              </CTable>
-            <CModal backdrop="static" visible={chosenMapping.visible} onClose={() => setChosenMapping({ visible: false })}>
-              <CModalHeader>
-                <CModalTitle>Are You Sure?</CModalTitle>
-              </CModalHeader>
-              <CModalBody>
-                This will remove permanently
-              </CModalBody>
-              <CModalFooter>
-                <CButton color="secondary" onClick={() => setChosenMapping({ visible: false })}>
-                  Close
-                </CButton>
-                <CButton color="danger" onClick={() => deleteData()}>Delete</CButton>
-              </CModalFooter>
-            </CModal>
+              </CTable>    
           </CCardBody>
         </CCard>
       </CCol>
