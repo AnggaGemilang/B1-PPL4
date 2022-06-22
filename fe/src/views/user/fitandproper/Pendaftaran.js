@@ -45,15 +45,9 @@ const Pendaftaran = () => {
   });
 
   useEffect(() => {
-    if(state.status == "edit"){
-      setNipValue(state?.data?.attributes?.registrant?.data?.attributes?.employee?.data?.attributes?.NIP      )
-      setExaminers1([state?.data?.attributes?.examiners?.data[0]])
-      setExaminers2([state?.data?.attributes?.examiners?.data[1]])
-      setExaminers3([state?.data?.attributes?.examiners?.data[2]])   
-      console.log(state.data)   
-    }
+    getExaminerData()
     if (nipValue.length > 1) {
-      DataPesertaAPI.findRegistrants(nipValue).then(
+      FitAndProperAPI.findRegistrants(nipValue).then(
       (res) => {
         if(res.data.length == 1){
           setState({
@@ -66,7 +60,6 @@ const Pendaftaran = () => {
         }
       });
     }
-    getExaminerData()
     getLevelData()
     getPositionData()
   }, [nipValue])
@@ -80,6 +73,11 @@ const Pendaftaran = () => {
   const getExaminerData = () => {
     DataPengujiAPI.get().then((res) => {
       setExaminers1(res.data)
+      if(state.status == "edit"){
+        setNipValue(state?.data?.attributes?.registrant?.data?.attributes?.employee?.data?.attributes?.NIP      )
+        setExaminers2(res.data)
+        setExaminers3(res.data)
+      }
     })
   }  
 

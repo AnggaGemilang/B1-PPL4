@@ -101,10 +101,10 @@ const Penilaian = () => {
                 </CTableHead>
                 <CTableBody id="body">
                   { criterias.map( (criteria, index) => (
-                    <CTableRow key={criteria.id}>
+                    <CTableRow key={criteria?.id}>
                       <CTableHeaderCell scope="row">{ index+1 }</CTableHeaderCell>
-                      <CTableDataCell type="text" className='criteria' id_val={ criteria.id }>{ criteria.attributes.criteria }</CTableDataCell>
-                      <CTableDataCell type="text" className='criteria'>{ criteria.attributes.value + "%" }</CTableDataCell>
+                      <CTableDataCell className='criteria' id_val={ criteria?.id }>{ criteria?.attributes?.criteria }</CTableDataCell>
+                      <CTableDataCell>{ criteria?.attributes?.value + "%" }</CTableDataCell>
                       <CTableDataCell>
                         <CFormInput type="number" min={0} max={100} id="nilai" name='nilai' />
                       </CTableDataCell>

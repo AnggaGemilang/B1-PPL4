@@ -14,8 +14,6 @@ let _nav
   // 3 = hr specialist
   // 4 = penguji
 
-  console.log(JSON.parse(sessionStorage.getItem("auth")).user.employee.NIP)
-
   if(JSON.parse(sessionStorage.getItem("auth")).user.cp_role == 1){
     _nav = [
       {

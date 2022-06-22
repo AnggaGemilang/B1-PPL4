@@ -28,6 +28,7 @@ const AppSidebar = () => {
       <CSidebarBrand className="d-none d-md-flex" style={{ background: "rgba(48,60,84, 0.05)" }}>
         <CImage className="sidebar-brand-full" src={logoPLN} height={35} />
         <CImage className="sidebar-brand-narrow" src={logoPLN} height={35} />
+        {/* <strong><h4>FIT & PROPER</h4></strong> */}
       </CSidebarBrand>
       <CSidebarNav>
         <SimpleBar>
