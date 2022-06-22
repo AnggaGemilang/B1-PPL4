@@ -26,6 +26,7 @@ const DataNilai = () => {
   useEffect(() => {
     getDataPenguji()
     getData()
+    console.log(state)
   }, [])  
   
   const getDataPenguji = () => {

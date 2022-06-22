@@ -116,6 +116,7 @@ const Pendaftaran = () => {
           fitproper_type: document.getElementById("fitproper_type").value,
           level: document.getElementById("level").value,
           position: document.getElementById("projection").value,
+          is_interview: false
         }
       };  
       MappingAPI.add(body).then(
@@ -126,7 +127,8 @@ const Pendaftaran = () => {
                 mapping: res.data.id,
                 examiner: examinersVal[i],
                 status_fitproper: false,
-                status_interview: false
+                status_interview: false,
+                is_interview: false                
               }
             }; 
             FitAndProperAPI.addLineMapping(body).then(

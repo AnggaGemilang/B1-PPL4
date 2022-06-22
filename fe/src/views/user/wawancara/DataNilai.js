@@ -26,17 +26,19 @@ const DataNilai = () => {
   useEffect(() => {
     getDataPenguji()
     getData()
+    console.log(state)
   }, [])  
   
   const getDataPenguji = () => {
     MappingAPI.getPenguji(state.registrant, state.position).then((res) => {
-      setExaminers(res.data[0].attributes.examiners.data)
+      setExaminers(res.data[0].attributes.examiners_interview.data)
     })
   }
 
   const getData = e => {
     const examiner = (location?.state?.examiner == null) ? e?.target?.value : state.examiner
     ScoreAPI.getWawancara(state.registrant, examiner, state.position).then((res) => {
+      console.log(res.data)
       if(res.data.length > 0){
         let value = 0
         setScores(res.data)

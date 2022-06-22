@@ -176,7 +176,10 @@ const DataWawancara = () => {
                           variant="outline"
                           onClick={() => navigate(
                             '/wawancara/datapenilaian/datanilai', 
-                            { state: { position: mapping?.attributes?.position?.data?.id, registrant: mapping?.attributes?.registrant?.data?.id } }
+                            { state: {
+                              position: mapping?.attributes?.position?.data?.id, 
+                              registrant: mapping?.attributes?.registrant?.data?.id 
+                            } }
                           )}
                           style={{width: '75px', marginBottom: '10px'}} >
                             Lihat Nilai

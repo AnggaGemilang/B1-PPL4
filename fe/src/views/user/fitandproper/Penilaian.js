@@ -40,7 +40,7 @@ const Penilaian = () => {
     for (let i = 0; i < data.length; i++) {
       const body = {
         data : {
-          mapping: lineMapping?.attributes?.mapping?.data?.id,
+          line_mapping: lineMapping?.id,
           registrant: lineMapping?.attributes?.mapping?.data?.attributes?.registrant?.data?.id,
           examiner: lineMapping.attributes?.examiner?.data?.id,
           criterion: data[i].querySelector('.criteria').getAttribute('id_val'),
