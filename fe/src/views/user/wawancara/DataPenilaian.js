@@ -131,7 +131,7 @@ const DataPenilaian = () => {
         </CCol>                 
         <CCard className="mb-4 mt-3">
           <CCardHeader>
-            <strong>Data Penilaian Fit & Proper</strong>
+            <strong>Data Penilaian Wawancara</strong>
           </CCardHeader>
           <CCardBody>
             <CTable striped className='mt-3 text-center'>
@@ -177,7 +177,11 @@ const DataPenilaian = () => {
                           variant="outline"
                           onClick={() => navigate(
                             '/wawancara/datapenilaian/datanilai', 
-                            { state: { position: linemapping?.attributes?.position?.data?.id, registrant: linemapping?.attributes?.registrant?.data?.id } }
+                            { state: { 
+                                position: linemapping?.attributes?.mapping?.data?.attributes?.position?.data?.id, 
+                                registrant: linemapping?.attributes?.mapping?.data?.attributes?.registrant?.data?.id,
+                                examiner: linemapping?.attributes?.examiner?.data?.id
+                            }}
                           )}
                           style={{marginLeft: '10px', marginBottom: '10px', width: "80px"}} >
                             Lihat Nilai

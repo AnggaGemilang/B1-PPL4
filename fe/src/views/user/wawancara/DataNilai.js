@@ -18,24 +18,25 @@ const DataNilai = () => {
   const [state, setState] = useState({
     registrant: location?.state?.registrant,
     position: location?.state?.position,
-    examiner: 0,
-    visible: false,
+    examiner: location?.state?.examiner,
+    visible: location?.state?.examiner == null ? false : true,
     total: 0
   })
 
   useEffect(() => {
+    getDataPenguji()
     getData()
-    getDataPenguji()    
   }, [])  
   
   const getDataPenguji = () => {
     MappingAPI.getPenguji(state.registrant, state.position).then((res) => {
-      setExaminers(res?.data[0]?.attributes?.examiners?.data)
+      setExaminers(res.data[0].attributes.examiners.data)
     })
   }
 
   const getData = e => {
-    ScoreAPI.get(state.registrant, e?.target?.value, state.position).then((res) => {
+    const examiner = (location?.state?.examiner == null) ? e?.target?.value : state.examiner
+    ScoreAPI.getWawancara(state.registrant, examiner, state.position).then((res) => {
       if(res.data.length > 0){
         let value = 0
         setScores(res.data)
@@ -64,12 +65,15 @@ const DataNilai = () => {
           </CCallout>
         </CCol>
         <CCol xs={3}>
-          <CFormSelect name="examiner" id="examiner" className="mb-3" aria-label="Large select example" onChange={getData}>
-            <option>Pilih Penguji</option>            
-              { examiners.map(examiner => (
-                <option key={examiner.id} value={examiner.id}>{ examiner?.attributes?.employee?.data?.attributes?.Name }</option>
-              ))}  
-          </CFormSelect>      
+          { state?.examiner == null ?
+            <CFormSelect name="examiner" id="examiner" className="mb-3" aria-label="Large select example" onChange={getData}>
+              <option value='0'>Pilih Penguji</option>            
+                { examiners.map(examiner => (
+                  <option key={examiner.id} value={examiner.id}>{ examiner?.attributes?.employee?.data?.attributes?.Name }</option>
+                ))}  
+            </CFormSelect> :
+            null
+           }
         </CCol>
         { state.visible ? <CriteriaForm data={scores} total={state.total} /> : null }
       </CCol>

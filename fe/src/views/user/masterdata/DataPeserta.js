@@ -59,8 +59,11 @@ const DataPeserta = () => {
       query += `&filters[employee][NIP][$contains]=${document.getElementById("filter_nip").value}`
     }
 
+    console.log(query)
+
     DataPesertaAPI.findRegistrants(query).then(
       (res) => {
+        console.log(res.data)
         if(res.data.length != 0){
           setRegistrants(res.data)
         } else {

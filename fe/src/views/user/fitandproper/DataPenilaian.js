@@ -216,7 +216,11 @@ const DataPenilaian = () => {
                           variant="outline"
                           onClick={() => navigate(
                             '/fitandproper/datapenilaian/datanilai', 
-                            { state: { data: linemapping }}
+                            { state: { 
+                                position: linemapping?.attributes?.mapping?.data?.attributes?.position?.data?.id, 
+                                registrant: linemapping?.attributes?.mapping?.data?.attributes?.registrant?.data?.id,
+                                examiner: linemapping?.attributes?.examiner?.data?.id
+                            }}
                           )}
                           style={{marginLeft: '10px', marginBottom: '10px', width: "80px"}} >
                             Lihat Nilai
