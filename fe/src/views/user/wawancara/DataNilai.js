@@ -30,17 +30,17 @@ const DataNilai = () => {
   
   const getDataPenguji = () => {
     MappingAPI.getPenguji(state.registrant, state.position).then((res) => {
-      setExaminers(res.data[0].attributes.examiners.data)
+      setExaminers(res.data[0].attributes.examiners_interview.data)
     })
   }
 
   const getData = e => {
     const examiner = (location?.state?.examiner == null) ? e?.target?.value : state.examiner
-    ScoreAPI.getWawancara(state.registrant, examiner, state.position).then((res) => {
+    ScoreAPI.getNilaiWawancara(state.registrant, examiner, state.position).then((res) => {
       if(res.data.length > 0){
         let value = 0
-        setScores(res.data)
-        res.data.forEach((element) => { 
+        setScores(res.data[0])
+        res?.data[0]?.attributes?.scores_interview?.data.forEach((element) => { 
           value += parseInt(element.attributes.score / 100 * element.attributes.criterion.data.attributes.value)
         })     
         setState({ ...state, visible: true, total: value })        
@@ -75,7 +75,7 @@ const DataNilai = () => {
             null
            }
         </CCol>
-        { state.visible ? <CriteriaForm data={scores} total={state.total} /> : null }
+        { state.visible ? <CriteriaForm datas={scores?.attributes?.scores_interview} total={state.total} type={2}/> : null }
       </CCol>
     </CRow>
   )

@@ -13,11 +13,6 @@ import {
   CTableHeaderCell,
   CTableRow,
   CFormInput,
-  CModal,
-  CModalBody,
-  CModalFooter,
-  CModalHeader,
-  CModalTitle,
   CAccordion,
   CAccordionBody,
   CAccordionHeader,
@@ -28,7 +23,7 @@ import {
   CImage,
 } from '@coreui/react'
 import { useLocation, useNavigate } from "react-router-dom";
-import { cilSearch, cilPlus } from '@coreui/icons'
+import { cilSearch } from '@coreui/icons'
 import CIcon from '@coreui/icons-react'
 import MappingAPI from '../../../config/user/MappingAPI'
 import url from "../../../config/setting"
@@ -76,14 +71,6 @@ const RekapFitAndProper = () => {
   const getData = () => {
     MappingAPI.get().then((res) => {
       setMappings(res.data)
-    })
-  }
-
-  const deleteData = () => {
-    MappingAPI.delete(chosenMapping.id).then((res) => {
-      setMessage("Pendaftaran Telah Dihapus")
-      setChosenMapping({ visible: false })
-      getData()
     })
   }
 
@@ -138,7 +125,7 @@ const RekapFitAndProper = () => {
         </CCol>                 
         <CCard className="mb-4 mt-3">
           <CCardHeader>
-            <strong>Data Rekap Fit & Proper</strong>
+            <strong>Rekap Data Fit & Proper</strong>
           </CCardHeader>
           <CCardBody style={{ overflowX: "auto"}}>
               <CTable striped className='mt-3 text-center'>
@@ -152,7 +139,6 @@ const RekapFitAndProper = () => {
                     <CTableHeaderCell scope="col">Uraian Jabatan</CTableHeaderCell>
                     <CTableHeaderCell scope="col">Tanggal</CTableHeaderCell>
                     <CTableHeaderCell scope="col">Penguji</CTableHeaderCell>
-                    <CTableHeaderCell scope="col">Lampiran File</CTableHeaderCell>
                     <CTableHeaderCell scope="col">Action</CTableHeaderCell>
                   </CTableRow>
                 </CTableHead>
@@ -174,18 +160,6 @@ const RekapFitAndProper = () => {
                         </ul>
                       </CTableDataCell>
                       <CTableDataCell>
-                        <ul>
-                            <li style={{ textAlign: "left", marginBottom: "4px" }}>
-                              <p>CV</p>
-                              <a target="_blank" href={url + mapping?.attributes?.registrant?.data?.attributes?.cv?.data?.attributes?.url }><CImage style={{ marginTop: "-10px", marginLeft: "-5px" }} src={logoPDF} height={35} /></a>
-                            </li>
-                            <li style={{ textAlign: "left" }}>
-                              <p>PPT</p>
-                              <a target="_blank" href={ url + mapping?.attributes?.registrant?.data?.attributes?.ppt?.data?.attributes?.url }><CImage style={{ marginTop: "-10px", marginLeft: "-5px" }} src={logoPDF} height={35} /></a>
-                            </li>                            
-                        </ul>
-                      </CTableDataCell>
-                      <CTableDataCell>
                         <CButton
                           color='success'
                           variant="outline"
@@ -200,21 +174,7 @@ const RekapFitAndProper = () => {
                     </CTableRow>
                   )}
                 </CTableBody>
-              </CTable>
-            <CModal backdrop="static" visible={chosenMapping.visible} onClose={() => setChosenMapping({ visible: false })}>
-              <CModalHeader>
-                <CModalTitle>Are You Sure?</CModalTitle>
-              </CModalHeader>
-              <CModalBody>
-                This will remove permanently
-              </CModalBody>
-              <CModalFooter>
-                <CButton color="secondary" onClick={() => setChosenMapping({ visible: false })}>
-                  Close
-                </CButton>
-                <CButton color="danger" onClick={() => deleteData()}>Delete</CButton>
-              </CModalFooter>
-            </CModal>           
+              </CTable>      
           </CCardBody>
         </CCard>
       </CCol>

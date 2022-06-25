@@ -106,12 +106,11 @@ const routes = [
   { path: '/wawancara/datapenilaian/nilai/edit', exact: true, name: 'Penilaian Wawancara', element: PenilaianWawancara },
   { path: '/wawancara/datapenilaian/datanilai', exact: true, name: 'Penilaian Wawancara', element: DataNilaiWawancara },
 
-  { path: 'report/reportfit', exact: true, name: 'Report Fit And Proper', element: ReportFit },
-  { path: 'report/reportmfit', exact: true, name: 'Report NM Fit And Proper', element: ReportMFit },
-  { path: 'report/cetakreport', exact: true, name: 'Cetak Report', element: CetakReport},
-  { path: 'report/reportwawancara', exact: true, name: 'Report Wawancara', element: ReportWawancara},
-  { path: 'report/cetakwawancara', exact: true, name: 'Cetak Wawancara', element: CetakWawancara},
-
+  { path: '/report/rekap/fitproper', exact: true, name: 'Rekap Fit And Proper', element: ReportFit },
+  { path: '/report/rekap/manualfitproper', exact: true, name: 'Rekap Manual Fit And Proper', element: ReportMFit },
+  { path: '/report/rekap/wawancara', exact: true, name: 'Rekap Wawancara', element: ReportWawancara},
+  { path: '/report/cetak/fitproper', exact: true, name: 'Cetak Report', element: CetakReport},
+  { path: '/report/cetak/wawancara', exact: true, name: 'Cetak Wawancara', element: CetakWawancara},
 ]
 
 export default routes

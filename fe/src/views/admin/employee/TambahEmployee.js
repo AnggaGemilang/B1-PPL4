@@ -121,6 +121,7 @@ const TambahEmployee = () => {
               }
             );               
           }
+          navigate('/employee', {state: { successMessage: 'Pegawai telah berhasil diperbaharui' } });
         },
         (err) => {
           console.log("err", err);

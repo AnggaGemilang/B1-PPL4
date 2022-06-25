@@ -13,11 +13,6 @@ import {
   CTableHeaderCell,
   CTableRow,
   CFormInput,
-  CModal,
-  CModalBody,
-  CModalFooter,
-  CModalHeader,
-  CModalTitle,
   CAccordion,
   CAccordionBody,
   CAccordionHeader,
@@ -193,7 +188,7 @@ const DataPenilaian = () => {
                           color='warning'
                           variant="outline"
                           onClick={() => navigate(
-                            '/wawancara/datapenilaian/datanilai', 
+                            '/wawancara/datapenilaian/nilai/edit', 
                             { state: { data: linemapping }}
                           )}
                           style={{marginLeft: '10px', marginBottom: '10px', width: "80px"}} >

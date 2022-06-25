@@ -232,7 +232,7 @@ const DataPenilaian = () => {
                           color='warning'
                           variant="outline"
                           onClick={() => navigate(
-                            '/fitandproper/datapenilaian/edit', 
+                            '/fitandproper/datapenilaian/nilai/edit', 
                             { state: { data: linemapping }}
                           )}
                           style={{marginLeft: '10px', marginBottom: '10px', width: "80px"}} >

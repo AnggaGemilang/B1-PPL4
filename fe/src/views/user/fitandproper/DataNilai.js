@@ -36,11 +36,12 @@ const DataNilai = () => {
 
   const getData = e => {
     const examiner = (location?.state?.examiner == null) ? e?.target?.value : state.examiner
-    ScoreAPI.getFitProper(state.registrant, examiner, state.position).then((res) => {
+    ScoreAPI.getNilaiFitProper(state.registrant, examiner, state.position).then((res) => {
       if(res.data.length > 0){
         let value = 0
-        setScores(res.data)
-        res.data.forEach((element) => { 
+        setScores(res.data[0])
+        console.log(res.data[0])
+        res?.data[0]?.attributes?.scores_fitproper?.data.forEach((element) => { 
           value += parseInt(element.attributes.score / 100 * element.attributes.criterion.data.attributes.value)
         })     
         setState({ ...state, visible: true, total: value })        
@@ -75,7 +76,7 @@ const DataNilai = () => {
             null
            }
         </CCol>
-        { state.visible ? <CriteriaForm data={scores} total={state.total} /> : null }
+        { state.visible ? <CriteriaForm datas={scores?.attributes?.scores_fitproper} total={state.total} type={1}/> : null }
       </CCol>
     </CRow>
   )

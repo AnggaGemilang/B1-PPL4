@@ -76,17 +76,17 @@ let _nav
           {
             component: CNavItem,
             name: 'Fit & Proper',
-            to: '/report/reportfit',
+            to: '/report/rekap/fitproper',
           },
           {
             component: CNavItem,
             name: 'Manual Fit & Proper',
-            to: '/report/reportmfit',
+            to: '/report/rekap/manualfitproper',
           },
           {
             component: CNavItem,
             name: 'Wawancara',
-            to: '/report/reportwawancara',
+            to: '/report/rekap/wawancara',
           },
         ],
       },
@@ -98,12 +98,12 @@ let _nav
           {
             component: CNavItem,
             name: 'Fit & Proper',
-            to: '/report/cetakreport',
+            to: '/report/cetak/fitproper',
           },
           {
             component: CNavItem,
             name: 'Wawancara',
-            to: '/report/cetakwawancara',
+            to: '/report/cetak/wawancara',
           },
         ],
       },    
@@ -568,36 +568,34 @@ let _nav
       {
         component: CNavGroup,
         name: 'Rekap Nilai',
-        to: '/base',
         icon: <CIcon icon={cilPuzzle} customClassName="nav-icon" />,
         items: [
           {
             component: CNavItem,
             name: 'Fit & Proper',
-            to: '/report/reportfit',
+            to: '/report/rekap/fitproper',
           },
           {
             component: CNavItem,
             name: 'Wawancara',
-            to: '/report/reportwawancara',
+            to: '/report/rekap/wawancara',
           },
         ],
       },
       {
         component: CNavGroup,
         name: 'Cetak Nilai',
-        to: '/base',
         icon: <CIcon icon={cilPuzzle} customClassName="nav-icon" />,
         items: [
           {
             component: CNavItem,
             name: 'Fit & Proper',
-            to: '/report/cetakreport',
+            to: '/report/cetak/fitproper',
           },
           {
             component: CNavItem,
             name: 'Wawancara',
-            to: '/report/cetakwawancara',
+            to: '/report/cetak/wawancara',
           },
         ],
       },    

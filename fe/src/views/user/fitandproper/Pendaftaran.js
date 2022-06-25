@@ -22,6 +22,8 @@ import DataPengujiAPI from '../../../config/user/DataPengujiAPI'
 import DataPesertaAPI from '../../../config/user/DataPesertaAPI'
 import LevelAPI from '../../../config/admin/LevelAPI'
 import PositionAPI from 'src/config/admin/PositionAPI'
+import CriteriaAPI from '../../../config/admin/CriteriaAPI'
+import ScoreAPI from '../../../config/user/ScoreAPI'
 import url from "../../../config/setting"
 import logoPDF from 'src/assets/images/pdf-icon.png'
 
@@ -34,12 +36,13 @@ const Pendaftaran = () => {
   const [examiners2, setExaminers2] = useState([])
   const [examiners3, setExaminers3] = useState([])
   const [positions, setPositions] = useState([])
+  const [criterias, setCriterias] = useState([])
   const [levels, setLevels] = useState([])
   const [state, setState] = useState({
     errorMessage: "",
     ppt: null,
     cv: null,
-    registrant: null,
+    registrant: {},
     data: location?.state?.data,
     status: location?.state?.status    
   });
@@ -56,12 +59,16 @@ const Pendaftaran = () => {
           });
         } 
         else {
-          setState({ ...state, registrant: null })
+          setState({ 
+            ...state, 
+            registrant: {}
+          })
         }
       });
     }
     getLevelData()
     getPositionData()
+    getCriteriaFitProper()
   }, [nipValue])
 
   const getLevelData = () => {
@@ -84,6 +91,13 @@ const Pendaftaran = () => {
   const getPositionData = () => {
     PositionAPI.get().then((res) => {
       setPositions(res.data)
+    })
+  }
+
+  const getCriteriaFitProper = () => {
+    CriteriaAPI.getFitProper().then((res) => {
+      setCriterias(res.data)
+      console.log(res.data)
     })
   }
 
@@ -116,6 +130,7 @@ const Pendaftaran = () => {
           fitproper_type: document.getElementById("fitproper_type").value,
           level: document.getElementById("level").value,
           position: document.getElementById("projection").value,
+          is_interview: false
         }
       };  
       MappingAPI.add(body).then(
@@ -126,12 +141,30 @@ const Pendaftaran = () => {
                 mapping: res.data.id,
                 examiner: examinersVal[i],
                 status_fitproper: false,
-                status_interview: false
+                status_interview: false,
+                is_interview: false                
               }
             }; 
             FitAndProperAPI.addLineMapping(body).then(
               (res) => {
-                console.log("success", res)
+                console.log(res)
+                for(let i = 0; i < criterias.length; i++){
+                  console.log(criterias[i].id)
+                  const body = {
+                    data : {
+                      line_mapping_fitproper: res.data.id,
+                      registrant: state?.registrant?.id,
+                      examiner: examinersVal[i],
+                      criterion: criterias[i].id,
+                      score: 0,
+                      type: 1
+                    }
+                  }
+                  console.log(body)
+                  ScoreAPI.add(body).then(res => {
+                    console.log("Data tersimpan dengan aman")
+                  })
+                }
               }, 
               (err) => {
                 console.log("err", err)
@@ -307,7 +340,7 @@ const Pendaftaran = () => {
                             name="name" 
                             placeholder='Masukkan Nama Peserta' 
                             disabled
-                            value={state?.registrant?.attributes?.employee?.data?.attributes?.Name} />
+                            value={state?.registrant?.attributes?.employee?.data?.attributes?.Name || ''} />
                         </div>
                     </CInputGroup>
                   </CRow>
@@ -321,7 +354,7 @@ const Pendaftaran = () => {
                             name="position" 
                             placeholder='Masukkan Jabatan Peserta' 
                             disabled 
-                            value={state?.registrant?.attributes?.employee?.data?.attributes?.position?.data?.attributes?.position_name}/>
+                            value={state?.registrant?.attributes?.employee?.data?.attributes?.position?.data?.attributes?.position_name || ''}/>
                         </div>
                     </CInputGroup>
                   </CRow>
@@ -335,7 +368,7 @@ const Pendaftaran = () => {
                             name="grade" 
                             placeholder='Masukkan Grade Peserta' 
                             disabled 
-                            value={state?.registrant?.attributes?.employee?.data?.attributes?.position?.data?.attributes?.grade?.data?.attributes?.grade_name}/>
+                            value={state?.registrant?.attributes?.employee?.data?.attributes?.position?.data?.attributes?.grade?.data?.attributes?.grade_name || ''}/>
                         </div>
                     </CInputGroup>
                   </CRow>
