@@ -13,6 +13,8 @@ import {
 
 const DataNilai = (props) => {
 
+  console.log(props.total)
+
   return (
     <CCard className="mb-4 mt-3">
       <CCardHeader>
@@ -29,12 +31,12 @@ const DataNilai = (props) => {
             </CTableRow>
           </CTableHead>
           <CTableBody id="body">
-            { props?.data.map( (score, index) => (
-              <CTableRow key={score.id}>
+            { props?.datas?.data?.map( (lineMapping, index) => (
+              <CTableRow key={lineMapping.id}>
                 <CTableHeaderCell scope="row">{ index+1 }</CTableHeaderCell>
-                <CTableDataCell type="text">{ score.attributes.criterion.data.attributes.criteria }</CTableDataCell>
-                <CTableDataCell type="text">{ score.attributes.criterion.data.attributes.value + "%"}</CTableDataCell>
-                <CTableDataCell scope="row">{ score.attributes.score }</CTableDataCell>
+                <CTableDataCell type="text">{ lineMapping?.attributes?.criterion?.data?.attributes?.criteria }</CTableDataCell>
+                <CTableDataCell type="text">{ lineMapping?.attributes?.criterion?.data?.attributes?.value + "%"}</CTableDataCell>
+                <CTableDataCell scope="row">{ lineMapping?.attributes?.score }</CTableDataCell>
               </CTableRow>
             ))}
             <CTableRow>

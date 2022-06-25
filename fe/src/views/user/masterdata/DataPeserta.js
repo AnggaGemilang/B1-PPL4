@@ -27,7 +27,7 @@ import {
   CForm
 } from '@coreui/react'
 import CIcon from '@coreui/icons-react'
-import { useLocation } from "react-router-dom";
+import { useLocation } from "react-router-dom"
 import { cilSearch, cilPlus } from '@coreui/icons'
 import url from "../../../config/setting"
 import DataPesertaAPI from '../../../config/user/DataPesertaAPI'

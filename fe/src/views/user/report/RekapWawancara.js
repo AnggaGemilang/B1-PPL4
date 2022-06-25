@@ -138,7 +138,7 @@ const RekapWawancara = () => {
         </CCol>                 
         <CCard className="mb-4 mt-3">
           <CCardHeader>
-            <strong>Data Rekap Wawancara</strong>
+            <strong>Rekap Data Wawancara</strong>
           </CCardHeader>
           <CCardBody style={{ overflowX: "auto"}}>
               <CTable striped className='mt-3 text-center'>

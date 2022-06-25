@@ -18,19 +18,19 @@ import {
   CForm
 } from '@coreui/react'
 import { useLocation, useNavigate } from "react-router-dom";
-import CriteriaAPI from '../../../config/admin/CriteriaAPI'
 import FitAndProperAPI from '../../../config/user/FitAndProperAPI'
+import ScoreAPI from 'src/config/user/ScoreAPI';
 
 const Penilaian = () => {
   const location = useLocation();
   const navigate = useNavigate();
 
-  const [criterias, setCriterias] = useState([])
+  const [scores, setScores] = useState([])
   const [message, setMessage] = useState("")
   const [lineMapping, setLineMapping] = useState(location?.state?.data)
 
   useEffect(() => {
-    getData()
+    getScore()
   }, [])  
   
   const postData = (e) => {
@@ -40,15 +40,11 @@ const Penilaian = () => {
     for (let i = 0; i < data.length; i++) {
       const body = {
         data : {
-          line_mapping: lineMapping?.id,
-          registrant: lineMapping?.attributes?.mapping?.data?.attributes?.registrant?.data?.id,
-          examiner: lineMapping.attributes?.examiner?.data?.id,
-          criterion: data[i].querySelector('.criteria').getAttribute('id_val'),
           score: data[i].querySelector('#nilai').value,
-          type: 1
+          examiner: lineMapping.attributes?.examiner?.data?.id,
         }
       }
-      FitAndProperAPI.nilai(body).then((res) => {
+      FitAndProperAPI.nilai(data[i].querySelector('#score').getAttribute('id_val'), body).then((res) => {
         const body = {
           data : {
             status_fitproper: true
@@ -61,9 +57,9 @@ const Penilaian = () => {
     }
   }
 
-  const getData = () => {
-    CriteriaAPI.get().then((res) => {
-      setCriterias(res.data)
+  const getScore = () => {
+    ScoreAPI.getFitProperPenilaian(lineMapping?.id).then((res) => {
+      setScores(res.data)
     })
   }
 
@@ -100,11 +96,11 @@ const Penilaian = () => {
                   </CTableRow>
                 </CTableHead>
                 <CTableBody id="body">
-                  { criterias.map( (criteria, index) => (
-                    <CTableRow key={criteria?.id}>
+                  { scores?.map( (score, index) => (
+                    <CTableRow key={score?.id}>
                       <CTableHeaderCell scope="row">{ index+1 }</CTableHeaderCell>
-                      <CTableDataCell className='criteria' id_val={ criteria?.id }>{ criteria?.attributes?.criteria }</CTableDataCell>
-                      <CTableDataCell>{ criteria?.attributes?.value + "%" }</CTableDataCell>
+                      <CTableDataCell id='score' id_val={ score?.id }>{ score?.attributes?.criterion?.data?.attributes?.criteria }</CTableDataCell>
+                      <CTableDataCell>{ score?.attributes?.criterion?.data?.attributes?.value + "%" }</CTableDataCell>
                       <CTableDataCell>
                         <CFormInput type="number" min={0} max={100} id="nilai" name='nilai' />
                       </CTableDataCell>

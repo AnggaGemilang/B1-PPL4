@@ -28,6 +28,7 @@ import { cilX, cilPlus } from '@coreui/icons'
 import CIcon from '@coreui/icons-react'
 import CriteriaAPI from '../../../config/admin/CriteriaAPI'
 import FitAndProperAPI from '../../../config/user/FitAndProperAPI'
+import ScoreAPI from 'src/config/user/ScoreAPI';
 
 const Penilaian = () => {
   const location = useLocation();
@@ -72,7 +73,7 @@ const Penilaian = () => {
     for (let i = 0; i < data.length; i++) {
       const body = {
         data : {
-          line_mapping: lineMapping?.id,
+          line_mapping_interview: lineMapping?.id,
           registrant: lineMapping?.attributes?.mapping?.data?.attributes?.registrant?.data?.id,
           examiner: lineMapping.attributes?.examiner?.data?.id,
           criterion: data[i].querySelector('.criteria').getAttribute('id_val'),
@@ -80,7 +81,7 @@ const Penilaian = () => {
           type: 2
         }
       }
-      FitAndProperAPI.nilai(body).then((res) => {
+      ScoreAPI.add(body).then((res) => {
         const body = {
           data : {
             status_interview: true

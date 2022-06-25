@@ -22,17 +22,56 @@ import {
   CAlert,
   CFormSelect    
 } from '@coreui/react'
-import { useLocation, useNavigate } from "react-router-dom"
-import { cilSearch, cilPlus } from '@coreui/icons'
+import { cilSearch } from '@coreui/icons'
 import CIcon from '@coreui/icons-react'
-
+import DataPesertaAPI from '../../../config/user/DataPesertaAPI'
+import FitAndProperAPI from '../../../config/user/FitAndProperAPI'
+import PositionAPI from 'src/config/admin/PositionAPI'
 
 const RekapMFitAndProper = () => {
-  const [chosenCriteria, setChosenCriteria] = useState({
-    visible: false,
-    name: "",
-    id: 0,
+
+  const [registrants, setRegistrants] = useState([])
+  const [projections, setProjections] = useState([])
+  const [message, setMessage] = useState("")
+  const [lineMappings, setLineMappings] = useState([])
+  const [state, setState] = useState({
+    visible: false
   })
+
+  useEffect(() => {
+    getDataPeserta()
+    getDataProyeksi()
+  }, []) 
+
+  const generateData = (e) => {
+    e.preventDefault()
+
+    const registrant = document.getElementById("filter_registrant").value
+    const projection = document.getElementById("filter_projection").value
+
+    FitAndProperAPI.getRekapManualFitProper(registrant, projection).then((res) => {
+      if(res.data.length != 0){
+        setState({ ...state, visible: true })
+        setLineMappings(res.data)
+        console.log(res.data)
+      } else {
+        setState({ ...state, visible: false })        
+        setLineMappings([])        
+      }
+    })    
+  }
+
+  const getDataPeserta = () => {
+    DataPesertaAPI.get().then((res) => {
+      setRegistrants(res.data)
+    })
+  }
+
+  const getDataProyeksi = () => {
+    PositionAPI.get().then((res) => {
+      setProjections(res.data)
+    })
+  }
 
   return (
     <CRow>
@@ -42,26 +81,27 @@ const RekapMFitAndProper = () => {
             <CAccordionItem itemKey={1}>
               <CAccordionHeader><CIcon icon={cilSearch} style={{ marginRight: "10px" }}/>Pencarian Data</CAccordionHeader>
               <CAccordionBody>
-                <CForm>
+                <CForm onSubmit={generateData}>
                   <CRow className='mt-2'>
                     <CCol xs={6}>
-                      <CFormLabel htmlFor="filter_nama">NIP</CFormLabel>
-                      <CFormInput
-                        type="text"
-                        name='filter_nip'
-                        id="filter_nip"
-                        placeholder="Enter NIP . . ."
-                      />
-                    </CCol>
-                    <CCol xs={6}>
-                      <CFormLabel htmlFor="filter_usefor">Use For</CFormLabel>
-                      <CFormSelect name="filter_usefor" id="filter_usefor" className="mb-3" aria-label="Large select example">
-                        <option value="">Choose Use For</option>
-                        <option value="am">Ahli Madya</option>
-                        <option value="md">Modern Madya</option>
+                      <CFormLabel htmlFor="exampleFormControlInput1">Peserta</CFormLabel>
+                      <CFormSelect name="filter_registrant" id="filter_registrant" className="mb-3" aria-label="Large select example">
+                        <option value="">Pilih Peserta</option>
+                        { registrants?.map(registrant =>
+                          <option key={ registrant.id } value={ registrant.id } >{ registrant?.attributes?.employee?.data?.attributes?.Name }</option>
+                        )}
                       </CFormSelect>
                     </CCol>
-                  </CRow>                            
+                    <CCol xs={6}>
+                      <CFormLabel htmlFor="filter_usefor">Proyeksi</CFormLabel>
+                      <CFormSelect name="filter_projection" id="filter_projection" className="mb-3" aria-label="Large select example">
+                        <option value="">Pilih Proyeksi</option>
+                        { projections?.map(projection =>
+                          <option value={ projection.id } key={ projection.id } >{ projection.attributes.position_name }</option>
+                        )}
+                      </CFormSelect>
+                    </CCol>
+                  </CRow>
                   <CRow>
                     <hr className='mt-4' style={{ marginLeft: "12px", width: "97.6%" }} />
                   </CRow>
@@ -73,86 +113,46 @@ const RekapMFitAndProper = () => {
                           style={{ width:'10%', borderRadius: "50px", fontSize: "14px" }} >
                           <CIcon icon={cilSearch} style={{ marginRight: "10px", color: "#FFFFFF" }}/>
                             Cari
-                      </CButton>                                          
+                      </CButton>
                     </CCol>
                   </CRow>
                 </CForm>
               </CAccordionBody>
             </CAccordionItem>
-          </CAccordion> 
-        </CCol>           
-        <CCard className="mt-3">
-          <CCardHeader>
-            <strong>Rekap Penilaian Manual Peserta Fit Proper</strong>
-          </CCardHeader>  
-          <CCardBody>
-            <CTable align="center" striped style={{ display:'block', 'overflow-x':'auto'}}>
-              <CTableHead>
-                  <CTableRow>
-                    <CTableHeaderCell rowSpan={2}>No</CTableHeaderCell>
-                    <CTableHeaderCell rowSpan={2}>Tim Penilai</CTableHeaderCell>
-                    <CTableHeaderCell colSpan={2}>Pengetahuan / Knowledge</CTableHeaderCell>
-                    <CTableHeaderCell colSpan={2}>Keterampilan / Skill </CTableHeaderCell>
-                    <CTableHeaderCell rowSpan={2}>Rekomendasi Penguji </CTableHeaderCell>
-                    <CTableHeaderCell rowSpan={2}>Kelemahan yang harus diperbaiki</CTableHeaderCell>
-                    <CTableHeaderCell rowSpan={2}>Kelebihan yang dimiliki</CTableHeaderCell>
-                  </CTableRow>
-                  <CTableRow>
-                    <CTableHeaderCell scope="col">Pengetahuan terhadap proses bisnis (bobot 40%)</CTableHeaderCell>
-                    <CTableHeaderCell scope="col">Pengetahuan terhadap tugas pokok dan tanggung jawab / Job Desk yang terkait dengan jabatan yang di proyeksikan (bobot 60%)</CTableHeaderCell>
-                    <CTableHeaderCell scope="col">Pemecahan masalah / Pengambilan  Keputusan (bobot 60%)</CTableHeaderCell>
-                    <CTableHeaderCell scope="col">Komunikasi dengan Pihak Eksternal (bobot 40%)</CTableHeaderCell>
-                </CTableRow>
-                <CTableRow>
-                  <CTableHeaderCell scope="row">1</CTableHeaderCell>
-                  <CTableDataCell><CFormInput type="text" id="inputEmail3" /></CTableDataCell>
-                  <CTableDataCell><CFormInput type="text" id="inputEmail3" /></CTableDataCell>
-                  <CTableDataCell><CFormInput type="text" id="inputEmail3" /></CTableDataCell>
-                  <CTableDataCell><CFormInput type="text" id="inputEmail3" /></CTableDataCell>
-                  <CTableDataCell><CFormInput type="text" id="inputEmail3" /></CTableDataCell>
-                  <CTableDataCell><CFormInput type="text" id="inputEmail3" /></CTableDataCell>
-                  <CTableDataCell><CFormInput type="text" id="inputEmail3" /></CTableDataCell>
-                  <CTableDataCell><CFormInput type="text" id="inputEmail3" /></CTableDataCell>
-                </CTableRow>
-                <CTableRow>
-                  <CTableHeaderCell scope="row">2</CTableHeaderCell>
-                  <CTableDataCell><CFormInput type="text" id="inputEmail3" /></CTableDataCell>
-                  <CTableDataCell><CFormInput type="text" id="inputEmail3" /></CTableDataCell>
-                  <CTableDataCell><CFormInput type="text" id="inputEmail3" /></CTableDataCell>
-                  <CTableDataCell><CFormInput type="text" id="inputEmail3" /></CTableDataCell>
-                  <CTableDataCell><CFormInput type="text" id="inputEmail3" /></CTableDataCell>
-                  <CTableDataCell><CFormInput type="text" id="inputEmail3" /></CTableDataCell>
-                  <CTableDataCell><CFormInput type="text" id="inputEmail3" /></CTableDataCell>
-                  <CTableDataCell><CFormInput type="text" id="inputEmail3" /></CTableDataCell>
-                </CTableRow>
-                <CTableRow>
-                  <CTableHeaderCell scope="row">3</CTableHeaderCell>
-                  <CTableDataCell><CFormInput type="text" id="inputEmail3" /></CTableDataCell>
-                  <CTableDataCell><CFormInput type="text" id="inputEmail3" /></CTableDataCell>
-                  <CTableDataCell><CFormInput type="text" id="inputEmail3" /></CTableDataCell>
-                  <CTableDataCell><CFormInput type="text" id="inputEmail3" /></CTableDataCell>
-                  <CTableDataCell><CFormInput type="text" id="inputEmail3" /></CTableDataCell>
-                  <CTableDataCell><CFormInput type="text" id="inputEmail3" /></CTableDataCell>
-                  <CTableDataCell><CFormInput type="text" id="inputEmail3" /></CTableDataCell>
-                  <CTableDataCell><CFormInput type="text" id="inputEmail3" /></CTableDataCell>
-                </CTableRow>
-                <CTableRow>
-                  <CTableHeaderCell scope="row">4</CTableHeaderCell>
-                  <CTableDataCell><CFormInput type="text" id="inputEmail3" /></CTableDataCell>
-                  <CTableDataCell><CFormInput type="text" id="inputEmail3" /></CTableDataCell>
-                  <CTableDataCell><CFormInput type="text" id="inputEmail3" /></CTableDataCell>
-                  <CTableDataCell><CFormInput type="text" id="inputEmail3" /></CTableDataCell>
-                  <CTableDataCell><CFormInput type="text" id="inputEmail3" /></CTableDataCell>
-                  <CTableDataCell><CFormInput type="text" id="inputEmail3" /></CTableDataCell>
-                  <CTableDataCell><CFormInput type="text" id="inputEmail3" /></CTableDataCell>
-                  <CTableDataCell><CFormInput type="text" id="inputEmail3" /></CTableDataCell>
-                </CTableRow>
-              </CTableHead>
-              <CTableBody>
-              </CTableBody>
-            </CTable>
-          </CCardBody>
-          </CCard>
+          </CAccordion>
+        </CCol>
+          { state.visible ? 
+            <CCard className="mt-3">
+              <CCardHeader>
+                <strong>Rekap Penilaian Manual Peserta Fit Proper</strong>
+              </CCardHeader>
+                <CCardBody>
+                  <CTable striped style={{ display:'block', overflowX:'auto'}}>
+                    <CTableHead>
+                      <CTableRow>
+                        <CTableHeaderCell scope="col">No</CTableHeaderCell>
+                        <CTableHeaderCell scope="col">Tim Penilai</CTableHeaderCell>
+                        { lineMappings[0]?.attributes?.scores_fitproper?.data.map(criteria =>
+                          <CTableHeaderCell key={ criteria?.attributes?.criterion?.data?.id } scope="col">{ criteria?.attributes?.criterion?.data?.attributes?.criteria } (Bobot {criteria?.attributes?.criterion?.data?.attributes?.value}%)</CTableHeaderCell>
+                        )}
+                      </CTableRow>
+                    </CTableHead>
+                    <CTableBody>
+                      { lineMappings?.map( (lineMapping, index) =>
+                        <CTableRow key={lineMapping.id}>
+                          <CTableHeaderCell scope="row">{index+1}</CTableHeaderCell>
+                          <CTableDataCell key={lineMapping?.id} scope="col">{ lineMapping?.attributes?.examiner?.data?.attributes?.employee?.data?.attributes?.Name }</CTableDataCell>
+                          { lineMapping?.attributes?.scores_fitproper?.data.map(score =>
+                            <CTableDataCell key={score?.id}><CFormInput type="text" id="inputEmail3" defaultValue={score?.attributes?.score || 0}/></CTableDataCell>
+                          )}
+                        </CTableRow>
+                      )}
+                    </CTableBody>
+                  </CTable>
+                </CCardBody>
+            </CCard>
+          : null
+        }                        
       </CCol>
     </CRow>
   )
