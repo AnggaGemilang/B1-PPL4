@@ -1,7 +1,6 @@
 import React from 'react'
 import {
   CAvatar,
-  CBadge,
   CDropdown,
   CDropdownDivider,
   CDropdownHeader,
@@ -10,31 +9,29 @@ import {
   CDropdownToggle,
 } from '@coreui/react'
 import {
-  cilBell,
-  cilCreditCard,
-  cilCommentSquare,
-  cilEnvelopeOpen,
-  cilFile,
   cilLockLocked,
   cilSettings,
-  cilTask,
-  cilUser,
 } from '@coreui/icons'
 import CIcon from '@coreui/icons-react'
-
-import avatar8 from './../../assets/images/avatars/8.jpg'
+import url from "../../config/setting"
 
 const AppHeaderDropdown = () => {
   return (
     <CDropdown variant="nav-item">
-      <CDropdownToggle placement="bottom-end" className="py-0" caret={false}>
-        <CAvatar src={avatar8} size="md" />
+      <CDropdownToggle caret={false}>
+        <div style={{ display: "flex", paddingRight: "8px" }}>
+          <img className='foto_karyawan' style={{ width: "52px", height: "52px" }} src={ url + JSON.parse(sessionStorage.getItem("auth")).user.cp_photo} size="lg" />
+          <div style={{ marginLeft: "15px" }}>
+            <h5 style={{ marginBottom: "4px", marginTop: "3px", fontSize: "18px", fontWeight: "600" }}>{ JSON.parse(sessionStorage.getItem("auth")).user?.employee?.Name }</h5>            
+            <h6 style={{ marginBottom: "0px", fontSize: "15px" }}>{ JSON.parse(sessionStorage.getItem("auth")).user?.employee?.NIP }</h6>                        
+          </div>
+        </div>
       </CDropdownToggle>
-      <CDropdownMenu className="pt-0" placement="bottom-end">
-        <CDropdownHeader className="bg-light fw-semibold py-2">Settings</CDropdownHeader>
-        <CDropdownItem href="#">
-          <CIcon icon={cilUser} className="me-2" />
-          Profile
+      <CDropdownMenu className="pt-0 w-100 mt-2" placement="bottom-end">
+        <CDropdownHeader className="bg-light fw-semibold py-2 mb-2">Aksi</CDropdownHeader>
+        <CDropdownItem href="/change-password">
+          <CIcon icon={cilSettings} className="me-2" />
+          Ubah Password
         </CDropdownItem>
         <CDropdownDivider />
         <CDropdownItem href="/login" onClick={() => sessionStorage.clear()}>

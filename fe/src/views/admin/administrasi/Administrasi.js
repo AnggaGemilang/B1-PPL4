@@ -286,7 +286,7 @@ const Administrasi = () => {
                                 if(res.length != 0){
                                   const body = {
                                     role: e.target.value,
-                                    cp_role: e.target.value
+                                    cp_role: e.target.value,
                                   }
                                   AdministrasiUserAPI.edit(employee.attributes.account.data.id, body).then(res => {
                                     getData()
@@ -299,7 +299,8 @@ const Administrasi = () => {
                                     password: employee?.attributes?.NIP,
                                     role: e.target.value,
                                     employee: employee?.id,
-                                    cp_role: e.target.value
+                                    cp_role: e.target.value,
+                                    cp_photo: employee?.attributes?.Photo?.data?.attributes?.formats?.thumbnail?.url,
                                   }
                                   AdministrasiUserAPI.add(body).then(res => {
                                     getData()

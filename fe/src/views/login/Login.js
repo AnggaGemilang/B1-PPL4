@@ -33,9 +33,10 @@ const Login = () => {
       password: document.getElementById("password").value
     }
     LoginAPI.login(data).then((res) => {
-        sessionStorage.setItem("auth", JSON.stringify(res))
-        setState({visible: false})
-        navigate('/');
+      console.log(res)
+      sessionStorage.setItem("auth", JSON.stringify(res))
+      setState({visible: false})
+      navigate('/');
     }).catch((err) => {
         setState({errorMessage:"Invalid email or password", visible: false})
     })

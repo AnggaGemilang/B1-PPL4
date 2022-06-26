@@ -1,5 +1,6 @@
 import React from 'react'
 
+const ChangePassword = React.lazy(() => import('./views/changepassword/ChangePassword'))
 const Dashboard = React.lazy(() => import('./views/dashboard/Dashboard'))
 const Login = React.lazy(() => import('./views/login/Login'))
 
@@ -53,7 +54,8 @@ const ReportWawancara = React.lazy(() => import ('./views/user/report/RekapWawan
 const CetakWawancara = React.lazy(() => import('./views/user/report/CetakRekapWawancara'))
 
 const routes = [
-  { path: '/', exact: true, name: 'Dashboard', element: Dashboard },
+  { path: '/', exact: true, name: '', element: Dashboard },
+  { path: '/change-password', exact: true, name: 'Ubah Password', element: ChangePassword },
   { path: '/login', exact: true, name: 'Login', element: Login },
   { path: '/unit', exact: true, name: 'Unit', element: Unit },
   { path: '/unit/tambah', exact: true, name: 'Tambah Unit', element: TambahUnit },

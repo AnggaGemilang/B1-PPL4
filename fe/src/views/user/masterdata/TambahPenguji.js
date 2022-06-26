@@ -19,8 +19,7 @@ const TambahPenguji = () => {
   const navigate = useNavigate();
   const [nipValue, setNipValue] = useState("")
   const [state, setState] = useState({
-    namaKaryawan: "",
-    idKaryawan: 0,
+    employe: {},
     errorMessage: ""
   });
 
@@ -32,8 +31,8 @@ const TambahPenguji = () => {
         if(res.data.length == 1){
           console.log(res.data[0].attributes.Name)
           setState({
-            namaKaryawan: res.data[0].attributes.Name,
-            idKaryawan: res.data[0].id
+            ...state,
+            employe: res.data[0]
           });
         } 
         else {
@@ -56,7 +55,18 @@ const TambahPenguji = () => {
       }
       DataPengujiAPI.add(body).then(
         (res) => {
-          navigate('/datapenguji', {state: { successMessage: 'Examiner has added successfully' } });
+          const body = {
+            username : generateSlug(state.namaKaryawan),
+            email : employee?.attributes?.Email.toLowerCase(),
+            password: employee?.attributes?.NIP,
+            role: 4,
+            employee: state.idKaryawan,
+            cp_role: 4,
+            cp_photo: employee?.attributes?.Photo?.data?.attributes?.formats?.thumbnail?.url,
+          }
+          AdministrasiUserAPI.add(body).then(res => {
+            navigate('/datapenguji', {state: { successMessage: 'Penguji Berhasil Ditambahkan' } });
+          })
         },
         (err) => {
           setState({ errorMessage: "" })
