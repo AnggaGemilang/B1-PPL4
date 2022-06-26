@@ -11,48 +11,52 @@ import {
   CRow,
   CFormTextarea,
   CCallout,
-  CAlert   
+  CAlert,
+  CSpinner
 } from '@coreui/react'
 import {useNavigate, useLocation} from 'react-router-dom'
 import UnitAPI from '../../../config/admin/UnitAPI'
 
 const TambahUnit = () => {
-  const location = useLocation();
-  const navigate = useNavigate();
+  const location = useLocation()
+  const navigate = useNavigate()
 
-  const [message, setMessage] = useState("");
+  const [message, setMessage] = useState("")
   const [state, setState] = useState({
     status: location.state.status,
-    data: location?.state?.data
-  });
+    data: location?.state?.data,
+    visibleSubmit: false,
+  })
 
   const postData = (event) => {
     event.preventDefault()
-    var name = document.getElementById("unit_name").value
-    var address = document.getElementById("address").value
+    setState({ ...state, visibleSubmit: true })
+
     const body = {
       data: {
-        unit_name: name,
-        address: address
+        unit_name: document.getElementById("unit_name").value,
+        address: document.getElementById("address").value
       }
-    };
+    }
 
     if(state.status == "tambah"){
       UnitAPI.add(body).then(
         (res) => {
-          navigate('/unit', {state: { successMessage: 'Unit has added successfully' } }); 
+          navigate('/unit', {state: { successMessage: 'Unit Telah Berhasil Ditambahkan!' } }) 
         },
         (err) => {
-          console.log("err", err);
+          setMessage(err.message)
+          setState({ ...state, visibleSubmit: false })
         }
       )
     } else {
       UnitAPI.edit(state.data.id, body).then(
         (res) => {
-          navigate('/unit', {state: { successMessage: 'Unit has added successfully' } }); 
+          navigate('/unit', {state: { successMessage: 'Unit Gagal Ditambahkan!' } }) 
         },
         (err) => {
-          console.log("err", err);
+          setMessage(err.message)
+          setState({ ...state, visibleSubmit: false })
         }
       )      
     }
@@ -76,13 +80,13 @@ const TambahUnit = () => {
           { message && <CAlert color="danger" dismissible onClose={() => { setMessage("") }}> { message } </CAlert> }
         </CCol>     
         <CCol xs={12}>
-          <CCard className="mb-4">
+          <CCard>
             <CCardHeader>
               <strong>Tambah Unit</strong>
             </CCardHeader>
             <CCardBody>
               <CForm onSubmit={postData} method="post">
-                <CRow className="mb-3" style={{ alignItem: "center" }}>
+                <CRow className="mt-2" style={{ alignItem: "center" }}>
                   <CFormLabel htmlFor="unit_name" className="col-sm-2 col-form-label">
                     Nama Unit
                   </CFormLabel>
@@ -95,7 +99,7 @@ const TambahUnit = () => {
                       defaultValue={ state.status == "tambah" ? "" : state.data.attributes.unit_name } />
                   </CCol>
                 </CRow>
-                <CRow className="mb-3">
+                <CRow className="mt-3">
                   <CFormLabel htmlFor="address" className="col-sm-2 col-form-label">
                     Alamat Unit
                   </CFormLabel>
@@ -104,8 +108,15 @@ const TambahUnit = () => {
                       { state.status == "tambah" ? "" : state.data.attributes.address }
                     </CFormTextarea>
                   </CCol>
-                </CRow>              
-                <CButton type="submit" style={{width:'100%'}}>Submit</CButton>
+                </CRow>
+                <CRow className='mt-4'>
+                  <CCol xs={12} className="position-relative">
+                    <CButton disabled={state.visibleSubmit} type="submit" style={{width:'100%'}} className="p-2 w-100">
+                      Submit
+                    </CButton>
+                    { state.visibleSubmit && <CSpinner color="primary" className='position-absolute' style={{right: "20px", top: "5px"}} /> }
+                  </CCol>
+                </CRow>
               </CForm>
             </CCardBody>
           </CCard>

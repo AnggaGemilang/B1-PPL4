@@ -11,60 +11,62 @@ import {
   CRow,
   CFormSelect,  
   CCallout,
-  CAlert     
+  CAlert,
+  CSpinner
 } from '@coreui/react'
 import {useNavigate, useLocation} from 'react-router-dom'
 import PositionAPI from '../../../config/admin/PositionAPI'
 import GradeAPI from '../../../config/admin/GradeAPI'
 
 const TambahPosition = () => {
-  const location = useLocation();
-  const navigate = useNavigate();
+  const location = useLocation()
+  const navigate = useNavigate()
 
   const [grades, setGrades] = useState([])
-  const [message, setMessage] = useState("");
+  const [message, setMessage] = useState("")
   const [state, setState] = useState({
     status: location.state.status,
-    data: location?.state?.data
-  });
+    data: location?.state?.data,
+    visibleSubmit: false,
+  })
 
   useEffect(() => {
-    getGradeData()
-  }, [])  
-  
-  const getGradeData = () => {
     GradeAPI.get().then((res) => {
       setGrades(res.data)
     })
-  }
-
+  }, [])  
+  
   const postData = (event) => {
     event.preventDefault()
+    setState({ ...state, visibleSubmit: true })
+
     const body = {
       data: {
         position_name: document.getElementById("position_name").value,
         grade: document.getElementById("grade").value
       }
-    };
+    }
 
     if(state.status == "tambah"){
       PositionAPI.add(body).then(
         (res) => {
-          navigate('/position', {state: { successMessage: 'Position has added successfully' } });  
+          navigate('/position', {state: { successMessage: 'Jabatan Telah Berhasil Dihapus!' } })  
         },
         (err) => {
-          console.log("err", err);
+          setMessage(err.message)
+          setState({ ...state, visibleSubmit: false })
         }
-      );    
+      )    
     } else {
       PositionAPI.edit(state.data.id, body).then(
         (res) => {
-          navigate('/position', {state: { successMessage: 'Position has update successfully' } });  
+          navigate('/position', {state: { successMessage: 'Jabatan Telah Berhasil Diperbaharui!' } })  
         },
         (err) => {
-          console.log("err", err);
+          setMessage(err.message)
+          setState({ ...state, visibleSubmit: false })
         }
-      );
+      )
     }
   }
 
@@ -86,13 +88,13 @@ const TambahPosition = () => {
           { message && <CAlert color="danger" dismissible onClose={() => { setMessage("") }}> { message } </CAlert> }
         </CCol>     
         <CCol xs={12}>       
-          <CCard className="mb-4">
+          <CCard>
             <CCardHeader>
               <strong>{ state.status == "tambah" ? "Tambah" : "Edit"} Jabatan</strong>
             </CCardHeader>
             <CCardBody>
               <CForm onSubmit={postData} method="post">
-                <CRow className="mb-3">
+                <CRow className="mt-2">
                   <CFormLabel htmlFor="position_name" className="col-sm-2 col-form-label">
                     Nama Jabatan
                   </CFormLabel>
@@ -105,12 +107,12 @@ const TambahPosition = () => {
                       defaultValue={ state.status == "tambah" ? "" : state.data.attributes.position_name } />
                   </CCol>
                 </CRow>
-                <CRow className="mb-3">
+                <CRow className="mt-3">
                   <CFormLabel htmlFor="grade" className="col-sm-2 col-form-label">
                     Grade
                   </CFormLabel>
                   <CCol sm={10}>
-                    <CFormSelect name="grade" id="grade" className="mb-3" aria-label="Large select example">
+                    <CFormSelect name="grade" id="grade" aria-label="Large select example">
                       <option>Pilih Grade</option>
                       { grades.map(grade =>
                         <option selected={grade.id == state?.data?.attributes?.grades?.data[0]?.id} key={ grade.id } value={ grade.id } >{ grade.attributes.grade_name }</option>
@@ -118,7 +120,14 @@ const TambahPosition = () => {
                     </CFormSelect>
                   </CCol>
                 </CRow>
-                <CButton type="submit" style={{width:'100%'}}>Submit</CButton>
+                <CRow className='mt-4'>
+                  <CCol xs={12} className="position-relative">
+                    <CButton disabled={state.visibleSubmit} type="submit" style={{width:'100%'}} className="p-2 w-100">
+                      Submit
+                    </CButton>
+                    { state.visibleSubmit && <CSpinner color="primary" className='position-absolute' style={{right: "20px", top: "5px"}} /> }                    
+                  </CCol>
+                </CRow>
               </CForm>
             </CCardBody>
           </CCard>

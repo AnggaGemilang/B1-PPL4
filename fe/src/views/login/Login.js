@@ -14,7 +14,7 @@ import {
   CAlert,
   CSpinner
 } from '@coreui/react'
-import background from '../../assets/images/LatarPLN.jpg';
+import background from '../../assets/images/LatarPLN.jpg'
 import LoginAPI from '../../config/admin/LoginAPI'
 
 const Login = () => {

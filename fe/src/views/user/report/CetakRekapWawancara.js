@@ -21,20 +21,20 @@ import {
   CAlert,
   CForm
 } from '@coreui/react'
-import { useLocation } from "react-router-dom";
+import { useLocation } from "react-router-dom"
 import { cilSearch } from '@coreui/icons'
 import CIcon from '@coreui/icons-react'
 import MappingAPI from '../../../config/user/MappingAPI'
 import FitAndProperAPI from '../../../config/user/FitAndProperAPI'
 import jsPDF from 'jspdf'
-import 'jspdf-autotable';
+import 'jspdf-autotable'
 
 const CetakRekapWawancara = () => {
-  const location = useLocation();
+  const location = useLocation()
 
   const [lineMappings, setLineMappings] = useState([])  
-  const [mappings, setMappings] = useState([]);
-  const [message, setMessage] = useState("");
+  const [mappings, setMappings] = useState([])
+  const [message, setMessage] = useState("")
 
   useEffect(() => {
     setMessage(location?.state?.successMessage)
@@ -83,7 +83,7 @@ const CetakRekapWawancara = () => {
             orientation: 'l',
             unit: 'pt',
             format: 'a4'        
-        });
+        })
 
         doc.setFontSize("18")
         doc.setFont('helvetica', 'bold')

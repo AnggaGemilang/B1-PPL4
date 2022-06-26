@@ -14,20 +14,24 @@ import {
   CTableRow,
   CFormInput,
   CAlert,
-  CCallout,  
-  CForm
+  CCallout,
+  CForm,
+  CSpinner  
 } from '@coreui/react'
-import { useLocation, useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom"
 import FitAndProperAPI from '../../../config/user/FitAndProperAPI'
-import ScoreAPI from 'src/config/user/ScoreAPI';
+import ScoreAPI from 'src/config/user/ScoreAPI'
 
 const Penilaian = () => {
-  const location = useLocation();
-  const navigate = useNavigate();
+  const location = useLocation()
+  const navigate = useNavigate()
 
   const [scores, setScores] = useState([])
   const [message, setMessage] = useState("")
-  const [lineMapping, setLineMapping] = useState(location?.state?.data)
+  const [state, setState] = useState({
+    lineMapping: location?.state?.data,
+    visibleSubmit: false,
+  })
 
   useEffect(() => {
     getScore()
@@ -35,31 +39,39 @@ const Penilaian = () => {
   
   const postData = (e) => {
     e.preventDefault()
+    setState({ ...state, visibleSubmit: true })
 
-    const data = document.querySelector('#body').children;
+    const data = document.querySelector('#body').children
     for (let i = 0; i < data.length; i++) {
       const body = {
         data : {
           score: data[i].querySelector('#nilai').value,
-          examiner: lineMapping.attributes?.examiner?.data?.id,
+          examiner: state?.lineMapping?.attributes?.examiner?.data?.id,
         }
       }
-      FitAndProperAPI.nilai(data[i].querySelector('#score').getAttribute('id_val'), body).then((res) => {
-        const body = {
-          data : {
-            status_fitproper: true
+      FitAndProperAPI.nilai(data[i].querySelector('#score').getAttribute('id_val'), body).then(
+        (res) => {
+          const body = {
+            data : {
+              status_fitproper: true
+            }
           }
+          FitAndProperAPI.editLineMapping(state?.lineMapping?.id, body).then((res) => {
+            navigate('/fitandproper/datapenilaian', {state: { successMessage: 'Penilaian Berhasil' } })        
+          })
+        }, 
+        (err) => {
+          setMessage(err.message)
+          setState({ ...state, visibleSubmit: false })
         }
-        FitAndProperAPI.editLineMapping(lineMapping?.id, body).then((res) => {
-          navigate('/fitandproper/datapenilaian', {state: { successMessage: 'Penilaian Berhasil' } });        
-        })
-      })
+      )
     }
   }
 
   const getScore = () => {
-    ScoreAPI.getFitProperPenilaian(lineMapping?.id).then((res) => {
+    ScoreAPI.getFitProperPenilaian(state?.lineMapping?.id).then((res) => {
       setScores(res.data)
+      console.log(res.data)
     })
   }
 
@@ -108,7 +120,14 @@ const Penilaian = () => {
                   ))}  
                 </CTableBody>
               </CTable>
-              <CButton type="submit" style={{width:'100%'}}>Submit</CButton>
+              <CRow className='mt-4'>
+                <CCol xs={12} className="position-relative">
+                  <CButton disabled={state.visibleSubmit} type="submit" style={{width:'100%'}} className="p-2 w-100">
+                    Submit
+                  </CButton>
+                  { state.visibleSubmit && <CSpinner color="primary" className='position-absolute' style={{right: "20px", top: "5px"}} /> }
+                </CCol>
+              </CRow>
             </CForm>
           </CCardBody>
         </CCard>

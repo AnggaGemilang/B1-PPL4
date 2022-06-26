@@ -21,76 +21,112 @@ import {
   CAccordionBody,
   CAccordionHeader,
   CAccordionItem,
-  CFormSelect  
+  CFormSelect,
+  CSpinner  
 } from '@coreui/react'
-import { useLocation, useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom"
 import { cilX, cilPlus } from '@coreui/icons'
 import CIcon from '@coreui/icons-react'
 import CriteriaAPI from '../../../config/admin/CriteriaAPI'
 import FitAndProperAPI from '../../../config/user/FitAndProperAPI'
-import ScoreAPI from 'src/config/user/ScoreAPI';
+import ScoreAPI from 'src/config/user/ScoreAPI'
 
 const Penilaian = () => {
-  const location = useLocation();
-  const navigate = useNavigate();
+  const location = useLocation()
+  const navigate = useNavigate()
 
   const [selectedCriteria, setSelectedCriteria] = useState([])
   const [criterias, setCriterias] = useState([])
   const [message, setMessage] = useState("")
-  const [lineMapping, setLineMapping] = useState(location?.state?.data)
+  const [lineMapping, setLineMapping] = useState()
+  const [state, setState] = useState({
+    lineMapping: location?.state?.data,
+    visibleSubmit: false,
+    visiblePenggunaan: false    
+  })
 
   useEffect(() => {
     getData()
   }, [])  
   
   const tambahKriteria = (event) => {
-    event.preventDefault();
-    const body = {
-      data: {
-        criteria: document.getElementById("criteria").value,
-        value: document.getElementById("value").value,
-        useFor: document.getElementById("usefor").value,
+    event.preventDefault()
+    setState({ ...state, visibleSubmit: true })
+
+    let body = {}    
+
+    if(document.getElementById("defaultused").value == "fitproper"){
+      body = {
+        data: {
+          criteria: document.getElementById("criteria").value,
+          value: document.getElementById("value").value,
+          defaultUsed: document.getElementById("defaultused").value,
+          useFor: document.getElementById("usefor").value,
+        }
       }
-    };
+    } else {
+      body = {
+        data: {
+          criteria: document.getElementById("criteria").value,
+          value: document.getElementById("value").value,
+          defaultUsed: document.getElementById("defaultused").value,
+        }
+      }
+    }
 
     CriteriaAPI.add(body).then(
       (res) => {
-        setMessage('Kriteria baru telah ditambahkan')
+        setMessage('Kriteria Telah Berhasil Ditambahkan!')
         document.getElementById("criteria").value = "",
         document.getElementById("value").value = "",
-        document.getElementById("usefor").value = ""
+        document.getElementById("usefor").value = "999"
+        document.getElementById("defaultused").value = "999"
         getData() 
       },
       (err) => {
-        console.log("err", err);
+        setMessage(err.message)
       }
-    ); 
+    ) 
   }
 
   const postData = (e) => {
     e.preventDefault()
-    const data = document.querySelector('#body').children;
+    setState({ ...state, visibleSubmit: true })
+
+    const data = document.querySelector('#body').children
     for (let i = 0; i < data.length; i++) {
       const body = {
         data : {
-          line_mapping_interview: lineMapping?.id,
-          registrant: lineMapping?.attributes?.mapping?.data?.attributes?.registrant?.data?.id,
-          examiner: lineMapping.attributes?.examiner?.data?.id,
+          line_mapping_interview: state?.lineMapping?.id,
+          registrant: state?.lineMapping?.attributes?.mapping?.data?.attributes?.registrant?.data?.id,
+          examiner: state?.lineMapping?.attributes?.examiner?.data?.id,
           criterion: data[i].querySelector('.criteria').getAttribute('id_val'),
           score: data[i].querySelector('#nilai').value,
           type: 2
         }
       }
-      ScoreAPI.add(body).then((res) => {
-        const body = {
-          data : {
-            status_interview: true
+      ScoreAPI.add(body).then(
+        (res) => {
+          const body = {
+            data : {
+              status_interview: true
+            }
           }
+          FitAndProperAPI.editLineMapping(state?.lineMapping?.id, body).then(
+            (res) => {
+              navigate('/fitandproper/datapenilaian', {state: { successMessage: 'Penilaian Berhasil' } })        
+            }, 
+            (err) => {
+              setMessage(err.message)
+              setState({ ...state, visibleSubmit: false })
+            }
+          )
+        }, 
+        (err) => {
+          setMessage(err.message)
+          setState({ ...state, visibleSubmit: false })
         }
-        FitAndProperAPI.editLineMapping(lineMapping?.id, body).then((res) => {
-          navigate('/fitandproper/datapenilaian', {state: { successMessage: 'Penilaian Berhasil' } });        
-        })
-      })
+      )
     }
   }
 
@@ -98,7 +134,6 @@ const Penilaian = () => {
     console.log(id)
     CriteriaAPI.findById(id).then((res) => {
       setSelectedCriteria([...selectedCriteria, res.data[0]])
-      console.log(res.data[0])
     })
   }
 
@@ -129,7 +164,7 @@ const Penilaian = () => {
               <CForm onSubmit={tambahKriteria}>
                 <CRow className='mt-2'>
                   <CCol xs={6}>
-                    <CFormLabel htmlFor="exampleFormControlInput1">Nama Kriteria</CFormLabel>
+                    <CFormLabel htmlFor="criteria">Nama Kriteria</CFormLabel>
                     <CFormInput 
                       type="text" 
                       name="criteria" 
@@ -137,7 +172,7 @@ const Penilaian = () => {
                       placeholder='Masukkan Kriteria Penilaian . . .' />
                   </CCol>
                   <CCol xs={6}>
-                    <CFormLabel htmlFor="exampleFormControlInput1">Bobot</CFormLabel>
+                    <CFormLabel htmlFor="value">Bobot</CFormLabel>
                     <CFormInput 
                       type="number"
                       name="value"
@@ -145,13 +180,26 @@ const Penilaian = () => {
                       placeholder='Masukkan Bobot . . .' />
                   </CCol>
                 </CRow>               
-                <CRow className='mt-3'>
+                <CRow className='mt-3'>                  
                   <CCol xs={6}>
-                    <CFormLabel htmlFor="exampleFormControlInput1">Penggunaan</CFormLabel>
-                    <CFormSelect name="usefor" id="usefor" className="mb-3" aria-label="Large select example">
-                      <option>Pilih Penggunaan</option>
-                      <option value="am">Am</option>
-                      <option value="md">Md</option>
+                    <CFormLabel htmlFor="defaultused">Kategori</CFormLabel>
+                    <CFormSelect 
+                      name="defaultused" 
+                      id="defaultused" 
+                      className="mb-3" 
+                      aria-label="Large select example"
+                      onChange={(e) => (e.target.value == "fitproper") ? setState({ ...state, visiblePenggunaan: true }) : setState({ ...state, visiblePenggunaan: false }) } >
+                      <option value="999">Pilih Kategori</option>
+                      <option value="fitproper">Fit & Proper</option>
+                      <option value="interview">Wawancara</option>
+                    </CFormSelect>
+                  </CCol>
+                  <CCol xs={6}>
+                    <CFormLabel htmlFor="usefor">Penggunaan</CFormLabel>
+                    <CFormSelect name="usefor" id="usefor" className="mb-3" aria-label="Large select example" disabled={ state.visiblePenggunaan == false }>
+                      <option value="999">Pilih Penggunaan</option>
+                      <option value="am">Manajemen Atas</option>
+                      <option value="md">Manajemen Dasar</option>
                     </CFormSelect>
                   </CCol>
                 </CRow>
@@ -228,7 +276,14 @@ const Penilaian = () => {
                   </CTableRow>
                 </CTableBody>
               </CTable>
-              <CButton type="submit" style={{width:'100%'}}>Submit</CButton>
+              <CRow className='mt-4'>
+                <CCol xs={12} className="position-relative">
+                  <CButton disabled={state.visibleSubmit} type="submit" style={{width:'100%'}} className="p-2 w-100">
+                    Submit
+                  </CButton>
+                  { state.visibleSubmit && <CSpinner color="primary" className='position-absolute' style={{right: "20px", top: "5px"}} /> }
+                </CCol>
+              </CRow>
             </CForm>
           </CCardBody>
         </CCard>

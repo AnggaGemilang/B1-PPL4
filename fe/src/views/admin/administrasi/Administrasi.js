@@ -37,7 +37,7 @@ const Administrasi = () => {
   const [levels, setLevels] = useState([])
   const [grades, setGrades] = useState([])
   const [subfields, setSubfields] = useState([])
-  const [message, setMessage] = useState("");
+  const [message, setMessage] = useState("")
 
   useEffect(() => {
     setMessage(location?.state?.successMessage)
@@ -104,7 +104,7 @@ const Administrasi = () => {
       .replace(/-+$/, '')
       .replace(/\s+/g, '-')
       .replace(/\-\-+/g, '-')
-      .replace(/[^\w\-]+/g, '');
+      .replace(/[^\w\-]+/g, '')
   }
 
   return (

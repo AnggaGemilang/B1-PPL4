@@ -10,22 +10,23 @@ import {
   CFormLabel,
   CRow,
   CCallout,
-  CAlert
+  CAlert,
+  CSpinner  
 } from '@coreui/react'
 import {useNavigate} from 'react-router-dom'
 import DataPesertaAPI from '../../../config/user/DataPesertaAPI'
 
 const TambahPeserta = () => {
-  const navigate = useNavigate();
+  const navigate = useNavigate()
   const [nipValue, setNipValue] = useState("")
   const [state, setState] = useState({
     namaKaryawan: "",
     idKaryawan: 0,
-    errorMessage: ""
-  });
+    errorMessage: "",
+    visibleSubmit: false,    
+  })
 
   useEffect(() => {
-    console.log(nipValue)
     if (nipValue.length > 1) {
       DataPesertaAPI.findEmployee(nipValue).then(
       (res) => {
@@ -35,20 +36,22 @@ const TambahPeserta = () => {
           setState({
             namaKaryawan: res.data[0].attributes.Name,
             idKaryawan: res.data[0].id
-          });
+          })
         } 
         else {
           setState({
             namaKaryawan: '',
             idKaryawan: 0,
-          });
+          })
         }
-      });
+      })
     }
   }, [nipValue])
 
   const postData = (event) => {
-    event.preventDefault();
+    event.preventDefault()
+    setState({ ...state, visibleSubmit: true })
+
     if(state.namaKaryawan.length > 0){
       const body = {
         data: {
@@ -57,14 +60,14 @@ const TambahPeserta = () => {
       }
       DataPesertaAPI.add(body).then(
         (res) => {
-          navigate('/datapeserta', {state: { successMessage: 'Registrant has added successfully' } });
+          navigate('/datapeserta', {state: { successMessage: 'Peserta Telah Berhasil Ditambahkan!' } })
         },
         (err) => {
-          setState({ errorMessage: "" })
+          setState({ ...state, visibleSubmit: false, errorMessage: "" })
         }
-      );    
+      )    
     } else {
-      setState({ errorMessage: "Enter NIP properly" })
+      setState({ ...state, visibleSubmit: false, errorMessage: "Masukkan NIP Dengan Benar!" })
     }
   }
 
@@ -92,11 +95,11 @@ const TambahPeserta = () => {
           <CCardBody>
             <CForm onSubmit={postData}>
               <CRow className="mb-3">
-                <CFormLabel htmlFor="nipValue" className="col-sm-2 col-form-label" placeholder='Masukkan NIP . . .' >
+                <CFormLabel htmlFor="nipValue" className="col-sm-2 col-form-label" >
                   NIP
                 </CFormLabel>
                 <CCol sm={10}>
-                  <CFormInput type="text" id="nipValue" name="nipValue" onChange={(e) => setNipValue(e.target.value )} />
+                  <CFormInput type="text" id="nipValue" name="nipValue" onChange={(e) => setNipValue(e.target.value )} placeholder='Masukkan NIP . . .' />
                 </CCol>
               </CRow>
               <CRow className="mb-3">
@@ -107,7 +110,14 @@ const TambahPeserta = () => {
                   <CFormInput type="text" id="namaKaryawan" name="namaKaryawan" value={state.namaKaryawan} placeholder='Nama Pegawai Akan Muncul Disini' disabled />
                 </CCol>
               </CRow>
-              <CButton type="submit" style={{width:'100%'}}>Submit</CButton>
+              <CRow className='mt-4'>
+                <CCol xs={12} className="position-relative">
+                  <CButton disabled={state.visibleSubmit} type="submit" style={{width:'100%'}} className="p-2 w-100">
+                    Submit
+                  </CButton>
+                  { state.visibleSubmit && <CSpinner color="primary" className='position-absolute' style={{right: "20px", top: "5px"}} /> }
+                </CCol>
+              </CRow>
             </CForm>
           </CCardBody>
         </CCard>

@@ -10,50 +10,54 @@ import {
   CFormLabel,
   CRow,
   CCallout,
-  CAlert     
+  CAlert,
+  CSpinner
 } from '@coreui/react'
 import {useNavigate, useLocation} from 'react-router-dom'
 import LevelAPI from '../../../config/admin/LevelAPI'
 
 const TambahLevel = () => {
-  const location = useLocation();
-  const navigate = useNavigate();
+  const location = useLocation()
+  const navigate = useNavigate()
 
-  const [message, setMessage] = useState("");
+  const [message, setMessage] = useState("")
   const [state, setState] = useState({
     status: location.state.status,
-    data: location?.state?.data
-  });   
+    data: location?.state?.data,
+    visibleSubmit: false,
+  })
 
   const postData = (event) => {
     event.preventDefault()
-    var functionalName = document.getElementById("functional_name").value
-    var structuralName = document.getElementById("structural_name").value
+    setState({ ...state, visibleSubmit: true })
+
     const body = {
       data: {
-        functional_name: functionalName,
-        structural_name: structuralName
+        functional_name: document.getElementById("functional_name").value,
+        structural_name: document.getElementById("structural_name").value
       }
-    };
+    }
 
     if(state.status == "tambah"){
       LevelAPI.add(body).then(
         (res) => {
-          navigate('/level', {state: { successMessage: 'Level has added successfully' } }); 
+          navigate('/level', {state: { successMessage: 'Jenjang Telah Berhasil Ditambah!' } }) 
         },
         (err) => {
-          console.log("err", err);
+          setMessage(err.message)
+          setState({ ...state, visibleSubmit: false })
         }
-      );
+      )
     } else {
       LevelAPI.edit(state.data.id, body).then(
         (res) => {
-          navigate('/level', {state: { successMessage: 'Level has updated successfully' } }); 
+          navigate('/level', {state: { successMessage: 'Jenjang Telah Berhasil Diperbaharui!' } }) 
         },
         (err) => {
-          console.log("err", err);
+          setMessage(err.message)
+          setState({ ...state, visibleSubmit: false })
         }
-      );         
+      )         
     }
   }
 
@@ -75,13 +79,13 @@ const TambahLevel = () => {
           { message && <CAlert color="danger" dismissible onClose={() => { setMessage("") }}> { message } </CAlert> }
         </CCol>     
         <CCol xs={12}>
-          <CCard className="mb-4">
+          <CCard>
             <CCardHeader>
               <strong>{ state.status == "tambah" ? "Tambah" : "Edit"} Jenjang</strong>
             </CCardHeader>
             <CCardBody>
               <CForm onSubmit={postData} method="post">
-                <CRow className="mb-3">
+                <CRow className="mt-2">
                   <CFormLabel htmlFor="structural_name" className="col-sm-2 col-form-label">
                     Nama Struktural
                   </CFormLabel>
@@ -94,7 +98,7 @@ const TambahLevel = () => {
                       defaultValue={ state.status == "tambah" ? "" : state.data.attributes.structural_name }/>
                   </CCol>
                 </CRow>
-                <CRow className="mb-3">
+                <CRow className="mt-3">
                   <CFormLabel htmlFor="functional_name" className="col-sm-2 col-form-label">
                     Nama Fungsional
                   </CFormLabel>
@@ -106,8 +110,15 @@ const TambahLevel = () => {
                       placeholder='Masukkan Nama Fungsional . . .'
                       defaultValue={ state.status == "tambah" ? "" : state.data.attributes.functional_name } />
                   </CCol>
-                </CRow>              
-                <CButton type="submit" style={{width:'100%'}}>Submit</CButton>
+                </CRow>
+                <CRow className='mt-4'>
+                  <CCol xs={12} className="position-relative">
+                    <CButton disabled={state.visibleSubmit} type="submit" style={{width:'100%'}} className="p-2 w-100">
+                      Submit
+                    </CButton>
+                    { state.visibleSubmit && <CSpinner color="primary" className='position-absolute' style={{right: "20px", top: "5px"}} /> }                    
+                  </CCol>
+                </CRow>
               </CForm>
             </CCardBody>
           </CCard>

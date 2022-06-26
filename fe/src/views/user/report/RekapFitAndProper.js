@@ -19,27 +19,19 @@ import {
   CAccordionItem, 
   CFormLabel,
   CAlert,
-  CForm,
-  CImage,
+  CForm
 } from '@coreui/react'
-import { useLocation, useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom"
 import { cilSearch } from '@coreui/icons'
 import CIcon from '@coreui/icons-react'
 import MappingAPI from '../../../config/user/MappingAPI'
-import url from "../../../config/setting"
-import logoPDF from 'src/assets/images/pdf-icon.png'
 
 const RekapFitAndProper = () => {
-  const location = useLocation();
-  const navigate = useNavigate(); 
+  const location = useLocation()
+  const navigate = useNavigate() 
 
-  const [mappings, setMappings] = useState([]);
-  const [message, setMessage] = useState("");
-  const [chosenMapping, setChosenMapping] = useState({
-    visible: false,
-    name: "",
-    id: 0    
-  })
+  const [mappings, setMappings] = useState([])
+  const [message, setMessage] = useState("")
 
   useEffect(() => {
     setMessage(location?.state?.successMessage)
