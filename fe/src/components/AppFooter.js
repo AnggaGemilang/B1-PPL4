@@ -9,7 +9,7 @@ const AppFooter = () => {
         <span className="ms-1">&copy; 2022 Proyek Perangkat Lunak</span>
       </div>
       <div className="ms-auto">
-        <span className="me-1">Made With &#9829; In Sodong Hilir</span>
+        <span className="me-1">Made With &#9829; In Ciwaruga</span>
       </div>
     </CFooter>
   )

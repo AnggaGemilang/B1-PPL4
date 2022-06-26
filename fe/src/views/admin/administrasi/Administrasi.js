@@ -311,9 +311,9 @@ const Administrasi = () => {
                             }     
                           }}>
                           <option value="999">Pilih Penggunaan</option>
-                          <option selected={employee?.attributes?.account?.data != null && employee?.attributes?.account?.data?.attributes?.cp_role == 1} value="1">Administrator</option>
-                          <option selected={employee?.attributes?.account?.data != null && employee?.attributes?.account?.data?.attributes?.cp_role == 2} value="2">HR Manager</option>
-                          <option selected={employee?.attributes?.account?.data != null && employee?.attributes?.account?.data?.attributes?.cp_role == 3} value="3">HR Specialist</option>
+                          <option selected={employee?.attributes?.account?.data != null && employee?.attributes?.account?.data?.attributes?.cp_role == 3} value="3">Administrator</option>
+                          <option selected={employee?.attributes?.account?.data != null && employee?.attributes?.account?.data?.attributes?.cp_role == 5} value="5">HR Manager</option>
+                          <option selected={employee?.attributes?.account?.data != null && employee?.attributes?.account?.data?.attributes?.cp_role == 6} value="6">HR Specialist</option>
                           <option selected={employee?.attributes?.account?.data != null && employee?.attributes?.account?.data?.attributes?.cp_role == 4} value="4">Penguji</option>
                         </CFormSelect>
                       </CTableDataCell>

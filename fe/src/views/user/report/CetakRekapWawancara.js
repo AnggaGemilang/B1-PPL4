@@ -190,7 +190,7 @@ const CetakRekapWawancara = () => {
                       <CTableDataCell>
                         <ul>
                           { mapping?.attributes?.examiners_interview?.data?.map(examiner  => (
-                              <li style={{ textAlign: "left", marginBottom: "4px" }} key={examiner.id}>{examiner.attributes.employee.data.attributes.Name}</li>
+                              <li style={{ textAlign: "left", marginBottom: "4px" }} key={examiner?.id}>{examiner?.attributes?.employee?.data?.attributes?.Name}</li>
                           ))}
                         </ul>
                       </CTableDataCell>

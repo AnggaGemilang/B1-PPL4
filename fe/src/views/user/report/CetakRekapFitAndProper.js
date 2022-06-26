@@ -197,8 +197,8 @@ const CetakRekapFitAndProper = () => {
                     <CTableDataCell>{mapping?.attributes?.schedule}</CTableDataCell>
                     <CTableDataCell>
                       <ul>
-                        { mapping.attributes.examiners.data.map(examiner  => (
-                          <li style={{ textAlign: "left", marginBottom: "4px" }} key={examiner.id}>{examiner.attributes.employee.data.attributes.Name}</li>
+                        { mapping?.attributes?.examiners?.data.map(examiner  => (
+                          <li style={{ textAlign: "left", marginBottom: "4px" }} key={examiner?.id}>{examiner?.attributes?.employee?.data?.attributes?.Name}</li>
                         ))}
                       </ul>
                     </CTableDataCell>

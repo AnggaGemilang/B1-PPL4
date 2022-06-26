@@ -12,18 +12,18 @@ import {
 } from '@coreui/icons'
 import { CNavGroup, CNavItem, CNavTitle } from '@coreui/react'
 
-let _nav
+  let _nav
 
-  // 1 = administrator
-  // 2 = hr manager
-  // 3 = hr specialist
+  // 3 = administrator
   // 4 = penguji
+  // 5 = hr manager
+  // 6 = hr specialist
 
-  if(JSON.parse(sessionStorage.getItem("auth")).user.cp_role == 1){
+  if(JSON.parse(sessionStorage.getItem("auth"))?.user?.cp_role == 3){
     _nav = [
       {
         component: CNavItem,
-        name: 'Home',
+        name: 'Dashboard',
         to: '/',
         icon: <CIcon icon={cilHome} customClassName="nav-icon" />,
       },
@@ -186,42 +186,17 @@ let _nav
         icon: <CIcon icon={cilPeople} customClassName="nav-icon" />,
       },
     ]
-  } else if (JSON.parse(sessionStorage.getItem("auth")).user.cp_role == 2){
+  } else if (JSON.parse(sessionStorage.getItem("auth"))?.user?.cp_role == 5){
     _nav = [
       {
         component: CNavItem,
-        name: 'Home',
+        name: 'Dashboard',
         to: '/',
         icon: <CIcon icon={cilHome} customClassName="nav-icon" />,
       },
       {
         component: CNavTitle,
         name: 'Main Menus',
-      },
-      {
-        component: CNavGroup,
-        name: 'Fit & Proper',
-        icon: <CIcon icon={cilColorBorder} customClassName="nav-icon" />,
-        items: [
-          {
-            component: CNavItem,
-            name: 'Data Fit & Proper',
-            to: '/fitandproper/',
-          },
-        ],
-      },
-      {
-        component: CNavGroup,
-        name: 'Wawancara',
-        to: '/base',
-        icon: <CIcon icon={cilCommentSquare} customClassName="nav-icon" />,
-        items: [
-          {
-            component: CNavItem,
-            name: 'Data Wawancara',
-            to: '/wawancara/',
-          },
-        ],
       },
       {
         component: CNavGroup,
@@ -264,11 +239,11 @@ let _nav
         icon: <CIcon icon={cilLockLocked} customClassName="nav-icon" />,
       },
     ]
-  } else if (JSON.parse(sessionStorage.getItem("auth")).user.cp_role == 3){
+  } else if (JSON.parse(sessionStorage.getItem("auth"))?.user?.cp_role == 6){
     _nav = [
       {
         component: CNavItem,
-        name: 'Home',
+        name: 'Dashboard',
         to: '/',
         icon: <CIcon icon={cilHome} customClassName="nav-icon" />,
       },
@@ -419,11 +394,11 @@ let _nav
         ],
       },
     ]
-  } else if (JSON.parse(sessionStorage.getItem("auth")).user.cp_role == 4){
+  } else if (JSON.parse(sessionStorage.getItem("auth"))?.user?.cp_role == 4){
     _nav = [
       {
         component: CNavItem,
-        name: 'Home',
+        name: 'Dashboard',
         to: '/',
         icon: <CIcon icon={cilHome} customClassName="nav-icon" />,
       },
