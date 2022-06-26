@@ -32,7 +32,6 @@ const RekapMFitAndProper = () => {
 
   const [registrants, setRegistrants] = useState([])
   const [projections, setProjections] = useState([])
-  const [message, setMessage] = useState("")
   const [lineMappings, setLineMappings] = useState([])
   const [state, setState] = useState({
     visible: false
@@ -76,7 +75,7 @@ const RekapMFitAndProper = () => {
   return (
     <CRow>
       <CCol xs={12}>
-        <CCol xs={12} className="mt-3">
+        <CCol xs={12}>
           <CAccordion>
             <CAccordionItem itemKey={1}>
               <CAccordionHeader><CIcon icon={cilSearch} style={{ marginRight: "10px" }}/>Pencarian Data</CAccordionHeader>

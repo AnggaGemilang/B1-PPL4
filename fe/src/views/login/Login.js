@@ -1,5 +1,4 @@
 import React, { useState } from 'react'
-import {useNavigate} from 'react-router-dom'
 import {
   CButton,
   CCard,
@@ -15,16 +14,15 @@ import {
   CAlert,
   CSpinner
 } from '@coreui/react'
-import background from '../../assets/images/LatarPLN.jpg';
+import background from '../../assets/images/LatarPLN.jpg'
 import LoginAPI from '../../config/admin/LoginAPI'
 
 const Login = () => {
-  const navigate = useNavigate();
   const [state, setState] = useState({
     errorMessage:"", 
     visible:false
-  });
-  
+  })
+
   const onLogin = (event) => {
     event.preventDefault()
     setState({visible: true})    
@@ -33,22 +31,21 @@ const Login = () => {
       password: document.getElementById("password").value
     }
     LoginAPI.login(data).then((res) => {
-      console.log(res)
       sessionStorage.setItem("auth", JSON.stringify(res))
-      setState({visible: false})
-      navigate('/');
+      window.location.href = "/"
     }).catch((err) => {
         setState({errorMessage:"Invalid email or password", visible: false})
     })
   }
+  
+  document.title = `Fit & Proper - Login`
 
   if(sessionStorage.getItem("auth") != null){
-      navigate('/');
+    window.location.href = "/"
   }
 
   return (
-// style={{ backgroundImage: `url(${background})`, backgroundSize: 'cover', }}
-    <div className="bg-light min-vh-100 d-flex flex-row align-items-center">
+    <div style={{ backgroundImage: `url(${background})`, backgroundSize: 'cover', }} className="bg-light min-vh-100 d-flex flex-row align-items-center">
       <CContainer>
         <CRow className="justify-content-center">
           <CCol md={5}>

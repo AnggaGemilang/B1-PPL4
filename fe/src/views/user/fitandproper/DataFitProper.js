@@ -27,7 +27,7 @@ import {
   CForm,
   CImage,
 } from '@coreui/react'
-import { useLocation, useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom"
 import { cilSearch, cilPlus } from '@coreui/icons'
 import CIcon from '@coreui/icons-react'
 import MappingAPI from '../../../config/user/MappingAPI'
@@ -35,11 +35,11 @@ import url from "../../../config/setting"
 import logoPDF from 'src/assets/images/pdf-icon.png'
 
 const DataFitProper = () => {
-  const location = useLocation();
-  const navigate = useNavigate(); 
+  const location = useLocation()
+  const navigate = useNavigate() 
 
-  const [mappings, setMappings] = useState([]);
-  const [message, setMessage] = useState("");
+  const [mappings, setMappings] = useState([])
+  const [message, setMessage] = useState("")
   const [chosenMapping, setChosenMapping] = useState({
     visible: false,
     name: "",

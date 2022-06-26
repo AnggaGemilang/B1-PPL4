@@ -11,60 +11,62 @@ import {
   CRow,
   CFormSelect,  
   CCallout,
-  CAlert
+  CAlert,
+  CSpinner  
 } from '@coreui/react'
 import {useNavigate, useLocation} from 'react-router-dom'
 import FieldAPI from '../../../config/admin/FieldAPI'
 import DivisionAPI from '../../../config/admin/DivisionAPI'
 
 const TambahField = () => {
-  const location = useLocation();
-  const navigate = useNavigate();
+  const location = useLocation()
+  const navigate = useNavigate()
 
   const [divisions, setDivisionss] = useState([])
-  const [message, setMessage] = useState("");
+  const [message, setMessage] = useState("")
   const [state, setState] = useState({
     status: location.state.status,
-    data: location?.state?.data
-  });
+    data: location?.state?.data,
+    visibleSubmit: false
+  })
 
   useEffect(() => {
-    getDivisionData()
-  }, [])  
-  
-  const getDivisionData = () => {
     DivisionAPI.get().then((res) => {
       setDivisionss(res.data)
     })
-  }
-
+  }, [])  
+  
   const postData = (event) => {
     event.preventDefault()
+    setState({ ...state, visibleSubmit: true })
+
     const body = {
       data: {
         field_name: document.getElementById("field_name").value,
         division: document.getElementById("division").value
       }
-    };
+    }
 
     if(state.status == "tambah"){
       FieldAPI.add(body).then(
         (res) => {
-          navigate('/field', {state: { successMessage: 'Field has added successfully' } });  
+          navigate('/field', {state: { successMessage: 'Bidang Telah Berhasil Ditambahkan!' } })  
         },
         (err) => {
-          console.log("err", err);
+          setMessage(err.message)
+          setState({ ...state, visibleSubmit: false })
         }
-      );  
+      )  
     } else {
       FieldAPI.edit(state.data.id, body).then(
         (res) => {
-          navigate('/field', {state: { successMessage: 'Field has update successfully' } });  
+          navigate('/field', {state: { successMessage: 'Bidang Telah Berhasil Diperbaharui!' } })  
         },
         (err) => {
-          console.log("err", err);
+          setMessage(err.message)
+          setState({ ...state, visibleSubmit: false })
         }
-      );
+      )
     }
   }
 
@@ -86,13 +88,13 @@ const TambahField = () => {
           { message && <CAlert color="danger" dismissible onClose={() => { setMessage("") }}> { message } </CAlert> }
         </CCol>  
         <CCol xs={12}>      
-          <CCard className="mb-4">
+          <CCard>
             <CCardHeader>
               <strong>{ state.status == "tambah" ? "Tambah" : "Edit"} Bidang</strong>
             </CCardHeader>
             <CCardBody>
               <CForm onSubmit={postData} method="post">
-                <CRow className="mb-3">
+                <CRow className="mt-2">
                   <CFormLabel htmlFor="field_name" className="col-sm-2 col-form-label">
                     Nama Bidang
                   </CFormLabel>
@@ -105,12 +107,12 @@ const TambahField = () => {
                       defaultValue={ state.status == "tambah" ? "" : state.data.attributes.field_name } />
                   </CCol>
                 </CRow>
-                <CRow className="mb-3">
+                <CRow className="mt-3">
                   <CFormLabel htmlFor="division" className="col-sm-2 col-form-label">
                     Divisi
                   </CFormLabel>
                   <CCol sm={10}>
-                    <CFormSelect name="division" id="division" className="mb-3" aria-label="Large select example">
+                    <CFormSelect name="division" id="division" aria-label="Large select example">
                       <option>Pilih Divisi</option>
                       { divisions.map(division =>
                         <option selected={division.id == state?.data?.attributes?.divisions?.data[0]?.id} key={ division.id } value={ division.id } >{ division.attributes.division_name }</option>
@@ -118,7 +120,14 @@ const TambahField = () => {
                     </CFormSelect>
                   </CCol>
                 </CRow>
-                <CButton type="submit" style={{width:'100%'}}>Submit</CButton>
+                <CRow className='mt-4'>
+                  <CCol xs={12} className="position-relative">
+                    <CButton disabled={state.visibleSubmit} type="submit" style={{width:'100%'}} className="p-2 w-100">
+                      Submit
+                    </CButton>
+                    { state.visibleSubmit && <CSpinner color="primary" className='position-absolute' style={{right: "20px", top: "5px"}} /> }                    
+                  </CCol>
+                </CRow>
               </CForm>
             </CCardBody>
           </CCard>

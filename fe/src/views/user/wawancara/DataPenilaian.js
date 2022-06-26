@@ -22,7 +22,7 @@ import {
   CForm,
   CImage,
 } from '@coreui/react'
-import { useLocation, useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom"
 import { cilSearch } from '@coreui/icons'
 import CIcon from '@coreui/icons-react'
 import WawancaraAPI from '../../../config/user/WawancaraAPI'
@@ -30,11 +30,11 @@ import url from "../../../config/setting"
 import logoPDF from 'src/assets/images/pdf-icon.png'
 
 const DataPenilaian = () => {
-  const location = useLocation();
-  const navigate = useNavigate(); 
+  const location = useLocation()
+  const navigate = useNavigate() 
 
-  const [lineMappings, setLineMappings] = useState([]);
-  const [message, setMessage] = useState("");
+  const [lineMappings, setLineMappings] = useState([])
+  const [message, setMessage] = useState("")
   const [chosenLineMapping, setChosenLineMapping] = useState({
     visible: false,
     name: "",

@@ -5,13 +5,13 @@ import {
   CCallout,  
   CFormSelect  
 } from '@coreui/react'
-import { useLocation } from "react-router-dom";
+import { useLocation } from "react-router-dom"
 import MappingAPI from '../../../config/user/MappingAPI'
-import CriteriaForm from 'src/components/CriteriaForm';
+import CriteriaForm from 'src/components/CriteriaForm'
 import ScoreAPI from '../../../config/user/ScoreAPI'
 
 const DataNilai = () => {
-  const location = useLocation();
+  const location = useLocation()
 
   const [scores, setScores] = useState([])
   const [examiners, setExaminers] = useState([])

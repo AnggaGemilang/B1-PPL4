@@ -10,18 +10,21 @@ import {
   CFormLabel,
   CRow,
   CCallout,
-  CAlert
+  CAlert,
+  CSpinner
 } from '@coreui/react'
 import {useNavigate} from 'react-router-dom'
 import DataPengujiAPI from '../../../config/user/DataPengujiAPI'
+import AdministrasiUserAPI from '../../../config/admin/AdministrasiUserAPI'
 
 const TambahPenguji = () => {
-  const navigate = useNavigate();
+  const navigate = useNavigate()
   const [nipValue, setNipValue] = useState("")
   const [state, setState] = useState({
-    employe: {},
-    errorMessage: ""
-  });
+    employee: {},
+    errorMessage: "",
+    visibleSubmit: false,    
+  })
 
   useEffect(() => {
     if (nipValue.length > 1) {
@@ -32,48 +35,59 @@ const TambahPenguji = () => {
           console.log(res.data[0].attributes.Name)
           setState({
             ...state,
-            employe: res.data[0]
-          });
+            employee: res.data[0]
+          })
         } 
         else {
           setState({
-            namaKaryawan: '',
-            idKaryawan: 0,
-          });
+            ...state,
+            employee: {}
+          })
         }
-      });
+      })
     }
   }, [nipValue])
 
+  const generateSlug = (text) => {
+    return text.toString().toLowerCase()
+      .replace(/^-+/, '')
+      .replace(/-+$/, '')
+      .replace(/\s+/g, '-')
+      .replace(/\-\-+/g, '-')
+      .replace(/[^\w\-]+/g, '')
+  }
+
   const postData = (event) => {
-    event.preventDefault();
-    if(state.namaKaryawan.length > 0){
+    event.preventDefault()
+    setState({ ...state, visibleSubmit: true })
+
+    if(state.employee != null){
       const body = {
         data: {
-          employee: state.idKaryawan
+          employee: state?.employee?.id
         }
       }
       DataPengujiAPI.add(body).then(
         (res) => {
           const body = {
-            username : generateSlug(state.namaKaryawan),
-            email : employee?.attributes?.Email.toLowerCase(),
-            password: employee?.attributes?.NIP,
+            username : generateSlug(state?.employee?.attributes?.Name),
+            email : state?.employee?.attributes?.Email.toLowerCase(),
+            password: state?.employee?.attributes?.NIP,
             role: 4,
-            employee: state.idKaryawan,
+            employee: state?.employee?.id,
             cp_role: 4,
-            cp_photo: employee?.attributes?.Photo?.data?.attributes?.formats?.thumbnail?.url,
+            cp_photo: state?.employee?.attributes?.Photo?.data?.attributes?.formats?.thumbnail?.url,
           }
           AdministrasiUserAPI.add(body).then(res => {
-            navigate('/datapenguji', {state: { successMessage: 'Penguji Berhasil Ditambahkan' } });
+            navigate('/datapenguji', {state: { successMessage: 'Penguji Berhasil Ditambahkan' } })
           })
         },
         (err) => {
-          setState({ errorMessage: "" })
+          setState({ ...state, visibleSubmit: false, errorMessage: "" })
         }
-      );    
+      )    
     } else {
-      setState({ errorMessage: "Enter NIP properly" })
+      setState({ ...state, visibleSubmit: false, errorMessage: "Masukkan NIP Dengan Benar!" })
     }
   }
 
@@ -102,11 +116,11 @@ const TambahPenguji = () => {
             <CCardBody>
               <CForm onSubmit={postData}>
                 <CRow className="mb-3">
-                  <CFormLabel htmlFor="nip_value" className="col-sm-2 col-form-label" placeholder='Masukkan NIK'>
+                  <CFormLabel htmlFor="nip_value" className="col-sm-2 col-form-label">
                     NIP
                   </CFormLabel>
                   <CCol sm={10}>
-                    <CFormInput type="text" id="nip_value" name="nip_value" onChange={(e) => setNipValue(e.target.value )} />
+                    <CFormInput type="text" id="nip_value" name="nip_value" onChange={(e) => setNipValue(e.target.value )} placeholder='Masukkan NIP . . .' />
                   </CCol>
                 </CRow>
                 <CRow className="mb-3">
@@ -114,10 +128,15 @@ const TambahPenguji = () => {
                     Nama
                   </CFormLabel>
                   <CCol sm={10}>
-                    <CFormInput type="text" id="nama_karyawan" name="nama_karyawan"  value={state.namaKaryawan} placeholder='Nama Pegawai Akan Muncul Disini' disabled />
+                    <CFormInput type="text" id="nama_karyawan" name="nama_karyawan"  value={state?.employee?.attributes?.Name} placeholder='Nama Pegawai Akan Muncul Disini' disabled />
                   </CCol>
                 </CRow>
-                <CButton type="submit" style={{width:'100%'}}>Submit</CButton>
+                <CCol xs={12} className="position-relative">
+                  <CButton disabled={state.visibleSubmit} type="submit" style={{width:'100%'}} className="p-2 w-100">
+                    Submit
+                  </CButton>
+                  { state.visibleSubmit && <CSpinner color="primary" className='position-absolute' style={{right: "20px", top: "5px"}} /> }
+                </CCol>
               </CForm>
             </CCardBody>
           </CCard>

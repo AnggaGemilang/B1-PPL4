@@ -11,60 +11,62 @@ import {
   CRow,
   CFormSelect,
   CCallout,
-  CAlert  
+  CAlert,
+  CSpinner  
 } from '@coreui/react'
-import { useLocation, useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom"
 import DirectorateAPI from '../../../config/admin/DirectorateAPI'
 import UnitAPI from '../../../config/admin/UnitAPI'
 
 const TambahDirectorate = () => {
-  const navigate = useNavigate();
-  const location = useLocation();    
+  const navigate = useNavigate()
+  const location = useLocation()
+
   const [units, setUnits] = useState([])
-  const [message, setMessage] = useState("");
+  const [message, setMessage] = useState("")
   const [state, setState] = useState({
-    status: location.state.status,
-    data: location?.state?.data
-  });
+    status: location?.state?.status,
+    data: location?.state?.data,
+    visibleSubmit: false
+  })
 
   useEffect(() => {
-    getUnitData()
-  }, [])  
-  
-  const getUnitData = () => {
     UnitAPI.get().then((res) => {
       setUnits(res.data)
     })
-  }
+  }, [])  
 
   const postData = (event) => {
     event.preventDefault()
+    setState({ ...state, visibleSubmit: true })
 
     const body = {
       data: {
         directorate_name: document.getElementById("directorate_name").value,
         unit: document.getElementById("unit").value
       }
-    };
+    }
 
     if(state.status == "tambah"){
       DirectorateAPI.add(body).then(
         (res) => {
-          navigate('/directorate', {state: { successMessage: 'Directorate has added successfully' } });  
+          navigate('/directorate', {state: { successMessage: 'Directorate has added successfully' } })  
         },
         (err) => {
-          console.log("err", err);
+          setMessage(err.message)
+          setState({ ...state, visibleSubmit: false })
         }
-      );
+      )
     } else {
       DirectorateAPI.edit(state.data.id, body).then(
         (res) => {
-          navigate('/directorate', {state: { successMessage: 'Directorate has updated successfully' } });  
+          navigate('/directorate', {state: { successMessage: 'Directorate has updated successfully' } })  
         },
         (err) => {
-          console.log("err", err);
+          setMessage(err.message)
+          setState({ ...state, visibleSubmit: false })
         }
-      );    
+      )    
     }
   }
 
@@ -86,13 +88,13 @@ const TambahDirectorate = () => {
           { message && <CAlert color="danger" dismissible onClose={() => { setMessage("") }}> { message } </CAlert> }
         </CCol>
         <CCol xs={12}>
-          <CCard className="mb-4">
+          <CCard>
             <CCardHeader>
               <strong>{ state.status == "tambah" ? "Tambah" : "Edit"} Directorate</strong>
             </CCardHeader>
             <CCardBody>
               <CForm onSubmit={postData} method="post">
-                <CRow className="mb-3">
+                <CRow className="mt-2">
                   <CFormLabel htmlFor="directorate_name" className="col-sm-2 col-form-label">
                     Nama Direktorat
                   </CFormLabel>
@@ -105,12 +107,12 @@ const TambahDirectorate = () => {
                       defaultValue={ state.status == "tambah" ? "" : state.data.attributes.directorate_name } />
                   </CCol>
                 </CRow>
-                <CRow className="mb-3">
+                <CRow className="mt-3">
                   <CFormLabel htmlFor="unit" className="col-sm-2 col-form-label">
                     Unit
                   </CFormLabel>
                   <CCol sm={10}>
-                    <CFormSelect name="unit" id="unit" className="mb-3" aria-label="Large select example">
+                    <CFormSelect name="unit" id="unit" aria-label="Large select example">
                       <option>Pilih Unit</option>
                       { units.map(unit =>
                         <option selected={unit.id == state?.data?.attributes?.units?.data[0]?.id} key={ unit.id } value={ unit.id } >{ unit.attributes.unit_name }</option>
@@ -118,7 +120,14 @@ const TambahDirectorate = () => {
                     </CFormSelect>
                   </CCol>
                 </CRow>
-                <CButton type="submit" style={{width:'100%'}}>Submit</CButton>
+                <CRow className='mt-4'>
+                  <CCol xs={12} className="position-relative">
+                    <CButton disabled={state.visibleSubmit} type="submit" style={{width:'100%'}} className="p-2 w-100">
+                      Submit
+                    </CButton>
+                    { state.visibleSubmit && <CSpinner color="primary" className='position-absolute' style={{right: "20px", top: "5px"}} /> }                    
+                  </CCol>
+                </CRow>
               </CForm>
             </CCardBody>
           </CCard>

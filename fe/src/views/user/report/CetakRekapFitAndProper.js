@@ -30,11 +30,11 @@ import FitAndProperAPI from '../../../config/user/FitAndProperAPI'
 import 'jspdf-autotable'
 
 const CetakRekapFitAndProper = () => {
-  const location = useLocation();
+  const location = useLocation()
 
   const [lineMappings, setLineMappings] = useState([])  
-  const [mappings, setMappings] = useState([]);
-  const [message, setMessage] = useState("");
+  const [mappings, setMappings] = useState([])
+  const [message, setMessage] = useState("")
 
   useEffect(() => {
     setMessage(location?.state?.successMessage)
@@ -83,7 +83,7 @@ const CetakRekapFitAndProper = () => {
             orientation: 'l',
             unit: 'pt',
             format: 'a4'        
-        });
+        })
 
         doc.setFontSize("18")
         doc.setFont('helvetica', 'bold')
@@ -197,8 +197,8 @@ const CetakRekapFitAndProper = () => {
                     <CTableDataCell>{mapping?.attributes?.schedule}</CTableDataCell>
                     <CTableDataCell>
                       <ul>
-                        { mapping.attributes.examiners.data.map(examiner  => (
-                          <li style={{ textAlign: "left", marginBottom: "4px" }} key={examiner.id}>{examiner.attributes.employee.data.attributes.Name}</li>
+                        { mapping?.attributes?.examiners?.data.map(examiner  => (
+                          <li style={{ textAlign: "left", marginBottom: "4px" }} key={examiner?.id}>{examiner?.attributes?.employee?.data?.attributes?.Name}</li>
                         ))}
                       </ul>
                     </CTableDataCell>
@@ -243,7 +243,6 @@ const CetakRekapFitAndProper = () => {
           )}
         </CTableBody>
       </CTable>
-
     </CRow>
   )
 }

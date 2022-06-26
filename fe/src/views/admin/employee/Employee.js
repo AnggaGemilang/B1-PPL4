@@ -28,7 +28,7 @@ import {
   CFormCheck,
   CFormSelect,  
 } from '@coreui/react'
-import { useLocation, useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom"
 import { cilSearch, cilPlus } from '@coreui/icons'
 import CIcon from '@coreui/icons-react'
 import url from "../../../config/setting"
@@ -38,14 +38,14 @@ import LevelAPI from '../../../config/admin/LevelAPI'
 import SubFieldAPI from '../../../config/admin/SubFieldAPI'
 
 const Employee = () => {
-  const location = useLocation(); 
-  const navigate = useNavigate(); 
+  const location = useLocation()
+  const navigate = useNavigate() 
 
   const [employees, setEmployees] = useState([])
   const [levels, setLevels] = useState([])
   const [positions, setPositions] = useState([])
   const [subfields, setSubfields] = useState([])
-  const [message, setMessage] = useState("");
+  const [message, setMessage] = useState("")
   const [chosenEmployee, setChosenEmployee] = useState({
     visible: false,
     name: "",
@@ -125,7 +125,8 @@ const Employee = () => {
 
   const deleteData = () => {
     EmployeeAPI.delete(chosenEmployee.id).then((res) => {
-      setChosenEmployee({visible:false})
+      setChosenEmployee({ ...state, visible:false })
+      setMessage("Pegawai Telah Berhasil Dihapus!")
       getData()
     })
   }
@@ -133,142 +134,144 @@ const Employee = () => {
   return (
     <CRow>
       <CCol xs={12}>
-        <CAccordion>
-          <CAccordionItem itemKey={1}>
-            <CAccordionHeader><CIcon icon={cilSearch} style={{ marginRight: "10px" }}/>Pencarian Data</CAccordionHeader>
-            <CAccordionBody>
-              <CForm onSubmit={filterSearch}>
-                <CRow className='mt-2'>
-                  <CCol xs={6}>
-                    <CFormLabel htmlFor="exampleFormControlInput1">NIP</CFormLabel>
-                    <CFormInput
-                      type="text"
-                      name='filter_nip'
-                      id="filter_nip"
-                      placeholder="Enter NIP . . ."
-                    />
-                  </CCol>
-                  <CCol xs={6}>
-                    <CFormLabel htmlFor="exampleFormControlInput1">Nama Lengkap</CFormLabel>
-                    <CFormInput
-                      type="text"
-                      name='filter_nama'
-                      id="filter_nama"
-                      placeholder="Enter Full Name . . ."
-                    />
-                  </CCol>
-                </CRow>
-                <CRow className='mt-3'>
-                  <CCol xs={6}>
-                    <CFormLabel htmlFor="gender">Jenis Kelamin</CFormLabel>                      
-                    <CCol xs={12}>
-                      <CFormCheck
-                        inline
-                        type="radio"
-                        name="filter_gender"
-                        id="filter_gender1"
-                        value=""
-                        label="None"
-                      />
-                      <CFormCheck
-                        inline
-                        type="radio"
-                        name="filter_gender"
-                        id="filter_gender2"
-                        value="Male"
-                        label="Male"
-                      />
-                      <CFormCheck
-                        inline
-                        type="radio"
-                        name="filter_gender"
-                        id="filter_gender3"
-                        value="Female"
-                        label="Female"
+        <CCol xs={12}>
+          <CAccordion>
+            <CAccordionItem itemKey={1}>
+              <CAccordionHeader><CIcon icon={cilSearch} style={{ marginRight: "10px" }}/>Pencarian Data</CAccordionHeader>
+              <CAccordionBody>
+                <CForm onSubmit={filterSearch}>
+                  <CRow className='mt-2'>
+                    <CCol xs={6}>
+                      <CFormLabel htmlFor="exampleFormControlInput1">NIP</CFormLabel>
+                      <CFormInput
+                        type="text"
+                        name='filter_nip'
+                        id="filter_nip"
+                        placeholder="Enter NIP . . ."
                       />
                     </CCol>
-                  </CCol>
-                  <CCol xs={6}>
-                    <CFormLabel htmlFor="exampleFormControlInput1">Tempat Lahir</CFormLabel>
-                    <CFormInput type="text" name="filter_birthplace" id="filter_birthplace" placeholder='Enter Birth Place . . .' />
-                  </CCol>
-                </CRow>
-                <CRow className='mt-3'>
-                  <CCol xs={6}>
-                    <CFormLabel htmlFor="exampleFormControlInput1">Tanggal Lahir</CFormLabel>
-                    <CFormInput type="date" name="filter_birthDate" id="filter_birthDate"/>
-                  </CCol>
-                  <CCol xs={6}>
-                    <CFormLabel htmlFor="exampleFormControlInput1">Email</CFormLabel>
-                    <CFormInput type="email" name="filter_email" id="filter_email" placeholder='Enter Email . . .'/>
-                  </CCol>
-                </CRow> 
-                <CRow className='mt-3'>
-                  <CCol xs={6}>
-                    <CFormLabel htmlFor="exampleFormControlInput1">Nomor Handphone</CFormLabel>
-                    <CFormInput type="number" name="filter_phonenumber" id="filter_phonenumber" placeholder='Enter Phone Number . . .'/>
-                  </CCol>
-                  <CCol xs={6}>
-                    <CFormLabel htmlFor="exampleFormControlInput1">Agama</CFormLabel>
-                    <CFormSelect name="filter_religion" id="filter_religion" className="mb-3" aria-label="Large select example">
-                      <option value="">Choose Religion</option>
-                      <option value="Islam">Islam</option>
-                      <option value="Kristen">Kristen</option>
-                      <option value="Katolik">Katolik</option>
-                      <option value="Buddha">Buddha</option>
-                      <option value="Hindu">Hindu</option>
-                    </CFormSelect>
-                  </CCol>
-                </CRow> 
-                <CRow className='mt-3'>
-                  <CCol xs={6}>
-                    <CFormLabel htmlFor="exampleFormControlInput1">Jabatan</CFormLabel>
-                    <CFormSelect name="filter_grade" id="filter_grade" className="mb-3" aria-label="Large select example">
-                      <option value="">Pilih Jabatan</option>
-                      { positions.map(position =>
-                        <option key={ position.id } value={ position.id } >{ position.attributes.position_name }</option>
-                      )}
-                    </CFormSelect>
-                  </CCol>
-                  <CCol xs={6}>
-                    <CFormLabel htmlFor="exampleFormControlInput1">Jenjang</CFormLabel>
-                    <CFormSelect name="filter_level" id="filter_level" className="mb-3" aria-label="Large select example">
-                      <option value="">Pilih Jenjang</option>
-                      { levels.map(level =>
-                        <option key={ level.id } value={ level.id } >{ level.attributes.functional_name } - { level.attributes.structural_name }</option>
-                      )}
-                    </CFormSelect>
-                  </CCol>
-                </CRow>
-                <CRow className='mt-3'>
-                  <CCol xs={6}>
-                    <CFormLabel htmlFor="exampleFormControlInput1">Sub Bidang</CFormLabel>
-                    <CFormSelect name="filter_subfield" id="filter_subfield" className="mb-3" aria-label="Large select example">
-                      <option value="">Pilih Sub Bidang</option>
-                      { subfields.map(subfield =>
-                        <option key={ subfield.id } value={ subfield.id } >{ subfield.attributes.subfield_name }</option>
-                      )}
-                    </CFormSelect>
-                  </CCol>
-                </CRow>                
-                <CRow>
-                  <hr className='mt-4' style={{ marginLeft: "12px", width: "97.6%" }} />
-                </CRow>
-                <CRow>
-                  <CCol style={{ display: "flex", justifyContent: "right" }}>
-                    <CButton
-                      type='submit'
-                      color='primary'
-                      style={{ width:'10%', borderRadius: "50px", fontSize: "14px" }} >
-                        <CIcon icon={cilSearch} style={{ marginRight: "10px", color: "#FFFFFF" }}/>
-                        Cari
-                    </CButton>                                          
-                  </CCol>
-                </CRow>
-              </CForm>
-            </CAccordionBody>
-          </CAccordionItem>
-        </CAccordion>        
+                    <CCol xs={6}>
+                      <CFormLabel htmlFor="exampleFormControlInput1">Nama Lengkap</CFormLabel>
+                      <CFormInput
+                        type="text"
+                        name='filter_nama'
+                        id="filter_nama"
+                        placeholder="Enter Full Name . . ."
+                      />
+                    </CCol>
+                  </CRow>
+                  <CRow className='mt-3'>
+                    <CCol xs={6}>
+                      <CFormLabel htmlFor="gender">Jenis Kelamin</CFormLabel>                      
+                      <CCol xs={12}>
+                        <CFormCheck
+                          inline
+                          type="radio"
+                          name="filter_gender"
+                          id="filter_gender1"
+                          value=""
+                          label="None"
+                        />
+                        <CFormCheck
+                          inline
+                          type="radio"
+                          name="filter_gender"
+                          id="filter_gender2"
+                          value="Male"
+                          label="Male"
+                        />
+                        <CFormCheck
+                          inline
+                          type="radio"
+                          name="filter_gender"
+                          id="filter_gender3"
+                          value="Female"
+                          label="Female"
+                        />
+                      </CCol>
+                    </CCol>
+                    <CCol xs={6}>
+                      <CFormLabel htmlFor="exampleFormControlInput1">Tempat Lahir</CFormLabel>
+                      <CFormInput type="text" name="filter_birthplace" id="filter_birthplace" placeholder='Enter Birth Place . . .' />
+                    </CCol>
+                  </CRow>
+                  <CRow className='mt-3'>
+                    <CCol xs={6}>
+                      <CFormLabel htmlFor="exampleFormControlInput1">Tanggal Lahir</CFormLabel>
+                      <CFormInput type="date" name="filter_birthDate" id="filter_birthDate"/>
+                    </CCol>
+                    <CCol xs={6}>
+                      <CFormLabel htmlFor="exampleFormControlInput1">Email</CFormLabel>
+                      <CFormInput type="email" name="filter_email" id="filter_email" placeholder='Enter Email . . .'/>
+                    </CCol>
+                  </CRow> 
+                  <CRow className='mt-3'>
+                    <CCol xs={6}>
+                      <CFormLabel htmlFor="exampleFormControlInput1">Nomor Handphone</CFormLabel>
+                      <CFormInput type="number" name="filter_phonenumber" id="filter_phonenumber" placeholder='Enter Phone Number . . .'/>
+                    </CCol>
+                    <CCol xs={6}>
+                      <CFormLabel htmlFor="exampleFormControlInput1">Agama</CFormLabel>
+                      <CFormSelect name="filter_religion" id="filter_religion" className="mb-3" aria-label="Large select example">
+                        <option value="">Choose Religion</option>
+                        <option value="Islam">Islam</option>
+                        <option value="Kristen">Kristen</option>
+                        <option value="Katolik">Katolik</option>
+                        <option value="Buddha">Buddha</option>
+                        <option value="Hindu">Hindu</option>
+                      </CFormSelect>
+                    </CCol>
+                  </CRow> 
+                  <CRow className='mt-3'>
+                    <CCol xs={6}>
+                      <CFormLabel htmlFor="exampleFormControlInput1">Jabatan</CFormLabel>
+                      <CFormSelect name="filter_grade" id="filter_grade" className="mb-3" aria-label="Large select example">
+                        <option value="">Pilih Jabatan</option>
+                        { positions.map(position =>
+                          <option key={ position.id } value={ position.id } >{ position.attributes.position_name }</option>
+                        )}
+                      </CFormSelect>
+                    </CCol>
+                    <CCol xs={6}>
+                      <CFormLabel htmlFor="exampleFormControlInput1">Jenjang</CFormLabel>
+                      <CFormSelect name="filter_level" id="filter_level" className="mb-3" aria-label="Large select example">
+                        <option value="">Pilih Jenjang</option>
+                        { levels.map(level =>
+                          <option key={ level.id } value={ level.id } >{ level.attributes.functional_name } - { level.attributes.structural_name }</option>
+                        )}
+                      </CFormSelect>
+                    </CCol>
+                  </CRow>
+                  <CRow className='mt-3'>
+                    <CCol xs={12}>
+                      <CFormLabel htmlFor="exampleFormControlInput1">Sub Bidang</CFormLabel>
+                      <CFormSelect name="filter_subfield" id="filter_subfield" className="mb-3" aria-label="Large select example">
+                        <option value="">Pilih Sub Bidang</option>
+                        { subfields.map(subfield =>
+                          <option key={ subfield.id } value={ subfield.id } >{ subfield.attributes.subfield_name }</option>
+                        )}
+                      </CFormSelect>
+                    </CCol>
+                  </CRow>                
+                  <CRow>
+                    <hr className='mt-4' style={{ marginLeft: "12px", width: "97.6%" }} />
+                  </CRow>
+                  <CRow>
+                    <CCol style={{ display: "flex", justifyContent: "right" }}>
+                      <CButton
+                        type='submit'
+                        color='primary'
+                        style={{ width:'10%', borderRadius: "50px", fontSize: "14px" }} >
+                          <CIcon icon={cilSearch} style={{ marginRight: "10px", color: "#FFFFFF" }}/>
+                          Cari
+                      </CButton>                                          
+                    </CCol>
+                  </CRow>
+                </CForm>
+              </CAccordionBody>
+            </CAccordionItem>
+          </CAccordion>
+        </CCol>
         <CCol xs={12} className="mt-3">
           { message && <CAlert color="success" dismissible onClose={() => { setMessage("") }}> { message } </CAlert> }
         </CCol>          
@@ -353,16 +356,16 @@ const Employee = () => {
             </CRow>
             <CModal backdrop="static" visible={chosenEmployee.visible} onClose={() => setChosenEmployee({ visible: false })}>
               <CModalHeader>
-                <CModalTitle>Are You Sure?</CModalTitle>
+                <CModalTitle>Apakah Anda Yakin?</CModalTitle>
               </CModalHeader>
               <CModalBody>
-                This will remove {chosenEmployee.name} as employee permanently
+                Ini akan menghapus {chosenEmployee.name} secara permanen
               </CModalBody>
               <CModalFooter>
                 <CButton color="secondary" onClick={() => setChosenEmployee({ visible: false })}>
-                  Close
+                  Tutup
                 </CButton>
-                <CButton color="danger" onClick={() => deleteData()}>Delete</CButton>
+                <CButton color="danger" onClick={() => deleteData()}>Hapus</CButton>
               </CModalFooter>
             </CModal> 
           </CCardBody>

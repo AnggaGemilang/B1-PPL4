@@ -13,7 +13,8 @@ import {
   CFormSelect,
   CCallout,  
   CAlert,
-  CImage
+  CImage,
+  CSpinner  
 } from '@coreui/react'
 import {useNavigate, useLocation} from 'react-router-dom'
 import MappingAPI from '../../../config/user/MappingAPI'
@@ -44,8 +45,9 @@ const Pendaftaran = () => {
     cv: null,
     registrant: {},
     data: location?.state?.data,
-    status: location?.state?.status    
-  });
+    status: location?.state?.status,
+    visibleSubmit: false,    
+  })
 
   useEffect(() => {
     getExaminerData()
@@ -113,6 +115,8 @@ const Pendaftaran = () => {
 
   const postData = (event) => {
     event.preventDefault();
+    setState({ ...state, visibleSubmit: true })
+
     let examinersVal = []
     for(let i = 1; i < 4; i++){
       if(document.querySelector("#penguji"+i).value != 0){
@@ -160,14 +164,14 @@ const Pendaftaran = () => {
                       type: 1
                     }
                   }
-                  console.log(body)
                   ScoreAPI.add(body).then(res => {
                     console.log("Data tersimpan dengan aman")
                   })
                 }
               }, 
               (err) => {
-                console.log("err", err)
+                setMessage(err.message)
+                setState({ ...state, visibleSubmit: false })
               }
             )
           }
@@ -198,17 +202,20 @@ const Pendaftaran = () => {
                   navigate('/fitandproper', {state: { successMessage: 'Pendaftaran Berhasil' } });
                 },
                 (err) => {
-                  console.log("err", err);
+                  setMessage(err.message)
+                  setState({ ...state, visibleSubmit: false })
                 }
               );  
             },
             (err) => {
-              console.log("err", err);
+              setMessage(err.message)
+              setState({ ...state, visibleSubmit: false })
             }
           );
         },
         (err) => {
-          console.log("err", err);
+          setMessage(err.message)
+          setState({ ...state, visibleSubmit: false })
         }
       );   
     } else {
@@ -239,7 +246,8 @@ const Pendaftaran = () => {
                 console.log("success", res)
               }, 
               (err) => {
-                console.log("err", err)
+                setMessage(err.message)
+                setState({ ...state, visibleSubmit: false })
               }
             )
           }
@@ -259,7 +267,8 @@ const Pendaftaran = () => {
                 console.log("success", res);
               },
               (err) => {
-                console.log("err", err);
+                setMessage(err.message)
+                setState({ ...state, visibleSubmit: false })
               }
             );            
           }
@@ -279,14 +288,16 @@ const Pendaftaran = () => {
                 console.log("success", res);
               },
               (err) => {
-                console.log("err", err);
+                setMessage(err.message)
+                setState({ ...state, visibleSubmit: false })
               }
             );            
           }
           navigate('/fitandproper', {state: { successMessage: 'Pendaftaran Berhasil Diperbaharui' } });
         },
         (err) => {
-          console.log("err", err);
+          setMessage(err.message)
+          setState({ ...state, visibleSubmit: false })
         }
       );   
     } 
@@ -315,198 +326,205 @@ const Pendaftaran = () => {
               <strong>{ state.status == "tambah" ? "Pendaftaran" : "Edit"} Peserta Fit Proper</strong>
             </CCardHeader>
             <CCardBody>
-                <CForm onSubmit={postData}>
-                  <CRow className="mb-3 ">
-                    <CInputGroup>
-                      <CFormLabel htmlFor="input" className="col-sm-2 col-form-label">NIP</CFormLabel>
+              <CForm onSubmit={postData}>
+                <CRow className="mb-3 ">
+                  <CInputGroup>
+                    <CFormLabel htmlFor="input" className="col-sm-2 col-form-label">NIP</CFormLabel>
+                    <div className="col-sm-10">
+                      <CFormInput 
+                        type="text" 
+                        id="nip" 
+                        name="nip" 
+                        disabled={ state.status == "edit" }
+                        defaultValue={ state.status == "edit" ? state?.data?.attributes?.registrant?.data?.attributes?.employee?.data?.attributes.NIP : ""}
+                        onChange={(e) => setNipValue(e.target.value)} placeholder="Masukkan NIP . . ." />
+                    </div>
+                  </CInputGroup>
+                </CRow>
+                <CRow className="mb-3">
+                  <CInputGroup>
+                    <CFormLabel htmlFor="input" className="col-sm-2 col-form-label">Nama</CFormLabel>
                       <div className="col-sm-10">
                         <CFormInput 
-                          type="text" 
-                          id="nip" 
-                          name="nip" 
-                          disabled={ state.status == "edit" }
-                          defaultValue={ state.status == "edit" ? state?.data?.attributes?.registrant?.data?.attributes?.employee?.data?.attributes.NIP : ""}
-                          onChange={(e) => setNipValue(e.target.value)} placeholder="Masukkan NIP . . ." />
+                          type="input" 
+                          id="name" 
+                          name="name" 
+                          placeholder='Masukkan Nama Peserta' 
+                          disabled
+                          value={state?.registrant?.attributes?.employee?.data?.attributes?.Name || ''} />
                       </div>
-                    </CInputGroup>
-                  </CRow>
-                  <CRow className="mb-3">
-                    <CInputGroup>
-                      <CFormLabel htmlFor="input" className="col-sm-2 col-form-label">Nama</CFormLabel>
-                        <div className="col-sm-10">
-                          <CFormInput 
-                            type="input" 
-                            id="name" 
-                            name="name" 
-                            placeholder='Masukkan Nama Peserta' 
-                            disabled
-                            value={state?.registrant?.attributes?.employee?.data?.attributes?.Name || ''} />
-                        </div>
-                    </CInputGroup>
-                  </CRow>
-                  <CRow className="mb-3">
-                    <CInputGroup>
-                      <CFormLabel htmlFor="input" className="col-sm-2 col-form-label">Jabatan</CFormLabel>
-                        <div className="col-sm-10">
-                          <CFormInput
-                            type="input" 
-                            id="position" 
-                            name="position" 
-                            placeholder='Masukkan Jabatan Peserta' 
-                            disabled 
-                            value={state?.registrant?.attributes?.employee?.data?.attributes?.position?.data?.attributes?.position_name || ''}/>
-                        </div>
-                    </CInputGroup>
-                  </CRow>
-                  <CRow className="mb-3">
-                    <CInputGroup>
-                      <CFormLabel htmlFor="input" className="col-sm-2 col-form-label">Grade</CFormLabel>
-                        <div className="col-sm-10">
-                          <CFormInput 
-                            type="input" 
-                            id="grade" 
-                            name="grade" 
-                            placeholder='Masukkan Grade Peserta' 
-                            disabled 
-                            value={state?.registrant?.attributes?.employee?.data?.attributes?.position?.data?.attributes?.grade?.data?.attributes?.grade_name || ''}/>
-                        </div>
-                    </CInputGroup>
-                  </CRow>
-                  <CRow className="mb-3">
-                    <CInputGroup>
-                      <CFormLabel htmlFor="input" className="col-sm-2 col-form-label">Jadwal Pelaksanaan</CFormLabel>
-                        <div className="col-sm-10">
-                          <CFormInput 
-                            type="date" 
-                            id="schedule" 
-                            name="schedule"s
-                            defaultValue={ state.status == "edit" ? state?.data?.attributes?.schedule : ""}
-                            placeholder='Masukkan Tanggal'/>
-                        </div>
-                    </CInputGroup>
-                  </CRow>
-                  <CRow className="mb-3">
-                    <CInputGroup>
-                      <CFormLabel htmlFor="input" className="col-sm-2 col-form-label">Jabatan Proyeksi</CFormLabel>
-                        <div className="col-sm-10">
-                        <CFormSelect name="projection" id="projection" className="mb-3" aria-label="Large select example">
-                            <option>Pilih Proyeksi</option>
-                            { positions.map(position =>
-                              <option selected={state.status == "edit" && state?.data?.attributes?.position?.data?.id == position.id } value={ position.id } key={ position.id } >{ position.attributes.position_name }</option>
-                            )}
-                        </CFormSelect>
-                        </div>
-                    </CInputGroup>
-                  </CRow>
-                  <CRow className="mb-3">
-                    <CInputGroup>
-                      <CFormLabel htmlFor="input" className="col-sm-2 col-form-label">Jenjang Jabatan</CFormLabel>
-                        <div className="col-sm-10">
-                        <CFormSelect name="level" id="level" className="mb-3" aria-label="Large select example">
-                            <option>Pilih Jenjang</option>
-                            { levels.map(level =>
-                              <option selected={state.status == "edit" && state?.data?.attributes?.level?.data?.id == level.id } value={ level.id } key={ level.id } >{ level.attributes.functional_name } - { level.attributes.structural_name }</option>
-                            )}
-                        </CFormSelect>
-                        </div>
-                    </CInputGroup>
-                  </CRow>
-                  <CRow className="mb-3">
-                    <CInputGroup>
-                      <CFormLabel htmlFor="input" className="col-sm-2 col-form-label">Jenis Fit and Propper</CFormLabel>
+                  </CInputGroup>
+                </CRow>
+                <CRow className="mb-3">
+                  <CInputGroup>
+                    <CFormLabel htmlFor="input" className="col-sm-2 col-form-label">Jabatan</CFormLabel>
                       <div className="col-sm-10">
-                        <CFormSelect id="fitproper_type" aria-label="Default select example">
-                          <option>Pilih Jenis Fit & Proper</option>
-                          <option selected={state.status == "edit" && state?.data?.attributes?.fitproper_type == "Offline" } value="Offline">Offline</option>
-                          <option selected={state.status == "edit" && state?.data?.attributes?.fitproper_type == "Vcon" } value="Vcon">Vcon</option>
-                        </CFormSelect>
+                        <CFormInput
+                          type="input" 
+                          id="position" 
+                          name="position" 
+                          placeholder='Masukkan Jabatan Peserta' 
+                          disabled 
+                          value={state?.registrant?.attributes?.employee?.data?.attributes?.position?.data?.attributes?.position_name || ''}/>
                       </div>
-                    </CInputGroup>
-                  </CRow>
-                  <CRow className="mb-3">
-                    <CInputGroup>
-                      <CFormLabel htmlFor="input" className="col-sm-2 col-form-label">Uraian Jabatan</CFormLabel>
-                        <div className="col-sm-10">
-                          <CFormInput 
-                            type="text" 
-                            id="jobdesc" 
-                            name="jobdesc" 
-                            defaultValue={ state.status == "edit" ? state?.data?.attributes?.jobdesc : "" }
-                            placeholder='Masukkan Uraian Jabatan'/>
-                        </div>
-                    </CInputGroup>
-                  </CRow>
-                  <CRow className="mb-3">
-                    <CInputGroup>
-                      <CFormLabel htmlFor="input" className="col-sm-2 col-form-label">Upload PPT *.ppt/.pptx</CFormLabel>
-                        <div className="col-sm-10">
-                          { state.status == "edit" ? <a target="_blank" href={url + state?.data?.attributes?.registrant?.data?.attributes?.ppt?.data?.attributes?.url }><CImage style={{ marginTop: "-10px", marginLeft: "-5px", marginBottom: "10px", width: "70px", height: "70px" }} src={logoPDF} height={35} /></a> : null }                         
-                          <CFormInput type="file" id="ppt" name="ppt" onChange={ (e) => setState({ ...state, ppt: e.target.files[0] }) } />
-                        </div>
-                    </CInputGroup>
-                  </CRow>
-                  <CRow className="mb-3">
-                    <CInputGroup>
-                      <CFormLabel htmlFor="input" className="col-sm-2 col-form-label">Upload CV *.doc/.docs</CFormLabel>
-                        <div className="col-sm-10">
-                          { state.status == "edit" ? <a target="_blank" href={url + state?.data?.attributes?.registrant?.data?.attributes?.cv?.data?.attributes?.url }><CImage style={{ marginTop: "-10px", marginLeft: "-5px", marginBottom: "10px", width: "70px", height: "70px" }} src={logoPDF} height={35} /></a> : null }
-                          <CFormInput type="file" id="cv" name="cv" onChange={ (e) => setState({ ...state, cv: e.target.files[0] }) } />
-                        </div>
-                    </CInputGroup>
-                  </CRow>
-                  <CRow className="mb-3">
-                    <CInputGroup>
-                      <CFormLabel htmlFor="input" className="col-sm-2 col-form-label">Penguji 1</CFormLabel>
+                  </CInputGroup>
+                </CRow>
+                <CRow className="mb-3">
+                  <CInputGroup>
+                    <CFormLabel htmlFor="input" className="col-sm-2 col-form-label">Grade</CFormLabel>
                       <div className="col-sm-10">
-                        <CFormSelect 
-                          name="penguji1" 
-                          id="penguji1" 
-                          aria-label="Large select example"
-                          onChange={ (e) => 
-                            setExaminers2(deleteNode(e.target.value, examiners1))
-                          }>
-                          <option value="0">Pilih Penguji 1</option>
-                          { examiners1.map(examiner =>
-                            <option selected={state.status == "edit" && state?.data?.attributes?.examiners?.data[0]?.id == examiner?.id } value={examiner?.id} key={examiner?.id}>{examiner?.attributes?.employee?.data?.attributes?.Name}</option>                      
-                          )}
-                        </CFormSelect>
+                        <CFormInput 
+                          type="input" 
+                          id="grade" 
+                          name="grade" 
+                          placeholder='Masukkan Grade Peserta' 
+                          disabled 
+                          value={state?.registrant?.attributes?.employee?.data?.attributes?.position?.data?.attributes?.grade?.data?.attributes?.grade_name || ''}/>
                       </div>
-                    </CInputGroup>
-                  </CRow>
-                  <CRow className="mb-3">
-                    <CInputGroup>
-                      <CFormLabel htmlFor="input" className="col-sm-2 col-form-label">Penguji 2</CFormLabel>
+                  </CInputGroup>
+                </CRow>
+                <CRow className="mb-3">
+                  <CInputGroup>
+                    <CFormLabel htmlFor="input" className="col-sm-2 col-form-label">Jadwal Pelaksanaan</CFormLabel>
                       <div className="col-sm-10">
-                        <CFormSelect 
-                          name="penguji2" 
-                          id="penguji2" 
-                          aria-label="Large select example"
-                          onChange={ (e) => 
-                            setExaminers3(deleteNode(e.target.value, examiners2))
-                          }>
-                          <option value="0">Pilih Penguji 2</option>
-                          { examiners2.map(examiner =>
-                            <option selected={state.status == "edit" && state?.data?.attributes?.examiners?.data[1]?.id == examiner?.id } value={examiner?.id} key={examiner?.id}>{examiner?.attributes?.employee?.data?.attributes?.Name}</option>                      
-                          )}
-                        </CFormSelect>
+                        <CFormInput 
+                          type="date" 
+                          id="schedule" 
+                          name="schedule"s
+                          defaultValue={ state.status == "edit" ? state?.data?.attributes?.schedule : ""}
+                          placeholder='Masukkan Tanggal'/>
                       </div>
-                    </CInputGroup>
-                  </CRow>
-                  <CRow className="mb-3">
-                    <CInputGroup>
-                      <CFormLabel htmlFor="input" className="col-sm-2 col-form-label">Penguji 3</CFormLabel>
+                  </CInputGroup>
+                </CRow>
+                <CRow className="mb-3">
+                  <CInputGroup>
+                    <CFormLabel htmlFor="input" className="col-sm-2 col-form-label">Jabatan Proyeksi</CFormLabel>
+                    <div className="col-sm-10">
+                      <CFormSelect name="projection" id="projection" aria-label="Large select example">
+                        <option>Pilih Proyeksi</option>
+                        { positions.map(position =>
+                          <option selected={state.status == "edit" && state?.data?.attributes?.position?.data?.id == position.id } value={ position.id } key={ position.id } >{ position.attributes.position_name }</option>
+                        )}
+                      </CFormSelect>
+                    </div>
+                  </CInputGroup>
+                </CRow>
+                <CRow className="mb-3">
+                  <CInputGroup>
+                    <CFormLabel htmlFor="input" className="col-sm-2 col-form-label">Jenjang Jabatan</CFormLabel>
+                    <div className="col-sm-10">
+                      <CFormSelect name="level" id="level" aria-label="Large select example">
+                        <option>Pilih Jenjang</option>
+                        { levels.map(level =>
+                          <option selected={state.status == "edit" && state?.data?.attributes?.level?.data?.id == level.id } value={ level.id } key={ level.id } >{ level.attributes.functional_name } - { level.attributes.structural_name }</option>
+                        )}
+                      </CFormSelect>
+                    </div>
+                  </CInputGroup>
+                </CRow>
+                <CRow className="mb-3">
+                  <CInputGroup>
+                    <CFormLabel htmlFor="input" className="col-sm-2 col-form-label">Jenis Fit and Propper</CFormLabel>
+                    <div className="col-sm-10">
+                      <CFormSelect id="fitproper_type" aria-label="Default select example">
+                        <option>Pilih Jenis Fit & Proper</option>
+                        <option selected={state.status == "edit" && state?.data?.attributes?.fitproper_type == "Offline" } value="Offline">Offline</option>
+                        <option selected={state.status == "edit" && state?.data?.attributes?.fitproper_type == "Vcon" } value="Vcon">Vcon</option>
+                      </CFormSelect>
+                    </div>
+                  </CInputGroup>
+                </CRow>
+                <CRow className="mb-3">
+                  <CInputGroup>
+                    <CFormLabel htmlFor="input" className="col-sm-2 col-form-label">Uraian Jabatan</CFormLabel>
+                    <div className="col-sm-10">
+                      <CFormInput 
+                        type="text" 
+                        id="jobdesc" 
+                        name="jobdesc" 
+                        defaultValue={ state.status == "edit" ? state?.data?.attributes?.jobdesc : "" }
+                        placeholder='Masukkan Uraian Jabatan'/>
+                    </div>
+                  </CInputGroup>
+                </CRow>
+                <CRow className="mb-3">
+                  <CInputGroup>
+                    <CFormLabel htmlFor="input" className="col-sm-2 col-form-label">Upload PPT *.ppt/.pptx</CFormLabel>
                       <div className="col-sm-10">
-                        <CFormSelect name="penguji3" id="penguji3" aria-label="Large select example">
-                          <option value="0">Pilih Penguji 3</option>
-                          { examiners3.map(examiner =>
-                            <option selected={state.status == "edit" && state?.data?.attributes?.examiners?.data[2]?.id == examiner?.id } value={examiner?.id} key={examiner?.id}>{examiner?.attributes?.employee?.data?.attributes?.Name}</option>                      
-                          )}
-                        </CFormSelect>
+                        { state.status == "edit" ? <a target="_blank" href={url + state?.data?.attributes?.registrant?.data?.attributes?.ppt?.data?.attributes?.url }><CImage style={{ marginTop: "-10px", marginLeft: "-5px", marginBottom: "10px", width: "70px", height: "70px" }} src={logoPDF} height={35} /></a> : null }                         
+                        <CFormInput type="file" id="ppt" name="ppt" onChange={ (e) => setState({ ...state, ppt: e.target.files[0] }) } />
                       </div>
-                    </CInputGroup>
-                  </CRow>                  
-                  <CButton type="submit" style={{width:'100%'}}>Submit</CButton>
-                </CForm>
+                  </CInputGroup>
+                </CRow>
+                <CRow className="mb-3">
+                  <CInputGroup>
+                    <CFormLabel htmlFor="input" className="col-sm-2 col-form-label">Upload CV *.doc/.docs</CFormLabel>
+                      <div className="col-sm-10">
+                        { state.status == "edit" ? <a target="_blank" href={url + state?.data?.attributes?.registrant?.data?.attributes?.cv?.data?.attributes?.url }><CImage style={{ marginTop: "-10px", marginLeft: "-5px", marginBottom: "10px", width: "70px", height: "70px" }} src={logoPDF} height={35} /></a> : null }
+                        <CFormInput type="file" id="cv" name="cv" onChange={ (e) => setState({ ...state, cv: e.target.files[0] }) } />
+                      </div>
+                  </CInputGroup>
+                </CRow>
+                <CRow className="mb-3">
+                  <CInputGroup>
+                    <CFormLabel htmlFor="input" className="col-sm-2 col-form-label">Penguji 1</CFormLabel>
+                    <div className="col-sm-10">
+                      <CFormSelect 
+                        name="penguji1" 
+                        id="penguji1" 
+                        aria-label="Large select example"
+                        onChange={ (e) => 
+                          setExaminers2(deleteNode(e.target.value, examiners1))
+                        }>
+                        <option value="0">Pilih Penguji 1</option>
+                        { examiners1.map(examiner =>
+                          <option selected={state.status == "edit" && state?.data?.attributes?.examiners?.data[0]?.id == examiner?.id } value={examiner?.id} key={examiner?.id}>{examiner?.attributes?.employee?.data?.attributes?.Name}</option>                      
+                        )}
+                      </CFormSelect>
+                    </div>
+                  </CInputGroup>
+                </CRow>
+                <CRow className="mb-3">
+                  <CInputGroup>
+                    <CFormLabel htmlFor="input" className="col-sm-2 col-form-label">Penguji 2</CFormLabel>
+                    <div className="col-sm-10">
+                      <CFormSelect 
+                        name="penguji2" 
+                        id="penguji2" 
+                        aria-label="Large select example"
+                        onChange={ (e) => 
+                          setExaminers3(deleteNode(e.target.value, examiners2))
+                        }>
+                        <option value="0">Pilih Penguji 2</option>
+                        { examiners2.map(examiner =>
+                          <option selected={state.status == "edit" && state?.data?.attributes?.examiners?.data[1]?.id == examiner?.id } value={examiner?.id} key={examiner?.id}>{examiner?.attributes?.employee?.data?.attributes?.Name}</option>                      
+                        )}
+                      </CFormSelect>
+                    </div>
+                  </CInputGroup>
+                </CRow>
+                <CRow className="mb-3">
+                  <CInputGroup>
+                    <CFormLabel htmlFor="input" className="col-sm-2 col-form-label">Penguji 3</CFormLabel>
+                    <div className="col-sm-10">
+                      <CFormSelect name="penguji3" id="penguji3" aria-label="Large select example">
+                        <option value="0">Pilih Penguji 3</option>
+                        { examiners3.map(examiner =>
+                          <option selected={state.status == "edit" && state?.data?.attributes?.examiners?.data[2]?.id == examiner?.id } value={examiner?.id} key={examiner?.id}>{examiner?.attributes?.employee?.data?.attributes?.Name}</option>                      
+                        )}
+                      </CFormSelect>
+                    </div>
+                  </CInputGroup>
+                </CRow>
+                <CRow className='mt-4'>
+                  <CCol xs={12} className="position-relative">
+                    <CButton disabled={state.visibleSubmit} type="submit" style={{width:'100%'}} className="p-2 w-100">
+                      Submit
+                    </CButton>
+                    { state.visibleSubmit && <CSpinner color="primary" className='position-absolute' style={{right: "20px", top: "5px"}} /> }
+                  </CCol>
+                </CRow>
+              </CForm>
             </CCardBody>
           </CCard>
         </CCol>

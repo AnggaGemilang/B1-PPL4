@@ -12,7 +12,8 @@ import {
   CRow,
   CFormCheck,
   CCallout,
-  CAlert
+  CAlert,
+  CSpinner  
 } from '@coreui/react'
 import { useNavigate, useLocation } from 'react-router-dom'
 import PositionAPI from '../../../config/admin/PositionAPI'
@@ -28,11 +29,12 @@ const TambahEmployee = () => {
   const [positions, setPositions] = useState([])
   const [subfields, setSubfields] = useState([])
   const [levels, setLevels] = useState([])
+  const [message, setMessage] = useState("");
   const [state, setState] = useState({
     photo: null,
-    errorMessage: "",
     data: location?.state?.data,
-    status: location?.state?.status
+    status: location?.state?.status,
+    visibleSubmit: false    
   });
 
   useEffect(() => {
@@ -49,6 +51,8 @@ const TambahEmployee = () => {
 
   const postData = (event) => {
     event.preventDefault()
+    setState({ ...state, visibleSubmit: true })
+
     if(state.status == "tambah"){
       let body = {
         data: {
@@ -77,12 +81,14 @@ const TambahEmployee = () => {
               navigate('/employee', {state: { successMessage: 'Pegawai telah berhasil ditambahkan' } });            
             },
             (err) => {
-              console.log("err", err);
+              setMessage(err.message)
+              setState({ ...state, visibleSubmit: false })
             }
           );  
         },
         (err) => {
-          console.log("err", err);
+          setMessage(err.message)
+          setState({ ...state, visibleSubmit: false })
         }
       );
     } else {
@@ -117,14 +123,16 @@ const TambahEmployee = () => {
                 navigate('/employee', {state: { successMessage: 'Pegawai telah berhasil diperbaharui' } });            
               },
               (err) => {
-                console.log("err", err);
+                setMessage(err.message)
+                setState({ ...state, visibleSubmit: false })
               }
             );               
           }
           navigate('/employee', {state: { successMessage: 'Pegawai telah berhasil diperbaharui' } });
         },
         (err) => {
-          console.log("err", err);
+          setMessage(err.message)
+          setState({ ...state, visibleSubmit: false })
         }
       );      
     }
@@ -145,16 +153,16 @@ const TambahEmployee = () => {
           </CCallout>
         </CCol>
         <CCol xs={12}>
-          { state.errorMessage && <CAlert color="danger" dismissible onClose={() => { setState({errorMessage:""}) }}> { state.errorMessage } </CAlert> }
+          { message && <CAlert color="danger" dismissible onClose={() => { setMessage("") }}> { message } </CAlert> }
         </CCol>
         <CCol xs={12}>
-          <CCard className="mb-4">
+          <CCard>
             <CCardHeader>
               <strong>{ state.status == "tambah" ? "Tambah" : "Edit"}  Pegawai</strong>
             </CCardHeader>
             <CCardBody>
               <CForm onSubmit={postData} method="post">
-                <CRow className="mb-3">
+                <CRow className="mt-2">
                   <CFormLabel htmlFor="nip" className="col-sm-2 col-form-label">
                     NIP
                   </CFormLabel>
@@ -168,7 +176,7 @@ const TambahEmployee = () => {
                       placeholder='Masukkan NIP . . .' />
                   </CCol>
                 </CRow>
-                <CRow className="mb-3">
+                <CRow className="mt-3">
                   <CFormLabel htmlFor="name" className="col-sm-2 col-form-label">
                     Nama Pegawai
                   </CFormLabel>
@@ -181,7 +189,7 @@ const TambahEmployee = () => {
                       placeholder='Masukkan Nama Pegawai . . .' />
                   </CCol>
                 </CRow>
-                <CRow className="mb-3">
+                <CRow className="mt-3">
                   <CFormLabel htmlFor="gender" className="col-sm-2 col-form-label">
                     Jenis Kelamin
                   </CFormLabel>
@@ -206,7 +214,7 @@ const TambahEmployee = () => {
                     />
                   </CCol>
                 </CRow>
-                <CRow className="mb-3">
+                <CRow className="mt-3">
                   <CCol className='row' sm={6}>
                     <CFormLabel htmlFor="birth_place" className="col-sm-4 col-form-label">
                       Tempat Lahir
@@ -233,7 +241,7 @@ const TambahEmployee = () => {
                     </CCol>
                   </CCol>
                 </CRow>
-                <CRow className="mb-3">
+                <CRow className="mt-3">
                   <CFormLabel htmlFor="email" className="col-sm-2 col-form-label">
                     Email
                   </CFormLabel>
@@ -247,7 +255,7 @@ const TambahEmployee = () => {
                       placeholder='Masukkan Email . . .' />
                   </CCol>
                 </CRow>                
-                <CRow className="mb-3">
+                <CRow className="mt-3">
                   <CFormLabel htmlFor="phone_number" className="col-sm-2 col-form-label">
                     Phone Number
                   </CFormLabel>
@@ -260,7 +268,7 @@ const TambahEmployee = () => {
                       placeholder='Masukkan Nomor Telepon . . .' />
                   </CCol>
                 </CRow>
-                <CRow className="mb-3">
+                <CRow className="mt-3">
                   <CFormLabel htmlFor="photo" className="col-sm-2 col-form-label">
                     Foto
                   </CFormLabel>
@@ -269,12 +277,12 @@ const TambahEmployee = () => {
                     <CFormInput type="file" id="photo" name='photo' onChange={(e) =>  setState({ ...state, photo: e.target.files[0] })} />
                   </CCol>                  
                 </CRow>     
-                <CRow className="mb-3">
+                <CRow className="mt-3">
                   <CFormLabel htmlFor="religion" className="col-sm-2 col-form-label">
                     Agama
                   </CFormLabel>
                   <CCol sm={10}>
-                    <CFormSelect name="religion" id="religion" className="mb-3" aria-label="Large select example">
+                    <CFormSelect name="religion" id="religion" aria-label="Large select example">
                       <option>Pilih Agama</option>
                       <option selected={state.status == "edit" && state?.data?.attributes?.Religion == "Islam" } value="Islam">Islam</option>
                       <option selected={state.status == "edit" && state?.data?.attributes?.Religion == "Kristen" } value="Kristen">Kristen</option>
@@ -284,12 +292,12 @@ const TambahEmployee = () => {
                     </CFormSelect>
                   </CCol>
                 </CRow>                              
-                <CRow className="mb-3">
+                <CRow className="mt-3">
                   <CFormLabel htmlFor="position" className="col-sm-2 col-form-label">
                     Jabatan
                   </CFormLabel>
                   <CCol sm={10}>
-                    <CFormSelect name="position" id="position" className="mb-3" aria-label="Large select example">
+                    <CFormSelect name="position" id="position" aria-label="Large select example">
                       <option>Pilih Jabatan</option>
                       { positions.map(position =>
                         <option selected={ position.id == state?.data?.attributes?.position?.data?.id } key={ position.id } value={ position.id } >{ position.attributes.position_name }</option>
@@ -297,12 +305,12 @@ const TambahEmployee = () => {
                     </CFormSelect>
                   </CCol>
                 </CRow>                                       
-                <CRow className="mb-3">
+                <CRow className="mt-3">
                   <CFormLabel htmlFor="level" className="col-sm-2 col-form-label">
                     Jenjang
                   </CFormLabel>
                   <CCol sm={10}>
-                    <CFormSelect name="level" id="level" className="mb-3" aria-label="Large select example">
+                    <CFormSelect name="level" id="level" aria-label="Large select example">
                       <option>Pilih Jenjang</option>
                       { levels.map(level =>
                         <option selected={ level.id == state?.data?.attributes?.level?.data?.id } key={ level.id } value={ level.id } >{ level.attributes.functional_name } - { level.attributes.structural_name }</option>
@@ -310,20 +318,27 @@ const TambahEmployee = () => {
                     </CFormSelect>
                   </CCol>
                 </CRow>        
-                <CRow className="mb-3">
+                <CRow className="mt-3">
                   <CFormLabel htmlFor="sub_field" className="col-sm-2 col-form-label">
                     Sub Bidang
                   </CFormLabel>
                   <CCol sm={10}>
-                    <CFormSelect name="sub_field" id="sub_field" className="mb-3" aria-label="Large select example">
+                    <CFormSelect name="sub_field" id="sub_field" aria-label="Large select example">
                       <option>Pilih Sub Bidang</option>
                       { subfields.map(subfield =>
                         <option selected={ subfield.id == state?.data?.attributes?.sub_field?.data?.id } key={ subfield.id } value={ subfield.id } >{ subfield.attributes.subfield_name }</option>
                       )}
                     </CFormSelect>
                   </CCol>
-                </CRow>                        
-                <CButton type="submit" style={{width:'100%'}}>Submit</CButton>
+                </CRow>
+                <CRow className='mt-4'>
+                  <CCol xs={12} className="position-relative">
+                    <CButton disabled={state.visibleSubmit} type="submit" style={{width:'100%'}} className="p-2 w-100">
+                      Submit
+                    </CButton>
+                    { state.visibleSubmit && <CSpinner color="primary" className='position-absolute' style={{right: "20px", top: "5px"}} /> }                    
+                  </CCol>
+                </CRow>
               </CForm>
             </CCardBody>
           </CCard>

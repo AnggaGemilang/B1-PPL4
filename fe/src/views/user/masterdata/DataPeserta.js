@@ -34,9 +34,9 @@ import DataPesertaAPI from '../../../config/user/DataPesertaAPI'
 import { Link } from 'react-router-dom'
 
 const DataPeserta = () => {
-  const location = useLocation();
-  const [registrants, setRegistrants] = useState([]);
-  const [message, setMessage] = useState("");
+  const location = useLocation()
+  const [registrants, setRegistrants] = useState([])
+  const [message, setMessage] = useState("")
   const [chosenRegistrant, setChosenRegistrant] = useState({
     visible: false,
     name: "",
@@ -89,50 +89,52 @@ const DataPeserta = () => {
 
   return (
     <CRow>
-      <CCol>
-        <CAccordion>
-          <CAccordionItem itemKey={1}>
-            <CAccordionHeader><CIcon icon={cilSearch} style={{ marginRight: "10px" }}/>Pencarian Data</CAccordionHeader>
-            <CAccordionBody>
-              <CForm onSubmit={filterSearch}>
-                <CRow className='mt-2'>
-                  <CCol xs={6}>
-                    <CFormLabel htmlFor="exampleFormControlInput1">Nama lengkap</CFormLabel>
-                    <CFormInput
-                      type="text"
-                      name='filter_nama'
-                      id="filter_nama"
-                      placeholder="Masukkan Kata Kunci Pencarian . . ."
-                    />
-                  </CCol>
-                  <CCol xs={6}>
-                    <CFormLabel htmlFor="exampleFormControlInput1">NIP</CFormLabel>
-                    <CFormInput
-                      type="text"
-                      name='filter_nip'
-                      id="filter_nip"
-                      placeholder="Masukkan Kata Kunci Pencarian . . ."
-                    />
-                  </CCol>
-                </CRow>               
-                <CRow>
-                  <hr className='mt-4' style={{ marginLeft: "12px", width: "97.6%" }} />
-                </CRow>
-                <CRow>
-                  <CCol style={{ display: "flex", justifyContent: "right" }}>
-                    <CButton
-                      type='submit'
-                      color='primary'
-                      style={{ width:'10%', borderRadius: "50px", fontSize: "14px" }} >
-                        <CIcon icon={cilSearch} style={{ marginRight: "10px", color: "#FFFFFF" }}/>
-                        Cari
-                    </CButton>                                          
-                  </CCol>
-                </CRow>
-              </CForm>
-            </CAccordionBody>
-          </CAccordionItem>
-        </CAccordion>   
+      <CCol xs={12}>
+        <CCol xs={12}>
+          <CAccordion>
+            <CAccordionItem itemKey={1}>
+              <CAccordionHeader><CIcon icon={cilSearch} style={{ marginRight: "10px" }}/>Pencarian Data</CAccordionHeader>
+              <CAccordionBody>
+                <CForm onSubmit={filterSearch}>
+                  <CRow className='mt-2'>
+                    <CCol xs={6}>
+                      <CFormLabel htmlFor="exampleFormControlInput1">Nama lengkap</CFormLabel>
+                      <CFormInput
+                        type="text"
+                        name='filter_nama'
+                        id="filter_nama"
+                        placeholder="Masukkan Kata Kunci Pencarian . . ."
+                      />
+                    </CCol>
+                    <CCol xs={6}>
+                      <CFormLabel htmlFor="exampleFormControlInput1">NIP</CFormLabel>
+                      <CFormInput
+                        type="text"
+                        name='filter_nip'
+                        id="filter_nip"
+                        placeholder="Masukkan Kata Kunci Pencarian . . ."
+                      />
+                    </CCol>
+                  </CRow>               
+                  <CRow>
+                    <hr className='mt-4' style={{ marginLeft: "12px", width: "97.6%" }} />
+                  </CRow>
+                  <CRow>
+                    <CCol style={{ display: "flex", justifyContent: "right" }}>
+                      <CButton
+                        type='submit'
+                        color='primary'
+                        style={{ width:'10%', borderRadius: "50px", fontSize: "14px" }} >
+                          <CIcon icon={cilSearch} style={{ marginRight: "10px", color: "#FFFFFF" }}/>
+                          Cari
+                      </CButton>                                          
+                    </CCol>
+                  </CRow>
+                </CForm>
+              </CAccordionBody>
+            </CAccordionItem>
+          </CAccordion>
+        </CCol>
         <CCol xs={12} className="mt-3">
           { message && <CAlert color="success" dismissible onClose={() => { setMessage("") }}> { message } </CAlert> }
         </CCol>                 
@@ -191,16 +193,16 @@ const DataPeserta = () => {
               </CTable>
             <CModal backdrop="static" visible={chosenRegistrant.visible} onClose={() => setChosenRegistrant({ visible: false })}>
               <CModalHeader>
-                <CModalTitle>Are You Sure?</CModalTitle>
+                <CModalTitle>Apakah Anda Yakin?</CModalTitle>
               </CModalHeader>
               <CModalBody>
-                This will remove {chosenRegistrant.name} as registrant permanently
+                Ini akan menghapus {chosenRegistrant.name} sebagai peserta secara permanen
               </CModalBody>
               <CModalFooter>
                 <CButton color="secondary" onClick={() => setChosenRegistrant({ visible: false })}>
-                  Close
+                  Tutup
                 </CButton>
-                <CButton color="danger" onClick={() => deleteData()}>Delete</CButton>
+                <CButton color="danger" onClick={() => deleteData()}>Hapus</CButton>
               </CModalFooter>
             </CModal>
           </CCardBody>
