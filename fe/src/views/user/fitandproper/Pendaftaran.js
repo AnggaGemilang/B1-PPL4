@@ -54,10 +54,10 @@ const Pendaftaran = () => {
     if (nipValue.length > 1) {
       FitAndProperAPI.findRegistrants(nipValue).then(
       (res) => {
-        if(res.data.length == 1){
+        if(res.data.data.length == 1){
           setState({
             ...state,
-            registrant: res.data[0],
+            registrant: res.data.data[0],
           });
         } 
         else {
@@ -68,40 +68,25 @@ const Pendaftaran = () => {
         }
       });
     }
-    getLevelData()
-    getPositionData()
-    getCriteriaFitProper()
+    axios.all([PositionAPI.get(), CriteriaAPI.get(), LevelAPI.get()]).then(
+      axios.spread((...res) => {
+        setPositions(res[0]?.data.data),
+        setCriterias(res[1]?.data.data)
+        setLevels(res[2]?.data.data)
+      })
+    );
   }, [nipValue])
-
-  const getLevelData = () => {
-    LevelAPI.get().then((res) => {
-      setLevels(res.data)
-    })
-  }  
 
   const getExaminerData = () => {
     DataPengujiAPI.get().then((res) => {
-      setExaminers1(res.data)
+      setExaminers1(res.data.data)
       if(state.status == "edit"){
         setNipValue(state?.data?.attributes?.registrant?.data?.attributes?.employee?.data?.attributes?.NIP      )
-        setExaminers2(res.data)
-        setExaminers3(res.data)
+        setExaminers2(res.data.data)
+        setExaminers3(res.data.data)
       }
     })
   }  
-
-  const getPositionData = () => {
-    PositionAPI.get().then((res) => {
-      setPositions(res.data)
-    })
-  }
-
-  const getCriteriaFitProper = () => {
-    CriteriaAPI.getFitProper().then((res) => {
-      setCriterias(res.data)
-      console.log(res.data)
-    })
-  }
 
   const deleteNode = (value, arr) => {
     const temp = [...arr]
@@ -142,7 +127,7 @@ const Pendaftaran = () => {
           for(let i = 0; i < examinersVal.length; i++){
             const body = {
               data: {
-                mapping: res.data.id,
+                mapping: res.data.data.id,
                 examiner: examinersVal[i],
                 status_fitproper: false,
                 status_interview: false,
@@ -156,7 +141,7 @@ const Pendaftaran = () => {
                   console.log(criterias[i].id)
                   const body = {
                     data : {
-                      line_mapping_fitproper: res.data.id,
+                      line_mapping_fitproper: res.data.data.id,
                       registrant: state?.registrant?.id,
                       examiner: examinersVal[i],
                       criterion: criterias[i].id,
@@ -235,7 +220,7 @@ const Pendaftaran = () => {
           for(let i = 0; i < examinersVal.length; i++){
             const body = {
               data: {
-                mapping: res.data.id,
+                mapping: res.data.data.id,
                 examiner: examinersVal[i],
                 status_fitproper: false,
                 status_interview: false

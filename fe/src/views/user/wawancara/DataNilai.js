@@ -30,16 +30,16 @@ const DataNilai = () => {
   
   const getDataPenguji = () => {
     MappingAPI.getPenguji(state.registrant, state.position).then((res) => {
-      setExaminers(res.data[0].attributes.examiners_interview.data)
+      setExaminers(res.data.data[0].attributes.examiners_interview.data)
     })
   }
 
   const getData = e => {
     const examiner = (location?.state?.examiner == null) ? e?.target?.value : state.examiner
     ScoreAPI.getNilaiWawancara(state.registrant, examiner, state.position).then((res) => {
-      if(res.data.length > 0){
+      if(res.data.data.length > 0){
         let value = 0
-        setScores(res.data[0])
+        setScores(res.data.data[0])
         res?.data[0]?.attributes?.scores_interview?.data.forEach((element) => { 
           value += parseInt(element.attributes.score / 100 * element.attributes.criterion.data.attributes.value)
         })     

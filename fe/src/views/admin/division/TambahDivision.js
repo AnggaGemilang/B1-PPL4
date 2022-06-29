@@ -32,7 +32,7 @@ const TambahDivision = () => {
 
   useEffect(() => {
     DirectorateAPI.get().then((res) => {
-      setDirectorates(res.data)
+      setDirectorates(res.data.data)
     })
   }, [])  
   

@@ -41,15 +41,14 @@ const Administrasi = () => {
 
   useEffect(() => {
     setMessage(location?.state?.successMessage)
-    LevelAPI.get().then((res) => {
-      setLevels(res.data)
-    })
-    GradeAPI.get().then((res) => {
-      setGrades(res.data)
-    })
-    SubFieldAPI.get().then((res) => {
-      setSubfields(res.data)
-    })
+
+    axios.all([LevelAPI.get(), GradeAPI.get(), SubFieldAPI.get()]).then(
+      axios.spread((...res) => {
+        setLevels(res[0]?.data.data),
+        setGrades(res[1]?.data.data)
+        setSubfields(res[2]?.data.data)
+      })
+    );
     getData()
   }, [])    
 
@@ -83,8 +82,8 @@ const Administrasi = () => {
 
     EmployeeAPI.find(query).then(
       (res) => {
-        if(res.data.length != 0){
-          setEmployees(res.data)
+        if(res.data.data.length != 0){
+          setEmployees(res.data.data)
         } else {
           setEmployees([])
         }
@@ -94,7 +93,7 @@ const Administrasi = () => {
 
   const getData = () => {
     EmployeeAPI.get().then((res) => {
-      setEmployees(res.data)
+      setEmployees(res.data.data)
     })
   }
 

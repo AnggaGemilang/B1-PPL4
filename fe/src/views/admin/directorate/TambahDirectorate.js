@@ -32,7 +32,7 @@ const TambahDirectorate = () => {
 
   useEffect(() => {
     UnitAPI.get().then((res) => {
-      setUnits(res.data)
+      setUnits(res.data.data)
     })
   }, [])  
 

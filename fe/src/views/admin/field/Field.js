@@ -49,7 +49,7 @@ const Field = () => {
   useEffect(() => {
     setMessage(location?.state?.successMessage)
     DivisionAPI.get().then((res) => {
-      setDivisions(res.data)
+      setDivisions(res.data.data)
     })
     getData()
   }, [])    
@@ -67,8 +67,8 @@ const Field = () => {
 
     FieldAPI.find(query).then(
       (res) => {
-        if(res.data.length != 0){
-          setFields(res.data)
+        if(res.data.data.length != 0){
+          setFields(res.data.data)
         } else {
           setFields([])
         }
@@ -78,7 +78,7 @@ const Field = () => {
 
   const getData = () => {
     FieldAPI.get().then((res) => {
-      setFields(res.data)
+      setFields(res.data.data)
     })
   }
 

@@ -58,8 +58,8 @@ const Grade = () => {
 
     GradeAPI.find(query).then(
       (res) => {
-        if(res.data.length != 0){
-          setGrades(res.data)
+        if(res.data.data.length != 0){
+          setGrades(res.data.data)
         } else {
           setGrades([])
         }
@@ -69,8 +69,8 @@ const Grade = () => {
 
   const getData = () => {
     GradeAPI.get().then((res) => {
-      setGrades(res.data)
-      console.log(res.data)
+      setGrades(res.data.data)
+      console.log(res.data.data)
     })
   }
 

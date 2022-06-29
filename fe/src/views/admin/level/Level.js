@@ -61,8 +61,8 @@ const Level = () => {
 
     LevelAPI.find(query).then(
       (res) => {
-        if(res.data.length != 0){
-          setLevels(res.data)
+        if(res.data.data.length != 0){
+          setLevels(res.data.data)
         } else {
           setLevels([])
         }
@@ -72,8 +72,8 @@ const Level = () => {
 
   const getData = () => {
     LevelAPI.get().then((res) => {
-      setLevels(res.data)
-      console.log(res.data)
+      setLevels(res.data.data)
+      console.log(res.data.data)
     })
   }
 

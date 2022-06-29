@@ -49,7 +49,7 @@ const Grade = () => {
   useEffect(() => {
     setMessage(location?.state?.successMessage)
     GradeAPI.get().then((res) => {
-      setGrades(res.data)
+      setGrades(res.data.data)
     })
     getData()
   }, [])    
@@ -67,8 +67,8 @@ const Grade = () => {
 
     PositionAPI.find(query).then(
       (res) => {
-        if(res.data.length != 0){
-          setPositions(res.data)
+        if(res.data.data.length != 0){
+          setPositions(res.data.data)
         } else {
           setPositions([])
         }
@@ -78,7 +78,7 @@ const Grade = () => {
 
   const getData = () => {
     PositionAPI.get().then((res) => {
-      setPositions(res.data)
+      setPositions(res.data.data)
     })
   }
 

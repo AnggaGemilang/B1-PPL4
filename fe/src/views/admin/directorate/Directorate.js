@@ -49,7 +49,7 @@ const Directorate = () => {
   useEffect(() => {
     setMessage(location?.state?.successMessage)
     UnitAPI.get().then((res) => {
-      setUnits(res.data)
+      setUnits(res.data.data)
     })
     getData()
   }, [])    
@@ -67,8 +67,8 @@ const Directorate = () => {
 
     DirectorateAPI.find(query).then(
       (res) => {
-        if(res.data.length != 0){
-          setDirectorates(res.data)
+        if(res.data.data.length != 0){
+          setDirectorates(res.data.data)
         } else {
           setDirectorates([])
         }
@@ -78,8 +78,8 @@ const Directorate = () => {
 
   const getData = () => {
     DirectorateAPI.get().then((res) => {
-      setDirectorates(res.data)
-      console.log(res.data)
+      setDirectorates(res.data.data)
+      console.log(res.data.data)
     })
   }
 

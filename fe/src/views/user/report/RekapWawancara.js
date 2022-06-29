@@ -13,11 +13,6 @@ import {
   CTableHeaderCell,
   CTableRow,
   CFormInput,
-  CModal,
-  CModalBody,
-  CModalFooter,
-  CModalHeader,
-  CModalTitle,
   CAccordion,
   CAccordionBody,
   CAccordionHeader,
@@ -25,7 +20,6 @@ import {
   CFormLabel,
   CAlert,
   CForm,
-  CImage,
 } from '@coreui/react'
 import { useLocation, useNavigate } from "react-router-dom"
 import { cilSearch, cilPlus } from '@coreui/icons'
@@ -57,8 +51,8 @@ const RekapWawancara = () => {
 
     DataPesertaAPI.findRegistrants(query).then(
       (res) => {
-        if(res.data.length != 0){
-          setRegistrants(res.data)
+        if(res.data.data.length != 0){
+          setRegistrants(res.data.data)
         } else {
           setRegistrants([])         
         }
@@ -68,7 +62,7 @@ const RekapWawancara = () => {
   
   const getData = () => {
     MappingAPI.getWawancara().then((res) => {
-      setMappings(res.data)
+      setMappings(res.data.data)
     })
   }
 

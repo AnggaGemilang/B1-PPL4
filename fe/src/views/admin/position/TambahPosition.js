@@ -32,7 +32,7 @@ const TambahPosition = () => {
 
   useEffect(() => {
     GradeAPI.get().then((res) => {
-      setGrades(res.data)
+      setGrades(res.data.data)
     })
   }, [])  
   

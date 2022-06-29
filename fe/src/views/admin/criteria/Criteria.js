@@ -68,8 +68,8 @@ const Criteria = () => {
 
     CriteriaAPI.find(query).then(
       (res) => {
-        if(res.data.length != 0){
-          setCriterias(res.data)
+        if(res.data.data.length != 0){
+          setCriterias(res.data.data)
         } else {
           setCriterias([])
         }
@@ -79,7 +79,7 @@ const Criteria = () => {
 
   const getData = () => {
     CriteriaAPI.get().then((res) => {
-      setCriterias(res.data)
+      setCriterias(res.data.data)
     })
   }
 

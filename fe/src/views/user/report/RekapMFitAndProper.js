@@ -49,10 +49,9 @@ const RekapMFitAndProper = () => {
     const projection = document.getElementById("filter_projection").value
 
     FitAndProperAPI.getRekapManualFitProper(registrant, projection).then((res) => {
-      if(res.data.length != 0){
+      if(res.data.data.length != 0){
         setState({ ...state, visible: true })
-        setLineMappings(res.data)
-        console.log(res.data)
+        setLineMappings(res.data.data)
       } else {
         setState({ ...state, visible: false })        
         setLineMappings([])        
@@ -62,13 +61,13 @@ const RekapMFitAndProper = () => {
 
   const getDataPeserta = () => {
     DataPesertaAPI.get().then((res) => {
-      setRegistrants(res.data)
+      setRegistrants(res.data.data)
     })
   }
 
   const getDataProyeksi = () => {
     PositionAPI.get().then((res) => {
-      setProjections(res.data)
+      setProjections(res.data.data)
     })
   }
 
@@ -148,6 +147,11 @@ const RekapMFitAndProper = () => {
                       )}
                     </CTableBody>
                   </CTable>
+                    <CButton
+                      color='primary'
+                      style={{width: '100%', marginBottom: '10px'}} >
+                        Ubah Data
+                    </CButton>                  
                 </CCardBody>
             </CCard>
           : null

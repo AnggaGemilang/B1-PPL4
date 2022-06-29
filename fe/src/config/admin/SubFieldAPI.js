@@ -1,9 +1,9 @@
 import api from '../index'
 
 export default {
-  get: () => api.get('/sub-fields?populate=*').then((res) => res.data),
-  find: (query) => api.get(`/sub-fields?populate=*${query}`).then((res) => res.data),
-  add: (data) => api.post('/sub-fields', data).then((res) => res.data),
-  delete: (id) => api.delete(`/sub-fields/${id}`).then((res) => res.data),
-  edit: (id, data) => api.put(`/sub-fields/${id}`, data).then((res) => res.data),
+  get: () => api.get('/sub-fields?populate=*'),
+  find: (query) => api.get(`/sub-fields?populate=*${query}`),
+  add: (data) => api.post('/sub-fields', data),
+  delete: (id) => api.delete(`/sub-fields/${id}`),
+  edit: (id, data) => api.put(`/sub-fields/${id}`, data),
 }
