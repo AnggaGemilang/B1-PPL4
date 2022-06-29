@@ -31,11 +31,11 @@ const TambahPeserta = () => {
       DataPesertaAPI.findEmployee(nipValue).then(
       (res) => {
         console.log(res)
-        if(res.data.length == 1){
-          console.log(res.data[0].attributes.Name)
+        if(res.data.data.length == 1){
+          console.log(res.data.data[0].attributes.Name)
           setState({
-            namaKaryawan: res.data[0].attributes.Name,
-            idKaryawan: res.data[0].id
+            namaKaryawan: res.data.data[0].attributes.Name,
+            idKaryawan: res.data.data[0].id
           })
         } 
         else {

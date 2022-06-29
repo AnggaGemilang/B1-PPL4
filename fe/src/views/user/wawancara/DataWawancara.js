@@ -51,8 +51,8 @@ const DataWawancara = () => {
 
     DataPesertaAPI.findRegistrants(query).then(
       (res) => {
-        if(res.data.length != 0){
-          setRegistrants(res.data)
+        if(res.data.data.length != 0){
+          setRegistrants(res.data.data)
         } else {
           setRegistrants([])         
         }
@@ -62,7 +62,7 @@ const DataWawancara = () => {
   
   const getData = () => {
     MappingAPI.getWawancara().then((res) => {
-      setMappings(res.data)
+      setMappings(res.data.data)
     })
   }
 

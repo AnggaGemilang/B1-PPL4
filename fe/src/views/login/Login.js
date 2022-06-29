@@ -18,6 +18,13 @@ import background from '../../assets/images/LatarPLN.jpg'
 import LoginAPI from '../../config/admin/LoginAPI'
 
 const Login = () => {
+
+  document.title = `Fit & Proper - Login`
+
+  if(sessionStorage.getItem("auth") != null){
+    window.location.href = "/"
+  }
+
   const [state, setState] = useState({
     errorMessage:"", 
     visible:false
@@ -31,17 +38,11 @@ const Login = () => {
       password: document.getElementById("password").value
     }
     LoginAPI.login(data).then((res) => {
-      sessionStorage.setItem("auth", JSON.stringify(res))
+      sessionStorage.setItem("auth", JSON.stringify(res.data))
       window.location.href = "/"
     }).catch((err) => {
         setState({errorMessage:"Invalid email or password", visible: false})
     })
-  }
-  
-  document.title = `Fit & Proper - Login`
-
-  if(sessionStorage.getItem("auth") != null){
-    window.location.href = "/"
   }
 
   return (

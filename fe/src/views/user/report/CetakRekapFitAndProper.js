@@ -54,8 +54,8 @@ const CetakRekapFitAndProper = () => {
 
     DataPesertaAPI.findRegistrants(query).then(
       (res) => {
-        if(res.data.length != 0){
-          setRegistrants(res.data)
+        if(res.data.data.length != 0){
+          setRegistrants(res.data.data)
         } else {
           setRegistrants([])         
         }
@@ -65,7 +65,7 @@ const CetakRekapFitAndProper = () => {
   
   const getData = () => {
     MappingAPI.get().then((res) => {
-      setMappings(res.data)
+      setMappings(res.data.data)
     })
   }
 
@@ -74,10 +74,12 @@ const CetakRekapFitAndProper = () => {
     FitAndProperAPI.getRekapManualFitProper(e.target.getAttribute("registrant_val"), e.target.getAttribute("projection_val")).then((res) => {
       console.log(e.target.getAttribute("registrant_val"))
       console.log(e.target.getAttribute("projection_val"))
-      console.log(res.data)
+      console.log(res.data.data)
 
-      if(res.data.length != 0){
-        setLineMappings(res.data)
+      if(res.data.data.length != 0){
+        setLineMappings(res.data.data)
+
+        console.log(res.data.data)
 
         var doc = new jsPDF({
             orientation: 'l',
@@ -94,10 +96,10 @@ const CetakRekapFitAndProper = () => {
         doc.text(40, 130, "Jabatan Proyeksi")
         doc.text(40, 150, "Jenjang")
         doc.setFont('helvetica', 'normal')
-        doc.text(150, 90, ": " + res.data[0].attributes?.mapping?.data?.attributes?.registrant?.data?.attributes?.employee?.data?.attributes?.Name)
-        doc.text(150, 110, ": " + res.data[0].attributes?.mapping?.data?.attributes?.registrant?.data?.attributes?.employee?.data?.attributes?.NIP)
-        doc.text(150, 130, ": " + res.data[0].attributes?.mapping?.data?.attributes?.position?.data?.attributes?.position_name)
-        doc.text(150, 150, ": " + res.data[0].attributes?.mapping?.data?.attributes?.level?.data?.attributes?.functional_name + " - " + res.data[0].attributes?.mapping?.data?.attributes?.level?.data?.attributes?.structural_name)
+        doc.text(150, 90, ": " + res.data.data[0].attributes?.mapping?.data?.attributes?.registrant?.data?.attributes?.employee?.data?.attributes?.Name)
+        doc.text(150, 110, ": " + res.data.data[0].attributes?.mapping?.data?.attributes?.registrant?.data?.attributes?.employee?.data?.attributes?.NIP)
+        doc.text(150, 130, ": " + res.data.data[0].attributes?.mapping?.data?.attributes?.position?.data?.attributes?.position_name)
+        doc.text(150, 150, ": " + res.data.data[0].attributes?.mapping?.data?.attributes?.level?.data?.attributes?.functional_name + " - " + res.data.data[0].attributes?.mapping?.data?.attributes?.level?.data?.attributes?.structural_name)
 
         doc.autoTable({
           startY: 175,
@@ -106,11 +108,28 @@ const CetakRekapFitAndProper = () => {
 
         let finalY = doc.lastAutoTable.finalY
 
+        doc.setFontSize("12")
+        doc.text(40, finalY+=30, "Dengan ini, anda dinyatakan . . .")        
         doc.setFont('helvetica', 'bold')
         doc.setFontSize("18")
-        doc.text(40, finalY+40, ("Lolos").strike() + " Tidak Lolos")        
+        doc.text(40, finalY+=25, "Lolos")
 
-        doc.save(res.data[0].attributes?.mapping?.data?.attributes?.registrant?.data?.attributes?.employee?.data?.attributes?.Name+'_'+res.data[0].attributes?.mapping?.data?.attributes?.position?.data?.attributes?.position_name+'.pdf')    
+        doc.setFontSize("12")
+        doc.setFont('helvetica', 'normal')
+
+        doc.text(40, finalY+=38, "Bandung, 28 Juni 2022")
+        doc.text(650, finalY, "Bandung, 28 Juni 2022")
+
+        doc.text(40, finalY+=18, "Kepala Pusat Fit Proper")
+        doc.text(650, finalY, "Kepala Pusat Fit Proper")
+
+        doc.text(40, finalY+=60, "___________________")
+        doc.text(650, finalY, "___________________")
+
+        doc.text(40, finalY+=18, "NIP. 123123123123123")
+        doc.text(650, finalY, "NIP. 123123123123123")
+
+        doc.save(res.data.data[0].attributes?.mapping?.data?.attributes?.registrant?.data?.attributes?.employee?.data?.attributes?.Name+'_'+res.data.data[0].attributes?.mapping?.data?.attributes?.position?.data?.attributes?.position_name+'.pdf')    
       } else {
         setLineMappings([])        
       }

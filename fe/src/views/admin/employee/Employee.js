@@ -54,15 +54,13 @@ const Employee = () => {
 
   useEffect(() => {
     setMessage(location?.state?.successMessage)
-    LevelAPI.get().then((res) => {
-      setLevels(res.data)
-    })
-    PositionAPI.get().then((res) => {
-      setPositions(res.data)
-    })
-    SubFieldAPI.get().then((res) => {
-      setSubfields(res.data)
-    })    
+    axios.all([LevelAPI.get(), PositionAPI.get(), SubFieldAPI.get()]).then(
+      axios.spread((...res) => {
+        setLevels(res[0]?.data.data),
+        setPositions(res[1]?.data.data)
+        setSubfields(res[2]?.data.data)
+      })
+    );
     getData()
   }, [])    
 
@@ -106,9 +104,9 @@ const Employee = () => {
 
     EmployeeAPI.find(query).then(
       (res) => {
-        console.log(res.data)
-        if(res.data.length != 0){
-          setEmployees(res.data)
+        console.log(res.data.data)
+        if(res.data.data.length != 0){
+          setEmployees(res.data.data)
         } else {
           setEmployees([])
         }
@@ -118,8 +116,8 @@ const Employee = () => {
 
   const getData = () => {
     EmployeeAPI.get().then((res) => {
-      console.log(res.data)
-      setEmployees(res.data)
+      console.log(res.data.data)
+      setEmployees(res.data.data)
     })
   }
 

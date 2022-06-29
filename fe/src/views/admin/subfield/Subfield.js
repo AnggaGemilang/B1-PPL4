@@ -49,7 +49,7 @@ const SubField = () => {
   useEffect(() => {
     setMessage(location?.state?.successMessage)
     FieldAPI.get().then((res) => {
-      setFields(res.data)
+      setFields(res.data.data)
     })
     getData()
   }, [])    
@@ -65,8 +65,8 @@ const SubField = () => {
     }
     SubFieldAPI.find(query).then(
       (res) => {
-        if(res.data.length != 0){
-          setSubFields(res.data)
+        if(res.data.data.length != 0){
+          setSubFields(res.data.data)
         } else {
           setSubFields([])
         }
@@ -76,7 +76,7 @@ const SubField = () => {
 
   const getData = () => {
     SubFieldAPI.get().then((res) => {
-      setSubFields(res.data)
+      setSubFields(res.data.data)
     })
   }
 

@@ -32,7 +32,7 @@ const TambahField = () => {
 
   useEffect(() => {
     DivisionAPI.get().then((res) => {
-      setDivisionss(res.data)
+      setDivisionss(res.data.data)
     })
   }, [])  
   

@@ -28,7 +28,7 @@ import MappingAPI from '../../../config/user/MappingAPI'
 
 const RekapFitAndProper = () => {
   const location = useLocation()
-  const navigate = useNavigate() 
+  const navigate = useNavigate()
 
   const [mappings, setMappings] = useState([])
   const [message, setMessage] = useState("")
@@ -51,8 +51,8 @@ const RekapFitAndProper = () => {
 
     DataPesertaAPI.findRegistrants(query).then(
       (res) => {
-        if(res.data.length != 0){
-          setRegistrants(res.data)
+        if(res.data.data.length != 0){
+          setRegistrants(res.data.data)
         } else {
           setRegistrants([])         
         }
@@ -62,7 +62,7 @@ const RekapFitAndProper = () => {
   
   const getData = () => {
     MappingAPI.get().then((res) => {
-      setMappings(res.data)
+      setMappings(res.data.data)
     })
   }
 
@@ -114,7 +114,7 @@ const RekapFitAndProper = () => {
         </CAccordion>   
         <CCol xs={12} className="mt-3">
           { message && <CAlert color="success" dismissible onClose={() => { setMessage("") }}> { message } </CAlert> }
-        </CCol>                 
+        </CCol>
         <CCard className="mb-4 mt-3">
           <CCardHeader>
             <strong>Rekap Data Fit & Proper</strong>

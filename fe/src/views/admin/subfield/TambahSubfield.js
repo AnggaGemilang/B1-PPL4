@@ -32,7 +32,7 @@ const TambahSubfield = () => {
 
   useEffect(() => {
     FieldAPI.get().then((res) => {
-      setFields(res.data)
+      setFields(res.data.data)
     })
   }, [])  
 

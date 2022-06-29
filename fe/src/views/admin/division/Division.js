@@ -49,7 +49,7 @@ const Division = () => {
   useEffect(() => {
     setMessage(location?.state?.successMessage)
     DirectorateAPI.get().then((res) => {
-      setDirectorates(res.data)
+      setDirectorates(res.data.data)
     })
     getData()
   }, [])    
@@ -67,8 +67,8 @@ const Division = () => {
 
     DivisionAPI.find(query).then(
       (res) => {
-        if(res.data.length != 0){
-          setDivisions(res.data)
+        if(res.data.data.length != 0){
+          setDivisions(res.data.data)
         } else {
           setDivisions([])
         }
@@ -78,7 +78,7 @@ const Division = () => {
 
   const getData = () => {
     DivisionAPI.get().then((res) => {
-      setDivisions(res.data)
+      setDivisions(res.data.data)
     })
   }
 

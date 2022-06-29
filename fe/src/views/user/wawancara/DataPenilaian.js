@@ -59,8 +59,8 @@ const DataPenilaian = () => {
 
     DataPesertaAPI.findRegistrants(query).then(
       (res) => {
-        if(res.data.length != 0){
-          setRegistrants(res.data)
+        if(res.data.data.length != 0){
+          setRegistrants(res.data.data)
         } else {
           setRegistrants([])         
         }
@@ -70,8 +70,7 @@ const DataPenilaian = () => {
   
   const getData = () => {
     WawancaraAPI.getLineMapping().then((res) => {
-      setLineMappings(res.data)
-      console.log(res.data)
+      setLineMappings(res.data.data)
     })
   }
 

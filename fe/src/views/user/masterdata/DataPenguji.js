@@ -61,8 +61,8 @@ const DataPenguji = () => {
 
     DataPengujiAPI.findExaminers(query).then(
       (res) => {
-        if(res.data.length != 0){
-          setExaminers(res.data)
+        if(res.data.data.length != 0){
+          setExaminers(res.data.data)
         } else {
           setExaminers([]) 
         }
@@ -72,8 +72,7 @@ const DataPenguji = () => {
 
   const getData = () => {
     DataPengujiAPI.get().then((res) => {
-      setExaminers(res.data)
-      console.log(res.data)
+      setExaminers(res.data.data)
     })
   }
   

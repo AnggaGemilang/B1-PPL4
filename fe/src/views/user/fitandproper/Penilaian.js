@@ -70,8 +70,7 @@ const Penilaian = () => {
 
   const getScore = () => {
     ScoreAPI.getFitProperPenilaian(state?.lineMapping?.id).then((res) => {
-      setScores(res.data)
-      console.log(res.data)
+      setScores(res.data.data)
     })
   }
 

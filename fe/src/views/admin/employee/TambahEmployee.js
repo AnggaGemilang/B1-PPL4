@@ -38,15 +38,13 @@ const TambahEmployee = () => {
   });
 
   useEffect(() => {
-    SubFieldAPI.get().then((res) => {
-      setSubfields(res.data)
-    })
-    PositionAPI.get().then((res) => {
-      setPositions(res.data)
-    })
-    LevelAPI.get().then((res) => {
-      setLevels(res.data)
-    })
+    axios.all([LevelAPI.get(), PositionAPI.get(), SubFieldAPI.get()]).then(
+      axios.spread((...res) => {
+        setLevels(res[0]?.data.data),
+        setPositions(res[1]?.data.data)
+        setSubfields(res[2]?.data.data)
+      })
+    );
   }, [])  
 
   const postData = (event) => {
@@ -74,7 +72,7 @@ const TambahEmployee = () => {
           let formData = new FormData()
           formData.append('files', state.photo)
           formData.append('ref', 'api::employee.employee')
-          formData.append('refId', res.data.id)
+          formData.append('refId', res.data.data.id)
           formData.append('field', 'Photo')
           EmployeeAPI.addPhoto(formData).then(
             (res) => {

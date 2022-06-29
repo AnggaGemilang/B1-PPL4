@@ -64,8 +64,8 @@ const DataFitProper = () => {
 
     DataPesertaAPI.findRegistrants(query).then(
       (res) => {
-        if(res.data.length != 0){
-          setRegistrants(res.data)
+        if(res.data.data.length != 0){
+          setRegistrants(res.data.data)
         } else {
           setRegistrants([])         
         }
@@ -75,7 +75,7 @@ const DataFitProper = () => {
   
   const getData = () => {
     MappingAPI.get().then((res) => {
-      setMappings(res.data)
+      setMappings(res.data.data)
     })
   }
 

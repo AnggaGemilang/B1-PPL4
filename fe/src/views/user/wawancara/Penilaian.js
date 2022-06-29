@@ -133,13 +133,13 @@ const Penilaian = () => {
   const addRow = (id) => {
     console.log(id)
     CriteriaAPI.findById(id).then((res) => {
-      setSelectedCriteria([...selectedCriteria, res.data[0]])
+      setSelectedCriteria([...selectedCriteria, res.data.data[0]])
     })
   }
 
   const getData = () => {
     CriteriaAPI.get().then((res) => {
-      setCriterias(res.data)
+      setCriterias(res.data.data)
     })
   }
 

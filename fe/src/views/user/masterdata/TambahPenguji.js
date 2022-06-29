@@ -21,7 +21,7 @@ const TambahPenguji = () => {
   const navigate = useNavigate()
   const [nipValue, setNipValue] = useState("")
   const [state, setState] = useState({
-    employee: {},
+    employee: null,
     errorMessage: "",
     visibleSubmit: false,    
   })
@@ -30,18 +30,20 @@ const TambahPenguji = () => {
     if (nipValue.length > 1) {
       DataPengujiAPI.findEmployee(nipValue).then(
       (res) => {
-        console.log(res)
-        if(res.data.length == 1){
-          console.log(res.data[0].attributes.Name)
+        if(res.data.data.length == 1){
           setState({
             ...state,
-            employee: res.data[0]
+            employee: res.data.data[0]
           })
         } 
         else {
           setState({
             ...state,
-            employee: {}
+            employee: {
+              attributes : {
+                Name : ""
+              }
+            }
           })
         }
       })
@@ -69,17 +71,30 @@ const TambahPenguji = () => {
       }
       DataPengujiAPI.add(body).then(
         (res) => {
-          const body = {
-            username : generateSlug(state?.employee?.attributes?.Name),
-            email : state?.employee?.attributes?.Email.toLowerCase(),
-            password: state?.employee?.attributes?.NIP,
-            role: 4,
-            employee: state?.employee?.id,
-            cp_role: 4,
-            cp_photo: state?.employee?.attributes?.Photo?.data?.attributes?.formats?.thumbnail?.url,
-          }
-          AdministrasiUserAPI.add(body).then(res => {
-            navigate('/datapenguji', {state: { successMessage: 'Penguji Berhasil Ditambahkan' } })
+          let body = {}
+          AdministrasiUserAPI.find(state?.employee?.attributes?.NIP).then(res => {
+            if(res.length != 0){
+              body = {
+                role: 4,
+                cp_role: 4
+              }
+              AdministrasiUserAPI.edit(state?.employee?.attributes?.account?.data?.id, body).then(res => {
+                navigate('/datapenguji', {state: { successMessage: 'Penguji Berhasil Ditambahkan' } })
+              })
+            } else {
+              body = {
+                username : generateSlug(state?.employee?.attributes?.Name),
+                email : state?.employee?.attributes?.Email.toLowerCase(),
+                password: state?.employee?.attributes?.NIP,
+                role: 4,
+                employee: state?.employee?.id,
+                cp_role: 4,
+                cp_photo: state?.employee?.attributes?.Photo?.data?.attributes?.formats?.thumbnail?.url,
+              }
+              AdministrasiUserAPI.add(body).then(res => {
+                navigate('/datapenguji', {state: { successMessage: 'Penguji Berhasil Ditambahkan' } })
+              })
+            }
           })
         },
         (err) => {
@@ -128,7 +143,7 @@ const TambahPenguji = () => {
                     Nama
                   </CFormLabel>
                   <CCol sm={10}>
-                    <CFormInput type="text" id="nama_karyawan" name="nama_karyawan"  value={state?.employee?.attributes?.Name} placeholder='Nama Pegawai Akan Muncul Disini' disabled />
+                    <CFormInput type="text" id="nama_karyawan" name="nama_karyawan" value={state?.employee?.attributes?.Name} placeholder='Nama Pegawai Akan Muncul Disini' disabled />
                   </CCol>
                 </CRow>
                 <CCol xs={12} className="position-relative">

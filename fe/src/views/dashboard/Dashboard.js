@@ -1,20 +1,27 @@
-import React from 'react'
+import React, { useState, useEffect } from 'react'
 import {
   CCard,
   CCardBody,
-  CCardGroup,
   CCardHeader,
   CCol,
   CRow,
-  CWidgetStatsC,
+  CTable,
+  CTableBody,
+  CButton,
+  CTableHead,
+  CTableHeaderCell,
+  CTableDataCell,
+  CTableRow,
   CAccordion,
   CAccordionBody,
   CAccordionHeader,
-  CAccordionItem,
+  CAccordionItem, 
   CFormLabel,
   CForm,
+  CWidgetStatsC,
   CFormSelect,
-  CButton,  
+  CImage,
+  CAlert
 } from '@coreui/react'
 import CIcon from '@coreui/icons-react'
 import {
@@ -25,101 +32,564 @@ import {
   cilSpeedometer,
 } from '@coreui/icons'
 
+import logoPDF from 'src/assets/images/pdf-icon.png'
+import url from "src/config/setting"
+import DataPesertaAPI from 'src/config/user/DataPesertaAPI'
+import PositionAPI from 'src/config/admin/PositionAPI'
+import DashboardAPI from 'src/config/admin/DashboardAPI'
+import axios from "axios";
+
 const Dashboard = () => {
 
-  return (
-    <CRow>
-      <CCol>
-        <CRow>
-          <CCol sm={6} md={3}>
-            <CWidgetStatsC
-              color="primary"
-              icon={<CIcon icon={cilChartPie} height={36} />}
-              value="28%"
-              title="Returning Visitors"
-              inverse
-              progress={{ value: 75 }}
-              className="mb-4"
-            />
-          </CCol>
-          <CCol sm={6} md={3}>
-            <CWidgetStatsC
-              color="info"
-              icon={<CIcon icon={cilPeople} height={36} />}
-              value="87.500"
-              title="Visitors"
-              inverse
-              progress={{ value: 75 }}
-              className="mb-4"
-            />
-          </CCol>
-          <CCol sm={6} md={3}>
-            <CWidgetStatsC
-              color="warning"
-              icon={<CIcon icon={cilBasket} height={36} />}
-              value="1238"
-              title="Products sold"
-              inverse
-              progress={{ value: 75 }}
-              className="mb-4"
-            />
-          </CCol>
-          <CCol sm={6} md={3}>
-            <CWidgetStatsC
-              color="danger"
-              icon={<CIcon icon={cilSpeedometer} height={36} />}
-              value="5:34:11"
-              title="Avg. Time"
-              inverse
-              progress={{ value: 75 }}
-              className="mb-4"
-            />   
-          </CCol>    
-        </CRow>
-        <CRow>
-          <CCol xs={12} className="mt-2">
-            <CAccordion>
-              <CAccordionItem itemKey={1}>
-                <CAccordionHeader><CIcon icon={cilSearch} style={{ marginRight: "10px" }}/>Pencarian Data</CAccordionHeader>
-                <CAccordionBody>
-                  <CForm>
-                    <CRow className='mt-2'>
-                      <CCol xs={6}>
-                        <CFormLabel htmlFor="exampleFormControlInput1">Peserta</CFormLabel>
-                        <CFormSelect name="filter_registrant" id="filter_registrant" className="mb-3" aria-label="Large select example">
-                          <option value="">Pilih Peserta</option>
-                        </CFormSelect>
-                      </CCol>
-                      <CCol xs={6}>
-                        <CFormLabel htmlFor="filter_usefor">Proyeksi</CFormLabel>
-                        <CFormSelect name="filter_projection" id="filter_projection" className="mb-3" aria-label="Large select example">
-                          <option value="">Pilih Proyeksi</option>
-                        </CFormSelect>
-                      </CCol>
-                    </CRow>
-                    <CRow>
-                      <hr className='mt-4' style={{ marginLeft: "12px", width: "97.6%" }} />
-                    </CRow>
-                    <CRow>
-                      <CCol style={{ display: "flex", justifyContent: "right" }}>
-                        <CButton
-                            type='submit'
-                            color='primary'
-                            style={{ width:'10%', borderRadius: "50px", fontSize: "14px" }} >
-                            <CIcon icon={cilSearch} style={{ marginRight: "10px", color: "#FFFFFF" }}/>
-                              Cari
+  const [registrants, setRegistrants] = useState([])
+  const [projections, setProjections] = useState([])
+  const [message, setMessage] = useState("")  
+  const [mappings, setMappings] = useState([])
+  const [state, setState] = useState({
+    visible: false,
+    keterangan1: "",
+    keterangan2: "",
+    keterangan3: "",
+    keterangan4: "",
+  })
+
+  useEffect(() => {
+    if(JSON.parse(sessionStorage.getItem("auth"))?.user?.cp_role == 4){
+      getKeteranganPenguji()
+    } else {
+      getKetaranganPublic()
+    }
+
+    axios.all([DataPesertaAPI.get(), PositionAPI.get()]).then(
+      axios.spread((...res) => {
+        setRegistrants(res[0]?.data.data),
+        setProjections(res[1]?.data.data)
+      })
+    );
+
+  }, []) 
+
+  const getKeteranganPenguji = () => {
+    axios.all([
+      DashboardAPI.getKeteragan1Penguji(), 
+      DashboardAPI.getKeteragan2Penguji(),
+      DashboardAPI.getKeteragan3Penguji(),
+      DashboardAPI.getKeteragan4Penguji()
+    ]).then(
+      axios.spread((...res) => {
+        setState({
+          ...state,
+          keterangan1: res[0]?.data?.meta?.pagination?.total,
+          keterangan2: res[2]?.data?.meta?.pagination?.total,
+          keterangan3: res[1]?.data?.meta?.pagination?.total,
+          keterangan4: res[3]?.data?.meta?.pagination?.total,
+        })
+      })
+    );
+  }
+
+  const getKetaranganPublic = () => {
+    axios.all([
+      DashboardAPI.getKeteragan1Publik(), 
+      DashboardAPI.getKeteragan2Publik(),
+      DashboardAPI.getKeteragan3Publik(),
+      DashboardAPI.getKeteragan4Publik()]).then(
+      axios.spread((...res) => {
+        setState({
+          ...state,
+          keterangan1: res[0]?.data?.meta?.pagination?.total,
+          keterangan2: res[1]?.data?.meta?.pagination?.total,
+          keterangan3: res[2]?.data?.meta?.pagination?.total,
+          keterangan4: res[3]?.data?.meta?.pagination?.total,
+        })
+      })
+    );
+  }
+
+  const generateData = (e) => {
+    e.preventDefault()
+
+    let query = ""
+
+    if(JSON.parse(sessionStorage.getItem("auth"))?.user?.cp_role == 4){
+      if(document.getElementById("filter_registrant").value != ""){
+        query += `&filters[registrant][id][$eq]=${document.getElementById("filter_registrant").value}`
+      }
+      if (document.getElementById("filter_projection").value != ""){
+        query += `&filters[position][id][$eq]=${document.getElementById("filter_projection").value}`
+      }
+
+      if (document.getElementById("filter_category").value != ""){
+        query += `&filters[is_interview][$eq]=${document.getElementById("filter_category").value}`
+        DashboardAPI.getPenguji(query).then((res) => {
+          console.log(res.data)
+          if(res.data.data.length > 0){
+            setMappings(res.data.data)
+            setState({ ...state, visible: true })
+          }
+        })
+      } else {
+        setMessage("Pilih Kategori!")
+      }
+    } else {
+      if(document.getElementById("filter_registrant").value != ""){
+        query += `&filters[registrant][id][$eq]=${document.getElementById("filter_registrant").value}`
+      }
+      if (document.getElementById("filter_projection").value != ""){
+        query += `&filters[position][id][$eq]=${document.getElementById("filter_projection").value}`
+      }
+      if (document.getElementById("filter_category").value != ""){
+        query += `&filters[is_interview][$eq]=${document.getElementById("filter_category").value}`
+        DashboardAPI.getPublic(query).then((res) => {
+          console.log(res.data)
+          if(res.data.data.length > 0){
+            setMappings(res.data.data)
+            setState({ ...state, visible: true })
+          }
+        })
+      } else {
+        setMessage("Pilih Kategori!")
+      }
+    }    
+  }  
+
+  if(JSON.parse(sessionStorage.getItem("auth"))?.user?.cp_role != 4) {
+    return (
+      <CRow>
+        <CCol>
+          <CRow>
+            <CCol sm={6} md={3}>
+              <CWidgetStatsC
+                color="primary"
+                icon={<CIcon icon={cilChartPie} height={36} />}
+                value={ state.keterangan1 + " Orang"}
+                title="Jumlah Pegawai"
+                inverse
+                progress={{ value: 75 }}
+                className="mb-4"
+              />
+            </CCol>
+            <CCol sm={6} md={3}>
+              <CWidgetStatsC
+                color="info"
+                icon={<CIcon icon={cilPeople} height={36} />}
+                value={ state.keterangan2 + " Orang"}
+                title="Jumlah Peserta Fit & Proper"
+                inverse
+                progress={{ value: 75 }}
+                className="mb-4"
+              />
+            </CCol>
+            <CCol sm={6} md={3}>
+              <CWidgetStatsC
+                color="warning"
+                icon={<CIcon icon={cilBasket} height={36} />}
+                value={ state.keterangan3 + " Buah"}
+                title="Pengajuan Dalam Proses"
+                inverse
+                progress={{ value: 75 }}
+                className="mb-4"
+              />
+            </CCol>
+            <CCol sm={6} md={3}>
+              <CWidgetStatsC
+                color="danger"
+                icon={<CIcon icon={cilSpeedometer} height={36} />}
+                value={ state.keterangan4 + " Buah"}
+                title="Pengajuan Selesai"
+                inverse
+                progress={{ value: 75 }}
+                className="mb-4"
+              />   
+            </CCol>
+          </CRow>
+          <CRow>
+            <CCol xs={12}>
+              { message && <CAlert color="danger" dismissible onClose={() => { setMessage("") }}> { message } </CAlert> }
+            </CCol>             
+          </CRow>
+          <CRow>
+            <CCol xs={12} className="mt-2">
+              <CAccordion>
+                <CAccordionItem itemKey={1}>
+                  <CAccordionHeader><CIcon icon={cilSearch} style={{ marginRight: "10px" }}/>Pencarian Data</CAccordionHeader>
+                  <CAccordionBody>
+                    <CForm onSubmit={generateData}>
+                      <CRow className='mt-2'>
+                        <CCol xs={6}>
+                          <CFormLabel htmlFor="exampleFormControlInput1">Peserta</CFormLabel>
+                          <CFormSelect name="filter_registrant" id="filter_registrant" className="mb-3" aria-label="Large select example">
+                            <option value="">Pilih Peserta</option>
+                            { registrants?.map(registrant =>
+                              <option key={ registrant.id } value={ registrant.id } >{ registrant?.attributes?.employee?.data?.attributes?.Name }</option>
+                            )}
+                          </CFormSelect>
+                        </CCol>
+                        <CCol xs={6}>
+                          <CFormLabel htmlFor="filter_usefor">Proyeksi</CFormLabel>
+                          <CFormSelect name="filter_projection" id="filter_projection" className="mb-3" aria-label="Large select example">
+                            <option value="">Pilih Proyeksi</option>
+                            { projections?.map(projection =>
+                              <option value={ projection.id } key={ projection.id } >{ projection.attributes.position_name }</option>
+                            )}
+                          </CFormSelect>
+                        </CCol>
+                      </CRow>
+                      <CRow className='mt-2'>
+                        <CCol xs={12}>
+                          <CFormLabel htmlFor="exampleFormControlInput1">Kategori</CFormLabel>
+                          <CFormSelect name="filter_category" id="filter_category" className="mb-3" aria-label="Large select example">
+                            <option value="">Pilih Kategori</option>
+                            <option value="false">Fit & Proper</option>
+                            <option value="true">Wawancara</option>
+                          </CFormSelect>
+                        </CCol>
+                      </CRow>                      
+                      <CRow>
+                        <hr className='mt-4' style={{ marginLeft: "12px", width: "97.6%" }} />
+                      </CRow>
+                      <CRow>
+                        <CCol style={{ display: "flex", justifyContent: "right" }}>
+                          <CButton
+                              type='submit'
+                              color='primary'
+                              style={{ width:'10%', borderRadius: "50px", fontSize: "14px" }} >
+                              <CIcon icon={cilSearch} style={{ marginRight: "10px", color: "#FFFFFF" }}/>
+                                Cari
+                          </CButton>
+                        </CCol>
+                      </CRow>
+                    </CForm>
+                  </CAccordionBody>
+                </CAccordionItem>
+              </CAccordion>
+            </CCol>    
+            <CCol xs={12} >
+              { state.visible ? 
+                <CCard className="mt-3">
+                  <CCardHeader>
+                    <strong>Pencarian Data Fit Proper dan Wawancara</strong>
+                  </CCardHeader>
+                  <CCardBody style={{ overflowX: "auto"}}>
+                    <CTable striped className='mt-3 text-center'>
+                      <CTableHead>
+                        <CTableRow>
+                          <CTableHeaderCell scope="col">No</CTableHeaderCell>
+                          <CTableHeaderCell scope="col">Nama</CTableHeaderCell>
+                          <CTableHeaderCell scope="col">NIP</CTableHeaderCell>
+                          <CTableHeaderCell scope="col">Jabatan</CTableHeaderCell>
+                          <CTableHeaderCell scope="col">Proyeksi</CTableHeaderCell>
+                          <CTableHeaderCell scope="col">Uraian Jabatan</CTableHeaderCell>
+                          <CTableHeaderCell scope="col">Tanggal</CTableHeaderCell>
+                          <CTableHeaderCell scope="col">Penguji</CTableHeaderCell>
+                          <CTableHeaderCell scope="col">Lampiran File</CTableHeaderCell>
+                          <CTableHeaderCell scope="col">Action</CTableHeaderCell>
+                        </CTableRow>
+                      </CTableHead>
+                      <CTableBody>
+                        { mappings.map( (mapping, index) =>
+                          <CTableRow key={mapping.id}>
+                            <CTableHeaderCell scope="row">{ index+1 }</CTableHeaderCell>
+                            <CTableDataCell>{mapping?.attributes?.registrant?.data?.attributes?.employee?.data?.attributes.Name}</CTableDataCell>
+                            <CTableDataCell>{mapping?.attributes?.registrant?.data?.attributes?.employee?.data?.attributes.NIP}</CTableDataCell>
+                            <CTableDataCell>{mapping?.attributes?.registrant?.data?.attributes?.employee?.data?.attributes?.position?.data?.attributes?.position_name}</CTableDataCell>
+                            <CTableDataCell>{mapping?.attributes?.position?.data?.attributes?.position_name}</CTableDataCell>
+                            <CTableDataCell>{mapping?.attributes?.jobdesc}</CTableDataCell>
+                            <CTableDataCell>{mapping?.attributes?.schedule}</CTableDataCell>
+                            <CTableDataCell>
+                              <ul>
+                                { mapping.attributes.examiners.data.map(examiner  => (
+                                    <li style={{ textAlign: "left", marginBottom: "4px" }} key={examiner.id}>{examiner.attributes.employee.data.attributes.Name}</li>
+                                ))}
+                              </ul>
+                            </CTableDataCell>
+                            <CTableDataCell>
+                              <ul>
+                                  <li style={{ textAlign: "left", marginBottom: "4px" }}>
+                                    <p>CV</p>
+                                    <a target="_blank" href={url + mapping?.attributes?.registrant?.data?.attributes?.cv?.data?.attributes?.url }><CImage style={{ marginTop: "-10px", marginLeft: "-5px" }} src={logoPDF} height={35} /></a>
+                                  </li>
+                                  <li style={{ textAlign: "left" }}>
+                                    <p>PPT</p>
+                                    <a target="_blank" href={ url + mapping?.attributes?.registrant?.data?.attributes?.ppt?.data?.attributes?.url }><CImage style={{ marginTop: "-10px", marginLeft: "-5px" }} src={logoPDF} height={35} /></a>
+                                  </li>                            
+                              </ul>
+                            </CTableDataCell>
+                            <CTableDataCell>
+                              <CButton
+                                color='success'
+                                variant="outline"
+                                onClick={() => navigate(
+                                  '/fitandproper/datapenilaian/datanilai', 
+                                  { state: { position: mapping?.attributes?.position?.data?.id, registrant: mapping?.attributes?.registrant?.data?.id } }
+                                )}
+                                style={{width: '75px', marginBottom: '10px'}} >
+                                  Lihat Nilai
+                              </CButton>
+                            </CTableDataCell>
+                          </CTableRow>
+                        )}
+                      </CTableBody>
+                    </CTable>
+                  </CCardBody>
+                </CCard>
+                : null
+              }             
+            </CCol>          
+          </CRow>
+        </CCol>
+      </CRow>
+    )
+  } else {
+    return (
+      <CRow>
+        <CCol>
+          <CRow>
+            <CCol sm={6} md={3}>
+              <CWidgetStatsC
+                color="primary"
+                icon={<CIcon icon={cilChartPie} height={36} />}
+                value={ state.keterangan1 + " Buah"}
+                title="Fit & Proper Belum Dinilai"
+                inverse
+                progress={{ value: 75 }}
+                className="mb-4"
+              />
+            </CCol>
+            <CCol sm={6} md={3}>
+              <CWidgetStatsC
+                color="info"
+                icon={<CIcon icon={cilPeople} height={36} />}
+                value={ state.keterangan2 + " Buah"}
+                title="Wawancara Belum Dinilai"
+                inverse
+                progress={{ value: 75 }}
+                className="mb-4"
+              />
+            </CCol>
+            <CCol sm={6} md={3}>
+              <CWidgetStatsC
+                color="warning"
+                icon={<CIcon icon={cilBasket} height={36} />}
+                value={ state.keterangan3 + " Buah"}
+                title="Fit & Proper Telah Dinilai"
+                inverse
+                progress={{ value: 75 }}
+                className="mb-4"
+              />
+            </CCol>
+            <CCol sm={6} md={3}>
+              <CWidgetStatsC
+                color="danger"
+                icon={<CIcon icon={cilSpeedometer} height={36} />}
+                value={ state.keterangan4 + " Buah"}
+                title="Wawancara Telah Dinilai"
+                inverse
+                progress={{ value: 75 }}
+                className="mb-4"
+              />   
+            </CCol>    
+          </CRow>
+          <CRow>
+            <CCol xs={12}>
+              { message && <CAlert color="danger" dismissible onClose={() => { setMessage("") }}> { message } </CAlert> }
+            </CCol>             
+          </CRow>          
+          <CRow>
+            <CCol xs={12} className="mt-2">
+              <CAccordion>
+                <CAccordionItem itemKey={1}>
+                  <CAccordionHeader><CIcon icon={cilSearch} style={{ marginRight: "10px" }}/>Pencarian Data</CAccordionHeader>
+                  <CAccordionBody>
+                    <CForm onSubmit={generateData}>
+                      <CRow className='mt-2'>
+                        <CCol xs={6}>
+                          <CFormLabel htmlFor="exampleFormControlInput1">Peserta</CFormLabel>
+                          <CFormSelect name="filter_registrant" id="filter_registrant" className="mb-3" aria-label="Large select example">
+                            <option value="">Pilih Peserta</option>
+                            { registrants?.map(registrant =>
+                              <option key={ registrant.id } value={ registrant.id } >{ registrant?.attributes?.employee?.data?.attributes?.Name }</option>
+                            )}
+                          </CFormSelect>
+                        </CCol>
+                        <CCol xs={6}>
+                          <CFormLabel htmlFor="filter_usefor">Proyeksi</CFormLabel>
+                          <CFormSelect name="filter_projection" id="filter_projection" className="mb-3" aria-label="Large select example">
+                            <option value="">Pilih Proyeksi</option>
+                            { projections?.map(projection =>
+                              <option value={ projection.id } key={ projection.id } >{ projection.attributes.position_name }</option>
+                            )}
+                          </CFormSelect>
+                        </CCol>
+                      </CRow>
+                      <CRow className='mt-2'>
+                        <CCol xs={12}>
+                          <CFormLabel htmlFor="exampleFormControlInput1">Kategori</CFormLabel>
+                          <CFormSelect name="filter_category" id="filter_category" className="mb-3" aria-label="Large select example">
+                            <option value="">Pilih Kategori</option>
+                            <option value="false">Fit & Proper</option>
+                            <option value="true">Wawancara</option>
+                          </CFormSelect>
+                        </CCol>
+                      </CRow>
+                      <CRow>
+                        <hr className='mt-4' style={{ marginLeft: "12px", width: "97.6%" }} />
+                      </CRow>
+                      <CRow>
+                        <CCol style={{ display: "flex", justifyContent: "right" }}>
+                          <CButton
+                              type='submit'
+                              color='primary'
+                              style={{ width:'10%', borderRadius: "50px", fontSize: "14px" }} >
+                              <CIcon icon={cilSearch} style={{ marginRight: "10px", color: "#FFFFFF" }}/>
+                                Cari
+                          </CButton>
+                        </CCol>
+                      </CRow>
+                    </CForm>
+                  </CAccordionBody>
+                </CAccordionItem>
+              </CAccordion>
+            </CCol>    
+            <CCol xs={12} >
+              { state.visible ? 
+                <CCard className="mb-4 mt-3">
+                  <CCardHeader>
+                    <strong>Pencarian Data Fit Proper dan Wawancara</strong>
+                  </CCardHeader>
+                  <CCardBody style={{ overflowX: "auto"}}>
+                    <CTable striped className='mt-3 text-center'>
+                      <CTableHead>
+                        <CTableRow>
+                          <CTableHeaderCell scope="col">No</CTableHeaderCell>
+                          <CTableHeaderCell scope="col">Nama</CTableHeaderCell>
+                          <CTableHeaderCell scope="col">NIP</CTableHeaderCell>
+                          <CTableHeaderCell scope="col">Jabatan</CTableHeaderCell>
+                          <CTableHeaderCell scope="col">Proyeksi</CTableHeaderCell>
+                          <CTableHeaderCell scope="col">Tanggal</CTableHeaderCell>
+                          <CTableHeaderCell scope="col">Status</CTableHeaderCell>
+                          <CTableHeaderCell scope="col">Lampiran File</CTableHeaderCell>
+                          <CTableHeaderCell scope="col">Action</CTableHeaderCell>
+                        </CTableRow>
+                      </CTableHead>
+                      <CTableBody>
+                        { lineMappings.map( (linemapping, index) =>
+                          <CTableRow key={linemapping.id}>
+                            <CTableHeaderCell scope="row">{ index+1 }</CTableHeaderCell>
+                            <CTableDataCell>{linemapping?.attributes?.mapping?.data?.attributes?.registrant?.data?.attributes?.employee?.data?.attributes.Name}</CTableDataCell>
+                            <CTableDataCell>{linemapping?.attributes?.mapping?.data?.attributes?.registrant?.data?.attributes?.employee?.data?.attributes.NIP}</CTableDataCell>
+                            <CTableDataCell>{linemapping?.attributes?.mapping?.data?.attributes?.registrant?.data?.attributes?.employee?.data?.attributes?.position?.data?.attributes?.position_name}</CTableDataCell>
+                            <CTableDataCell>{linemapping?.attributes?.mapping?.data?.attributes?.position?.data?.attributes?.position_name}</CTableDataCell>
+                            <CTableDataCell>{linemapping?.attributes?.mapping?.data?.attributes?.schedule}</CTableDataCell>
+                            <CTableDataCell>{linemapping?.attributes?.status_fitproper ? "Sudah Dinilai" : "Belum Dinilai"}</CTableDataCell>
+                            <CTableDataCell>
+                              <ul>
+                                  <li style={{ textAlign: "left", marginBottom: "4px" }}>
+                                    <p>CV</p>
+                                    <a target="_blank" href={url + linemapping?.attributes?.mapping?.data?.attributes?.registrant?.data?.attributes?.cv?.data?.attributes?.url }><CImage style={{ marginTop: "-10px", marginLeft: "-5px" }} src={logoPDF} height={35} /></a>
+                                  </li>
+                                  <li style={{ textAlign: "left" }}>
+                                    <p>PPT</p>
+                                    <a target="_blank" href={ url + linemapping?.attributes?.mapping?.data?.attributes?.registrant?.data?.attributes?.ppt?.data?.attributes?.url }><CImage style={{ marginTop: "-10px", marginLeft: "-5px" }} src={logoPDF} height={35} /></a>
+                                  </li>                            
+                              </ul>
+                            </CTableDataCell>
+                            <CTableDataCell>
+                              { (linemapping?.attributes?.status_fitproper && !linemapping?.attributes?.is_interview) ? 
+                                <CButton
+                                  color='primary'
+                                  variant="outline" 
+                                  onClick={() => setChosenLineMapping({ 
+                                    visible: true, 
+                                    lineMapping: linemapping
+                                  })}
+                                  style={{marginLeft: '10px', marginBottom: '10px'}} >
+                                    Ajukan
+                                </CButton>
+                                : null
+                              }
+                              { (linemapping?.attributes?.status_fitproper) ? 
+                                <CButton
+                                  color='success'
+                                  variant="outline"
+                                  onClick={() => navigate(
+                                    '/fitandproper/datapenilaian/datanilai', 
+                                    { state: { 
+                                        position: linemapping?.attributes?.mapping?.data?.attributes?.position?.data?.id, 
+                                        registrant: linemapping?.attributes?.mapping?.data?.attributes?.registrant?.data?.id,
+                                        examiner: linemapping?.attributes?.examiner?.data?.id
+                                    }}
+                                  )}
+                                  style={{marginLeft: '10px', marginBottom: '10px', width: "80px"}} >
+                                    Lihat Nilai
+                                </CButton>
+                                : null
+                              }
+                              { (linemapping?.attributes?.status_fitproper) ? 
+                                <CButton
+                                  color='warning'
+                                  variant="outline"
+                                  onClick={() => navigate(
+                                    '/fitandproper/datapenilaian/nilai/edit', 
+                                    { state: { data: linemapping }}
+                                  )}
+                                  style={{marginLeft: '10px', marginBottom: '10px', width: "80px"}} >
+                                    Edit
+                                </CButton>
+                                : null
+                              }                      
+                              { (!linemapping?.attributes?.status_fitproper) ?
+                                <CButton
+                                  color='primary'
+                                  variant="outline" 
+                                  onClick={() => navigate(
+                                    '/fitandproper/datapenilaian/nilai', 
+                                    { state: { data: linemapping } }
+                                  )}
+                                  style={{marginLeft: '10px', marginBottom: '10px'}} >
+                                    Nilai
+                                </CButton>
+                                : null
+                              }                              
+                            </CTableDataCell>
+                          </CTableRow>
+                        )}
+                      </CTableBody>
+                    </CTable>
+                    <CModal backdrop="static" visible={chosenLineMapping.visible} onClose={() => setChosenLineMapping({ visible: false })}>
+                      <CModalHeader>
+                        <CModalTitle>Apakah Anda Yakin?</CModalTitle>
+                      </CModalHeader>
+                      <CModalBody>
+                        Dengan ini peserta akan melanjutkan penilaian ke tahap wawancara, yang akan dilaksanakan pada:
+                        <CRow className='mt-2'>
+                          <CCol>
+                            <CFormInput 
+                              type="date" 
+                              id="schedule" 
+                              name="schedule"
+                              placeholder='Masukkan Tanggal'/>                    
+                          </CCol>
+                        </CRow>
+                      </CModalBody>
+                      <CModalFooter>
+                        <CButton color="secondary" onClick={() => setChosenLineMapping({ visible: false })}>
+                          Close
                         </CButton>
-                      </CCol>
-                    </CRow>
-                  </CForm>
-                </CAccordionBody>
-              </CAccordionItem>
-            </CAccordion>
-          </CCol>    
-        </CRow>
-      </CCol>
-    </CRow>
-  )
+                        <CButton color="primary" onClick={() => daftarWawancara()}>Submit</CButton>
+                      </CModalFooter>
+                    </CModal>             
+                  </CCardBody>
+                </CCard>
+                : null
+              }             
+            </CCol>          
+          </CRow>
+        </CCol>
+      </CRow>
+    )      
+  }
+
 }
 
 export default Dashboard
