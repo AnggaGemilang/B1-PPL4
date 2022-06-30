@@ -55,17 +55,37 @@ const TambahPeserta = () => {
     if(state.namaKaryawan.length > 0){
       const body = {
         data: {
-          employee: state.idKaryawan
+          employee: state.idKaryawan,
+          status: 'active'
         }
       }
-      DataPesertaAPI.add(body).then(
+      DataPesertaAPI.findRegistrants(`&filters[employee][NIP][$eq]=${nipValue}`).then(
         (res) => {
-          navigate('/datapeserta', {state: { successMessage: 'Peserta Telah Berhasil Ditambahkan!' } })
-        },
-        (err) => {
-          setState({ ...state, visibleSubmit: false, errorMessage: "" })
+          if(res.data.data.length == 0){
+            DataPesertaAPI.add(body).then(
+              (res) => {
+                navigate('/datapeserta', {state: { successMessage: 'Peserta Telah Berhasil Ditambahkan!' } })
+              },
+              (err) => {
+                setState({ ...state, visibleSubmit: false, errorMessage: "" })
+              }
+            )   
+          } else {
+            if(res?.data?.data[0]?.attributes?.status == "non_active"){
+              DataPesertaAPI.edit(res?.data?.data[0]?.id, body).then(
+                (res) => {
+                  navigate('/datapeserta', {state: { successMessage: 'Peserta Telah Diaktifkan Kembali!' } })
+                },
+                (err) => {
+                  setState({ ...state, visibleSubmit: false, errorMessage: "" })
+                }
+              )   
+            } else {
+              setState({ ...state, visibleSubmit: false, errorMessage: "Pegawai sudah menjadi peserta" })
+            }
+          }
         }
-      )    
+      ) 
     } else {
       setState({ ...state, visibleSubmit: false, errorMessage: "Masukkan NIP Dengan Benar!" })
     }
