@@ -64,7 +64,7 @@ const Criteria = () => {
       query += `&filters[defaultUsed][$eq]=${document.getElementById("filter_defaultused").value}`
     }
     if(document.getElementById("filter_usefor").value.length != 0){
-      query += `&filters[useFor][$eq]=${document.getElementById("filter_usefor").value}`
+      query += `&filters[useFor][$contains]=${document.getElementById("filter_usefor").value}`
     }
 
     CriteriaAPI.find(query).then(
@@ -141,6 +141,7 @@ const Criteria = () => {
                         <option value="">Pilih Penggunaan</option>
                         <option value="am">Manajemen Atas</option>
                         <option value="md">Manajemen Dasar</option>
+                        <option value="am/md">Manajemen Dasar/Manajemen Atas</option>
                       </CFormSelect>
                     </CCol>
                   </CRow>
@@ -203,7 +204,9 @@ const Criteria = () => {
                       <CTableDataCell>{criteria.attributes.defaultUsed == "fitproper" ? "Fit & Proper" : "Wawancara"}</CTableDataCell>
                       <CTableDataCell>{
                         criteria.attributes.defaultUsed == "fitproper" 
-                          ? criteria.attributes.useFor == "am" ? "Manajemen Atas" : "Manajemen Dasar"
+                          ? criteria.attributes.useFor == "am" ? "Manajemen Atas" 
+                            : criteria.attributes.useFor == "md" ? "Manajemen Dasar" 
+                              : "Manajemen Atas/Manajemen Dasar"
                           : "-"}
                       </CTableDataCell>
                       <CTableDataCell>

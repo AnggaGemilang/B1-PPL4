@@ -69,38 +69,45 @@ const TambahPenguji = () => {
           employee: state?.employee?.id
         }
       }
-      DataPengujiAPI.add(body).then(
+      DataPengujiAPI.findExaminers(`&filters[employee][NIP][$eq]=${state?.employee?.attributes?.NIP}`).then(
         (res) => {
-          let body = {}
-          AdministrasiUserAPI.find(state?.employee?.attributes?.NIP).then(res => {
-            if(res.length != 0){
-              body = {
-                role: 4,
-                cp_role: 4
+          if(res.data.data.length == 0){
+            DataPengujiAPI.add(body).then(
+              (res) => {
+                let body = {}
+                AdministrasiUserAPI.find(state?.employee?.attributes?.NIP).then(res => {
+                  if(res.length != 0){
+                    body = {
+                      role: 4,
+                      cp_role: 4
+                    }
+                    AdministrasiUserAPI.edit(state?.employee?.attributes?.account?.data?.id, body).then(res => {
+                      navigate('/datapenguji', {state: { successMessage: 'Penguji Berhasil Ditambahkan' } })
+                    })
+                  } else {
+                    body = {
+                      username : generateSlug(state?.employee?.attributes?.Name),
+                      email : state?.employee?.attributes?.Email.toLowerCase(),
+                      password: state?.employee?.attributes?.NIP,
+                      role: 4,
+                      employee: state?.employee?.id,
+                      cp_role: 4,
+                      cp_photo: state?.employee?.attributes?.Photo?.data?.attributes?.formats?.thumbnail?.url,
+                    }
+                    AdministrasiUserAPI.add(body).then(res => {
+                      navigate('/datapenguji', {state: { successMessage: 'Penguji Berhasil Ditambahkan' } })
+                    })
+                  }
+                })
+              }, (err) => {
+                setState({ ...state, visibleSubmit: false, errorMessage: err.message })
               }
-              AdministrasiUserAPI.edit(state?.employee?.attributes?.account?.data?.id, body).then(res => {
-                navigate('/datapenguji', {state: { successMessage: 'Penguji Berhasil Ditambahkan' } })
-              })
-            } else {
-              body = {
-                username : generateSlug(state?.employee?.attributes?.Name),
-                email : state?.employee?.attributes?.Email.toLowerCase(),
-                password: state?.employee?.attributes?.NIP,
-                role: 4,
-                employee: state?.employee?.id,
-                cp_role: 4,
-                cp_photo: state?.employee?.attributes?.Photo?.data?.attributes?.formats?.thumbnail?.url,
-              }
-              AdministrasiUserAPI.add(body).then(res => {
-                navigate('/datapenguji', {state: { successMessage: 'Penguji Berhasil Ditambahkan' } })
-              })
-            }
-          })
-        },
-        (err) => {
-          setState({ ...state, visibleSubmit: false, errorMessage: "" })
+            )              
+          } else {
+            setState({ ...state, visibleSubmit: false, errorMessage: "Pegawai Sudah Menjadi Penguji!" })            
+          }
         }
-      )    
+      )  
     } else {
       setState({ ...state, visibleSubmit: false, errorMessage: "Masukkan NIP Dengan Benar!" })
     }

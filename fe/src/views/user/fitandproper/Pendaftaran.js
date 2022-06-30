@@ -37,8 +37,8 @@ const Pendaftaran = () => {
   const [examiners1, setExaminers1] = useState([])
   const [examiners2, setExaminers2] = useState([])
   const [examiners3, setExaminers3] = useState([])
-  const [positions, setPositions] = useState([])
   const [criterias, setCriterias] = useState([])
+  const [positions, setPositions] = useState([])
   const [levels, setLevels] = useState([])
   const [state, setState] = useState({
     errorMessage: "",
@@ -47,7 +47,7 @@ const Pendaftaran = () => {
     registrant: {},
     data: location?.state?.data,
     status: location?.state?.status,
-    visibleSubmit: false,    
+    visibleSubmit: false
   })
 
   useEffect(() => {
@@ -60,8 +60,17 @@ const Pendaftaran = () => {
             ...state,
             registrant: res.data.data[0],
           });
-        } 
-        else {
+          CriteriaAPI.find(res.data.data[0]?.attributes?.employee?.data?.attributes?.level?.data?.attributes?.functional_name.includes("Manajemen Dasar") ? "&filters[useFor][$contains]=md" : "&filters[useFor][$contains]=am").then(
+            (res) => {
+              if(res.data.data.length != 0){
+                setCriterias(res.data.data)
+                console.log(res.data.data)
+              } else {
+                setCriterias([])
+              }
+            }
+          )          
+        } else {
           setState({ 
             ...state, 
             registrant: {}
@@ -69,11 +78,10 @@ const Pendaftaran = () => {
         }
       });
     }
-    axios.all([PositionAPI.get(), CriteriaAPI.get(), LevelAPI.get()]).then(
+    axios.all([PositionAPI.get(), LevelAPI.get()]).then(
       axios.spread((...res) => {
         setPositions(res[0]?.data.data),
-        setCriterias(res[1]?.data.data)
-        setLevels(res[2]?.data.data)
+        setLevels(res[1]?.data.data)
       })
     );
   }, [nipValue])
@@ -137,9 +145,9 @@ const Pendaftaran = () => {
             }; 
             FitAndProperAPI.addLineMapping(body).then(
               (res) => {
-                console.log(res)
+                console.log("LINE MAPPING")
+                console.log(criterias)
                 for(let i = 0; i < criterias.length; i++){
-                  console.log(criterias[i].id)
                   const body = {
                     data : {
                       line_mapping_fitproper: res.data.data.id,
@@ -150,8 +158,12 @@ const Pendaftaran = () => {
                       type: 1
                     }
                   }
-                  ScoreAPI.add(body).then(res => {
-                    console.log("Data tersimpan dengan aman")
+                  console.log(body)
+                  ScoreAPI.add(body).then(
+                    (res) => {
+                      console.log("Data tersimpan dengan aman")
+                    }, (err) => {
+                      console.log(err)
                   })
                 }
               }, 
@@ -160,7 +172,7 @@ const Pendaftaran = () => {
                 setState({ ...state, visibleSubmit: false })
               }
             )
-          }
+          }          
           if(state?.registrant?.attributes?.cv?.data != null){
             DataPesertaAPI.deletePhoto(state?.registrant?.attributes?.cv?.data?.id).then(res => {
               console.log("CV Dihapus dulu")
@@ -388,7 +400,7 @@ const Pendaftaran = () => {
                     <div className="col-sm-10">
                       <CFormSelect name="projection" id="projection" aria-label="Large select example">
                         <option>Pilih Proyeksi</option>
-                        { positions.map(position =>
+                        { positions?.map(position =>
                           <option selected={state.status == "edit" && state?.data?.attributes?.position?.data?.id == position.id } value={ position.id } key={ position.id } >{ position.attributes.position_name }</option>
                         )}
                       </CFormSelect>
@@ -401,7 +413,7 @@ const Pendaftaran = () => {
                     <div className="col-sm-10">
                       <CFormSelect name="level" id="level" aria-label="Large select example">
                         <option>Pilih Jenjang</option>
-                        { levels.map(level =>
+                        { levels?.map(level =>
                           <option selected={state.status == "edit" && state?.data?.attributes?.level?.data?.id == level.id } value={ level.id } key={ level.id } >{ level.attributes.functional_name } - { level.attributes.structural_name }</option>
                         )}
                       </CFormSelect>
@@ -463,7 +475,7 @@ const Pendaftaran = () => {
                           setExaminers2(deleteNode(e.target.value, examiners1))
                         }>
                         <option value="0">Pilih Penguji 1</option>
-                        { examiners1.map(examiner =>
+                        { examiners1?.map(examiner =>
                           <option selected={state.status == "edit" && state?.data?.attributes?.examiners?.data[0]?.id == examiner?.id } value={examiner?.id} key={examiner?.id}>{examiner?.attributes?.employee?.data?.attributes?.Name}</option>                      
                         )}
                       </CFormSelect>
@@ -482,7 +494,7 @@ const Pendaftaran = () => {
                           setExaminers3(deleteNode(e.target.value, examiners2))
                         }>
                         <option value="0">Pilih Penguji 2</option>
-                        { examiners2.map(examiner =>
+                        { examiners2?.map(examiner =>
                           <option selected={state.status == "edit" && state?.data?.attributes?.examiners?.data[1]?.id == examiner?.id } value={examiner?.id} key={examiner?.id}>{examiner?.attributes?.employee?.data?.attributes?.Name}</option>                      
                         )}
                       </CFormSelect>
@@ -495,7 +507,7 @@ const Pendaftaran = () => {
                     <div className="col-sm-10">
                       <CFormSelect name="penguji3" id="penguji3" aria-label="Large select example">
                         <option value="0">Pilih Penguji 3</option>
-                        { examiners3.map(examiner =>
+                        { examiners3?.map(examiner =>
                           <option selected={state.status == "edit" && state?.data?.attributes?.examiners?.data[2]?.id == examiner?.id } value={examiner?.id} key={examiner?.id}>{examiner?.attributes?.employee?.data?.attributes?.Name}</option>                      
                         )}
                       </CFormSelect>
