@@ -62,7 +62,7 @@ const Division = () => {
       query += `&filters[division_name][$contains]=${document.getElementById("filter_nama").value}`
     }
     if(document.getElementById("filter_directorate").value.length != 0){
-      query += `&filters[directorates][id][$eq]=${document.getElementById("filter_directorate").value}`
+      query += `&filters[directorate][id][$eq]=${document.getElementById("filter_directorate").value}`
     }
 
     DivisionAPI.find(query).then(
@@ -101,7 +101,7 @@ const Division = () => {
                 <CForm onSubmit={filterSearch}>
                   <CRow className='mt-2'>
                     <CCol xs={6}>
-                      <CFormLabel htmlFor="exampleFormControlInput1">Nama Divisi</CFormLabel>
+                      <CFormLabel htmlFor="filter_nama">Nama Divisi</CFormLabel>
                       <CFormInput
                         type="text"
                         name='filter_nama'
@@ -110,7 +110,7 @@ const Division = () => {
                       />
                     </CCol>
                     <CCol xs={6}>
-                      <CFormLabel htmlFor="exampleFormControlInput1">Direktorat</CFormLabel>
+                      <CFormLabel htmlFor="filter_directorate">Direktorat</CFormLabel>
                       <CFormSelect name="filter_directorate" id="filter_directorate" className="mb-3" aria-label="Large select example">
                         <option value="">Pilih Direktorat</option>
                         { directorates.map(directorate =>
@@ -177,7 +177,7 @@ const Division = () => {
                         <CButton 
                           color={'warning'} 
                           variant="outline" 
-                          style={{width: '75px', marginBottom: '10px'}}                            
+                          style={{width: '75px', margin: '5px 5px'}}
                           onClick={() => navigate(
                             '/division/edit', 
                             {state: { data: division, status: 'edit' }})}>
@@ -185,6 +185,7 @@ const Division = () => {
                         <CButton 
                           color={'danger'} 
                           variant="outline" 
+                          style={{margin: '5px 5px'}}
                           onClick={() => setChosenDivision({ 
                             visible: true, 
                             id: division.id, 

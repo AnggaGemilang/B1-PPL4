@@ -62,7 +62,7 @@ const Grade = () => {
       query += `&filters[position_name][$contains]=${document.getElementById("filter_nama").value}`
     }
     if(document.getElementById("filter_grade").value.length != 0){
-      query += `&filters[grades][id][$eq]=${document.getElementById("filter_grade").value}`
+      query += `&filters[grade][id][$eq]=${document.getElementById("filter_grade").value}`
     }
 
     PositionAPI.find(query).then(
@@ -101,7 +101,7 @@ const Grade = () => {
                 <CForm onSubmit={filterSearch}>
                   <CRow className='mt-2'>
                     <CCol xs={6}>
-                      <CFormLabel htmlFor="exampleFormControlInput1">Jabatan</CFormLabel>
+                      <CFormLabel htmlFor="filter_nama">Jabatan</CFormLabel>
                       <CFormInput
                         type="text"
                         name='filter_nama'
@@ -110,7 +110,7 @@ const Grade = () => {
                       />
                     </CCol>
                     <CCol xs={6}>
-                      <CFormLabel htmlFor="exampleFormControlInput1">Grade</CFormLabel>
+                      <CFormLabel htmlFor="filter_grade">Grade</CFormLabel>
                       <CFormSelect name="filter_grade" id="filter_grade" className="mb-3" aria-label="Large select example">
                         <option value="">Pilih Grade</option>
                         { grades.map(grade =>
@@ -177,6 +177,7 @@ const Grade = () => {
                         <CButton 
                           color={'warning'} 
                           variant="outline"
+                          style={{width: '75px', margin: '5px 5px'}}
                           onClick={() => navigate(
                             '/position/edit', 
                             {state: { data: position, status: 'edit' }})}>
@@ -184,7 +185,7 @@ const Grade = () => {
                         <CButton 
                           color={'danger'} 
                           variant="outline" 
-                          style={{marginLeft: '10px'}}
+                          style={{margin: '5px 5px'}}
                           onClick={() => setChosenPosition({ 
                             visible: true, 
                             id: position.id, 

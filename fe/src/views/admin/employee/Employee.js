@@ -36,6 +36,7 @@ import EmployeeAPI from '../../../config/admin/EmployeeAPI'
 import PositionAPI from '../../../config/admin/PositionAPI'
 import LevelAPI from '../../../config/admin/LevelAPI'
 import SubFieldAPI from '../../../config/admin/SubFieldAPI'
+import axios from "axios";
 
 const Employee = () => {
   const location = useLocation()
@@ -92,14 +93,14 @@ const Employee = () => {
     if(document.getElementById("filter_religion").value.length != 0){
       query += `&filters[Religion][$contains]=${document.getElementById("filter_religion").value}`
     }
-    if(document.getElementById("filter_grade").value.length != 0){
-      query += `&filters[grades][id][$eq]=${document.getElementById("filter_grade").value}`
+    if(document.getElementById("filter_position").value.length != 0){
+      query += `&filters[position][id][$eq]=${document.getElementById("filter_position").value}`
     }
     if(document.getElementById("filter_level").value.length != 0){
-      query += `&filters[levels][id][$eq]=${document.getElementById("filter_level").value}`
+      query += `&filters[level][id][$eq]=${document.getElementById("filter_level").value}`
     }
     if(document.getElementById("filter_subfield").value.length != 0){
-      query += `&filters[sub_fields][id][$eq]=${document.getElementById("filter_subfield").value}`
+      query += `&filters[sub_field][id][$eq]=${document.getElementById("filter_subfield").value}`
     }    
 
     EmployeeAPI.find(query).then(
@@ -116,7 +117,6 @@ const Employee = () => {
 
   const getData = () => {
     EmployeeAPI.get().then((res) => {
-      console.log(res.data.data)
       setEmployees(res.data.data)
     })
   }
@@ -140,7 +140,7 @@ const Employee = () => {
                 <CForm onSubmit={filterSearch}>
                   <CRow className='mt-2'>
                     <CCol xs={6}>
-                      <CFormLabel htmlFor="exampleFormControlInput1">NIP</CFormLabel>
+                      <CFormLabel htmlFor="filter_nip">NIP</CFormLabel>
                       <CFormInput
                         type="text"
                         name='filter_nip'
@@ -149,7 +149,7 @@ const Employee = () => {
                       />
                     </CCol>
                     <CCol xs={6}>
-                      <CFormLabel htmlFor="exampleFormControlInput1">Nama Lengkap</CFormLabel>
+                      <CFormLabel htmlFor="filter_nama">Nama Lengkap</CFormLabel>
                       <CFormInput
                         type="text"
                         name='filter_nama'
@@ -160,7 +160,7 @@ const Employee = () => {
                   </CRow>
                   <CRow className='mt-3'>
                     <CCol xs={6}>
-                      <CFormLabel htmlFor="gender">Jenis Kelamin</CFormLabel>                      
+                      <CFormLabel>Jenis Kelamin</CFormLabel>                      
                       <CCol xs={12}>
                         <CFormCheck
                           inline
@@ -189,27 +189,27 @@ const Employee = () => {
                       </CCol>
                     </CCol>
                     <CCol xs={6}>
-                      <CFormLabel htmlFor="exampleFormControlInput1">Tempat Lahir</CFormLabel>
+                      <CFormLabel htmlFor="filter_birthplace">Tempat Lahir</CFormLabel>
                       <CFormInput type="text" name="filter_birthplace" id="filter_birthplace" placeholder='Enter Birth Place . . .' />
                     </CCol>
                   </CRow>
                   <CRow className='mt-3'>
                     <CCol xs={6}>
-                      <CFormLabel htmlFor="exampleFormControlInput1">Tanggal Lahir</CFormLabel>
+                      <CFormLabel htmlFor="filter_birthDate">Tanggal Lahir</CFormLabel>
                       <CFormInput type="date" name="filter_birthDate" id="filter_birthDate"/>
                     </CCol>
                     <CCol xs={6}>
-                      <CFormLabel htmlFor="exampleFormControlInput1">Email</CFormLabel>
+                      <CFormLabel htmlFor="filter_email">Email</CFormLabel>
                       <CFormInput type="email" name="filter_email" id="filter_email" placeholder='Enter Email . . .'/>
                     </CCol>
                   </CRow> 
                   <CRow className='mt-3'>
                     <CCol xs={6}>
-                      <CFormLabel htmlFor="exampleFormControlInput1">Nomor Handphone</CFormLabel>
+                      <CFormLabel htmlFor="filter_phonenumber">Nomor Handphone</CFormLabel>
                       <CFormInput type="number" name="filter_phonenumber" id="filter_phonenumber" placeholder='Enter Phone Number . . .'/>
                     </CCol>
                     <CCol xs={6}>
-                      <CFormLabel htmlFor="exampleFormControlInput1">Agama</CFormLabel>
+                      <CFormLabel htmlFor="filter_religion">Agama</CFormLabel>
                       <CFormSelect name="filter_religion" id="filter_religion" className="mb-3" aria-label="Large select example">
                         <option value="">Choose Religion</option>
                         <option value="Islam">Islam</option>
@@ -222,8 +222,8 @@ const Employee = () => {
                   </CRow> 
                   <CRow className='mt-3'>
                     <CCol xs={6}>
-                      <CFormLabel htmlFor="exampleFormControlInput1">Jabatan</CFormLabel>
-                      <CFormSelect name="filter_grade" id="filter_grade" className="mb-3" aria-label="Large select example">
+                      <CFormLabel htmlFor="filter_position">Jabatan</CFormLabel>
+                      <CFormSelect name="filter_position" id="filter_position" className="mb-3" aria-label="Large select example">
                         <option value="">Pilih Jabatan</option>
                         { positions.map(position =>
                           <option key={ position.id } value={ position.id } >{ position.attributes.position_name }</option>
@@ -231,7 +231,7 @@ const Employee = () => {
                       </CFormSelect>
                     </CCol>
                     <CCol xs={6}>
-                      <CFormLabel htmlFor="exampleFormControlInput1">Jenjang</CFormLabel>
+                      <CFormLabel htmlFor="filter_level">Jenjang</CFormLabel>
                       <CFormSelect name="filter_level" id="filter_level" className="mb-3" aria-label="Large select example">
                         <option value="">Pilih Jenjang</option>
                         { levels.map(level =>
@@ -242,7 +242,7 @@ const Employee = () => {
                   </CRow>
                   <CRow className='mt-3'>
                     <CCol xs={12}>
-                      <CFormLabel htmlFor="exampleFormControlInput1">Sub Bidang</CFormLabel>
+                      <CFormLabel htmlFor="filter_subfield">Sub Bidang</CFormLabel>
                       <CFormSelect name="filter_subfield" id="filter_subfield" className="mb-3" aria-label="Large select example">
                         <option value="">Pilih Sub Bidang</option>
                         { subfields.map(subfield =>
@@ -333,14 +333,15 @@ const Employee = () => {
                         <CButton 
                           color={'warning'} 
                           variant="outline" 
-                          style={{width: '75px', marginBottom: '10px'}}
+                          style={{width: '75px', margin: '5px 5px'}}
                           onClick={() => 
                             navigate('/employee/edit', {state: { data: employee, status: 'edit' } })
                           }>
                           Edit</CButton>
                         <CButton 
                           color={'danger'} 
-                          variant="outline" 
+                          variant="outline"
+                          style={{margin: '5px 5px'}}                          
                           onClick={() => setChosenEmployee({ 
                             visible: true, 
                             id: employee.id, 

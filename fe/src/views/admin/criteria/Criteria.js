@@ -40,6 +40,7 @@ const Criteria = () => {
   const [message, setMessage] = useState("")
   const [chosenCriteria, setChosenCriteria] = useState({
     visible: false,
+    visiblePenggunaan: false,
     name: "",
     id: 0,
   })
@@ -123,15 +124,20 @@ const Criteria = () => {
                   <CRow className='mt-3'>
                     <CCol xs={6}>
                       <CFormLabel htmlFor="filter_defaultused">Kategori</CFormLabel>
-                      <CFormSelect name="filter_defaultused" id="filter_defaultused" className="mb-3" aria-label="Large select example">
-                        <option value="">Pilih Kategori</option>
-                        <option value="fitproper">Fit & Proper</option>
-                        <option value="interview">Wawancara</option>
+                      <CFormSelect 
+                        name="filter_defaultused" 
+                        id="filter_defaultused" 
+                        className="mb-3" 
+                        aria-label="Large select example"
+                        onChange={(e) => (e.target.value == "fitproper") ? setChosenCriteria({ ...chosenCriteria, visiblePenggunaan: true }) : setChosenCriteria({ ...chosenCriteria, visiblePenggunaan: false }) }>
+                          <option value="">Pilih Kategori</option>
+                          <option value="fitproper">Fit & Proper</option>
+                          <option value="interview">Wawancara</option>
                       </CFormSelect>
                     </CCol>
                     <CCol xs={6}>
                       <CFormLabel htmlFor="filter_usefor">Penggunaan</CFormLabel>
-                      <CFormSelect name="filter_usefor" id="filter_usefor" className="mb-3" aria-label="Large select example">
+                      <CFormSelect name="filter_usefor" id="filter_usefor" className="mb-3" aria-label="Large select example" disabled={ chosenCriteria.visiblePenggunaan == false }>
                         <option value="">Pilih Penggunaan</option>
                         <option value="am">Manajemen Atas</option>
                         <option value="md">Manajemen Dasar</option>
@@ -204,7 +210,7 @@ const Criteria = () => {
                         <CButton 
                           color={'warning'} 
                           variant="outline"
-                          style={{width: '75px'}}
+                          style={{width: '75px', margin: '5px 5px'}}
                           onClick={() => navigate(
                             '/criteria/edit', 
                             {state: { data: criteria, status: 'edit' }})}>
@@ -213,7 +219,7 @@ const Criteria = () => {
                         <CButton 
                           color={'danger'} 
                           variant="outline" 
-                          style={{marginTop: '10px'}}
+                          style={{margin: '5px 5px'}}
                           onClick={() => setChosenCriteria({ 
                             visible: true, 
                             id: criteria.id, 

@@ -62,7 +62,7 @@ const Field = () => {
       query += `&filters[field_name][$contains]=${document.getElementById("filter_nama").value}`
     }
     if(document.getElementById("filter_division").value.length != 0){
-      query += `&filters[divisions][id][$eq]=${document.getElementById("filter_division").value}`
+      query += `&filters[division][id][$eq]=${document.getElementById("filter_division").value}`
     }
 
     FieldAPI.find(query).then(
@@ -101,7 +101,7 @@ const Field = () => {
                 <CForm onSubmit={filterSearch}>
                   <CRow className='mt-2'>
                     <CCol xs={6}>
-                      <CFormLabel htmlFor="exampleFormControlInput1">Name Bidang</CFormLabel>
+                      <CFormLabel htmlFor="filter_nama">Name Bidang</CFormLabel>
                       <CFormInput
                         type="text"
                         name='filter_nama'
@@ -110,7 +110,7 @@ const Field = () => {
                       />
                     </CCol>
                     <CCol xs={6}>
-                      <CFormLabel htmlFor="exampleFormControlInput1">Divisi</CFormLabel>
+                      <CFormLabel htmlFor="filter_division">Divisi</CFormLabel>
                       <CFormSelect name="filter_division" id="filter_division" className="mb-3" aria-label="Large select example">
                         <option value="">Pilih Divisi</option>
                         { divisions.map(division =>
@@ -177,7 +177,7 @@ const Field = () => {
                         <CButton 
                           color={'warning'} 
                           variant="outline" 
-                          style={{width: '75px', marginBottom: '10px'}}
+                          style={{width: '75px', margin: '5px 5px'}}
                           onClick={() => navigate(
                             '/field/edit', 
                             {state: { data: field, status: 'edit' }})}>
@@ -185,7 +185,8 @@ const Field = () => {
                         </CButton>
                         <CButton 
                           color={'danger'} 
-                          variant="outline" 
+                          variant="outline"
+                          style={{margin: '5px 5px'}}
                           onClick={() => setChosenField({ 
                             visible: true, 
                             id: field.id, 

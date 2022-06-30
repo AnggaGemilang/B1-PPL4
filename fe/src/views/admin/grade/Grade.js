@@ -93,7 +93,7 @@ const Grade = () => {
                 <CForm onSubmit={filterSearch}>
                   <CRow className='mt-2'>
                     <CCol xs={12}>
-                      <CFormLabel htmlFor="exampleFormControlInput1">Nama Grade</CFormLabel>
+                      <CFormLabel htmlFor="filter_nama">Nama Grade</CFormLabel>
                       <CFormInput
                         type="text"
                         name='filter_nama'
@@ -158,6 +158,7 @@ const Grade = () => {
                         <CButton 
                           color={'warning'} 
                           variant="outline" 
+                          style={{width: '75px', margin: '5px 5px'}}
                           onClick={() => navigate(
                             '/grade/edit', 
                             {state: { data: grade, status: 'edit' }})}>
@@ -165,8 +166,8 @@ const Grade = () => {
                         </CButton>
                         <CButton 
                           color={'danger'} 
-                          variant="outline" 
-                          style={{marginLeft: '10px'}}
+                          variant="outline"
+                          style={{margin: '5px 5px'}}
                           onClick={() => setChosenGrade({ 
                             visible: true, 
                             id: grade.id, 

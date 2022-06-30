@@ -62,7 +62,7 @@ const Directorate = () => {
       query += `&filters[directorate_name][$contains]=${document.getElementById("filter_nama").value}`
     }
     if(document.getElementById("filter_unit").value.length != 0){
-      query += `&filters[units][id][$eq]=${document.getElementById("filter_unit").value}`
+      query += `&filters[unit][id][$eq]=${document.getElementById("filter_unit").value}`
     }
 
     DirectorateAPI.find(query).then(
@@ -102,7 +102,7 @@ const Directorate = () => {
                 <CForm onSubmit={filterSearch}>
                   <CRow className='mt-2'>
                     <CCol xs={6}>
-                      <CFormLabel htmlFor="exampleFormControlInput1">Nama Direktorat</CFormLabel>
+                      <CFormLabel htmlFor="filter_nama">Nama Direktorat</CFormLabel>
                       <CFormInput
                         type="text"
                         name='filter_nama'
@@ -111,7 +111,7 @@ const Directorate = () => {
                       />
                     </CCol>
                     <CCol xs={6}>
-                      <CFormLabel htmlFor="exampleFormControlInput1">Unit</CFormLabel>
+                      <CFormLabel htmlFor="filter_unit">Unit</CFormLabel>
                       <CFormSelect name="filter_unit" id="filter_unit" className="mb-3" aria-label="Large select example">
                         <option value="">Pilih Unit</option>
                         { units.map(unit =>
@@ -178,7 +178,7 @@ const Directorate = () => {
                         <CButton 
                           color={'warning'} 
                           variant="outline" 
-                          style={{width: '75px', marginBottom: '10px'}}
+                          style={{width: '75px', margin: '5px 5px'}}
                           onClick={() => navigate(
                             '/directorate/edit', 
                             {state: { data: directorate, status: 'edit' }})}>
@@ -186,7 +186,8 @@ const Directorate = () => {
                         </CButton>
                         <CButton 
                           color={'danger'} 
-                          variant="outline" 
+                          variant="outline"
+                          style={{margin: '5px 5px'}}
                           onClick={() => setChosenDirectorate({ 
                             visible: true, 
                             id: directorate.id, 

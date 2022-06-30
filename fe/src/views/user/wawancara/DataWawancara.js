@@ -20,21 +20,27 @@ import {
   CFormLabel,
   CAlert,
   CForm,
+  CFormSelect
 } from '@coreui/react'
 import { useLocation, useNavigate } from "react-router-dom"
 import { cilSearch  } from '@coreui/icons'
 import CIcon from '@coreui/icons-react'
 import MappingAPI from '../../../config/user/MappingAPI'
+import PositionAPI from '../../../config/admin/PositionAPI'
 
 const DataWawancara = () => {
   const location = useLocation()
   const navigate = useNavigate() 
 
   const [mappings, setMappings] = useState([])
+  const [positions, setPositions] = useState([])
   const [message, setMessage] = useState("")
 
   useEffect(() => {
     setMessage(location?.state?.successMessage)
+    PositionAPI.get().then((res) => {
+      setPositions(res.data.data)
+    })    
     getData()
   }, [])  
 
@@ -43,21 +49,21 @@ const DataWawancara = () => {
 
     let query = ""
     if(document.getElementById("filter_nama").value.length != 0){
-      query += `&filters[employee][Name][$contains]=${document.getElementById("filter_nama").value}`
+      query += `&filters[registrant][employee][Name][$contains]=${document.getElementById("filter_nama").value}`
     }
     if(document.getElementById("filter_nip").value.length != 0){
-      query += `&filters[employee][NIP][$contains]=${document.getElementById("filter_nip").value}`
+      query += `&filters[registrant][employee][NIP][$contains]=${document.getElementById("filter_nip").value}`
+    }
+    if(document.getElementById("filter_position").value.length != 0){
+      query += `&filters[registrant][employee][position][id][$eq]=${document.getElementById("filter_position").value}`
+    }
+    if(document.getElementById("filter_projection").value.length != 0){
+      query += `&filters[position][id][$eq]=${document.getElementById("filter_projection").value}`
     }
 
-    DataPesertaAPI.findRegistrants(query).then(
-      (res) => {
-        if(res.data.data.length != 0){
-          setRegistrants(res.data.data)
-        } else {
-          setRegistrants([])         
-        }
-      }
-    )    
+    MappingAPI.findWawancara(query).then((res) => {
+      setMappings(res.data.data)
+    })
   }
   
   const getData = () => {
@@ -76,7 +82,7 @@ const DataWawancara = () => {
               <CForm onSubmit={filterSearch}>
                 <CRow className='mt-2'>
                   <CCol xs={6}>
-                    <CFormLabel htmlFor="exampleFormControlInput1">Nama lengkap</CFormLabel>
+                    <CFormLabel htmlFor="filter_nama">Nama lengkap</CFormLabel>
                     <CFormInput
                       type="text"
                       name='filter_nama'
@@ -85,7 +91,7 @@ const DataWawancara = () => {
                     />
                   </CCol>
                   <CCol xs={6}>
-                    <CFormLabel htmlFor="exampleFormControlInput1">NIP</CFormLabel>
+                    <CFormLabel htmlFor="filter_nip">NIP</CFormLabel>
                     <CFormInput
                       type="text"
                       name='filter_nip'
@@ -93,7 +99,27 @@ const DataWawancara = () => {
                       placeholder="Masukkan Kata Kunci Pencarian . . ."
                     />
                   </CCol>
-                </CRow>               
+                </CRow>
+                <CRow className='mt-3'>
+                  <CCol xs={6}>
+                    <CFormLabel htmlFor="filter_position">Jabatan</CFormLabel>
+                    <CFormSelect name="filter_position" id="filter_position" className="mb-3" aria-label="Large select example">
+                      <option value="">Pilih Jabatan</option>
+                      { positions.map(position =>
+                        <option key={ position.id } value={ position.id } >{ position.attributes.position_name }</option>
+                      )}
+                    </CFormSelect>
+                  </CCol>
+                  <CCol xs={6}>
+                    <CFormLabel htmlFor="filter_projection">Proyeksi</CFormLabel>
+                    <CFormSelect name="filter_projection" id="filter_projection" className="mb-3" aria-label="Large select example">
+                      <option value="">Pilih Proyeksi</option>
+                      { positions.map(position =>
+                        <option key={ position.id } value={ position.id } >{ position.attributes.position_name }</option>
+                      )}
+                    </CFormSelect>
+                  </CCol>                
+                </CRow>
                 <CRow>
                   <hr className='mt-4' style={{ marginLeft: "12px", width: "97.6%" }} />
                 </CRow>
@@ -120,54 +146,54 @@ const DataWawancara = () => {
             <strong>Data Wawancara</strong>
           </CCardHeader>
           <CCardBody style={{ overflowX: "auto"}}>
-              <CTable striped className='mt-3 text-center'>
-                <CTableHead>
-                   <CTableRow>
-                    <CTableHeaderCell scope="col">No</CTableHeaderCell>
-                    <CTableHeaderCell scope="col">Nama</CTableHeaderCell>
-                    <CTableHeaderCell scope="col">NIP</CTableHeaderCell>
-                    <CTableHeaderCell scope="col">Jabatan</CTableHeaderCell>
-                    <CTableHeaderCell scope="col">Proyeksi</CTableHeaderCell>
-                    <CTableHeaderCell scope="col">Uraian Jabatan</CTableHeaderCell>
-                    <CTableHeaderCell scope="col">Penguji</CTableHeaderCell>
-                    <CTableHeaderCell scope="col">Action</CTableHeaderCell>
+            <CTable striped className='mt-3 text-center'>
+              <CTableHead>
+                 <CTableRow>
+                  <CTableHeaderCell scope="col">No</CTableHeaderCell>
+                  <CTableHeaderCell scope="col">Nama</CTableHeaderCell>
+                  <CTableHeaderCell scope="col">NIP</CTableHeaderCell>
+                  <CTableHeaderCell scope="col">Jabatan</CTableHeaderCell>
+                  <CTableHeaderCell scope="col">Proyeksi</CTableHeaderCell>
+                  <CTableHeaderCell scope="col">Uraian Jabatan</CTableHeaderCell>
+                  <CTableHeaderCell scope="col">Penguji</CTableHeaderCell>
+                  <CTableHeaderCell scope="col">Action</CTableHeaderCell>
+                </CTableRow>
+              </CTableHead>
+              <CTableBody>
+                { mappings.map( (mapping, index) =>
+                  <CTableRow key={mapping.id}>
+                    <CTableHeaderCell scope="row">{ index+1 }</CTableHeaderCell>
+                    <CTableDataCell>{mapping?.attributes?.registrant?.data?.attributes?.employee?.data?.attributes.Name}</CTableDataCell>
+                    <CTableDataCell>{mapping?.attributes?.registrant?.data?.attributes?.employee?.data?.attributes.NIP}</CTableDataCell>
+                    <CTableDataCell>{mapping?.attributes?.registrant?.data?.attributes?.employee?.data?.attributes?.position?.data?.attributes?.position_name}</CTableDataCell>
+                    <CTableDataCell>{mapping?.attributes?.position?.data?.attributes?.position_name}</CTableDataCell>
+                    <CTableDataCell>{mapping?.attributes?.jobdesc}</CTableDataCell>
+                    <CTableDataCell>
+                      <ul>
+                        { mapping?.attributes?.examiners_interview?.data?.map(examiner  => (
+                            <li style={{ textAlign: "left", marginBottom: "4px" }} key={examiner.id}>{examiner.attributes.employee.data.attributes.Name}</li>
+                        ))}
+                      </ul>
+                    </CTableDataCell>
+                    <CTableDataCell>
+                      <CButton
+                        color='success'
+                        variant="outline"
+                        style={{width: '75px', margin: '5px 5px'}}
+                        onClick={() => navigate(
+                          '/wawancara/datapenilaian/datanilai', 
+                          { state: {
+                            position: mapping?.attributes?.position?.data?.id, 
+                            registrant: mapping?.attributes?.registrant?.data?.id 
+                          } }
+                        )}>
+                          Lihat Nilai
+                      </CButton>                   
+                    </CTableDataCell>
                   </CTableRow>
-                </CTableHead>
-                <CTableBody>
-                  { mappings.map( (mapping, index) =>
-                    <CTableRow key={mapping.id}>
-                      <CTableHeaderCell scope="row">{ index+1 }</CTableHeaderCell>
-                      <CTableDataCell>{mapping?.attributes?.registrant?.data?.attributes?.employee?.data?.attributes.Name}</CTableDataCell>
-                      <CTableDataCell>{mapping?.attributes?.registrant?.data?.attributes?.employee?.data?.attributes.NIP}</CTableDataCell>
-                      <CTableDataCell>{mapping?.attributes?.registrant?.data?.attributes?.employee?.data?.attributes?.position?.data?.attributes?.position_name}</CTableDataCell>
-                      <CTableDataCell>{mapping?.attributes?.position?.data?.attributes?.position_name}</CTableDataCell>
-                      <CTableDataCell>{mapping?.attributes?.jobdesc}</CTableDataCell>
-                      <CTableDataCell>
-                        <ul>
-                          { mapping?.attributes?.examiners_interview?.data?.map(examiner  => (
-                              <li style={{ textAlign: "left", marginBottom: "4px" }} key={examiner.id}>{examiner.attributes.employee.data.attributes.Name}</li>
-                          ))}
-                        </ul>
-                      </CTableDataCell>
-                      <CTableDataCell>
-                        <CButton
-                          color='success'
-                          variant="outline"
-                          onClick={() => navigate(
-                            '/wawancara/datapenilaian/datanilai', 
-                            { state: {
-                              position: mapping?.attributes?.position?.data?.id, 
-                              registrant: mapping?.attributes?.registrant?.data?.id 
-                            } }
-                          )}
-                          style={{width: '75px', marginBottom: '10px'}} >
-                            Lihat Nilai
-                        </CButton>                   
-                      </CTableDataCell>
-                    </CTableRow>
-                  )}
-                </CTableBody>
-              </CTable>    
+                )}
+              </CTableBody>
+            </CTable>    
           </CCardBody>
         </CCard>
       </CCol>

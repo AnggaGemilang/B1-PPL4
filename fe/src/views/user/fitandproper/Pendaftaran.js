@@ -27,6 +27,7 @@ import CriteriaAPI from '../../../config/admin/CriteriaAPI'
 import ScoreAPI from '../../../config/user/ScoreAPI'
 import url from "../../../config/setting"
 import logoPDF from 'src/assets/images/pdf-icon.png'
+import axios from "axios";
 
 const Pendaftaran = () => {
   const navigate = useNavigate();  
@@ -52,7 +53,7 @@ const Pendaftaran = () => {
   useEffect(() => {
     getExaminerData()
     if (nipValue.length > 1) {
-      FitAndProperAPI.findRegistrants(nipValue).then(
+      DataPesertaAPI.findRegistrants(nipValue).then(
       (res) => {
         if(res.data.data.length == 1){
           setState({
@@ -314,7 +315,7 @@ const Pendaftaran = () => {
               <CForm onSubmit={postData}>
                 <CRow className="mb-3 ">
                   <CInputGroup>
-                    <CFormLabel htmlFor="input" className="col-sm-2 col-form-label">NIP</CFormLabel>
+                    <CFormLabel htmlFor="nip" className="col-sm-2 col-form-label">NIP</CFormLabel>
                     <div className="col-sm-10">
                       <CFormInput 
                         type="text" 
@@ -328,7 +329,7 @@ const Pendaftaran = () => {
                 </CRow>
                 <CRow className="mb-3">
                   <CInputGroup>
-                    <CFormLabel htmlFor="input" className="col-sm-2 col-form-label">Nama</CFormLabel>
+                    <CFormLabel htmlFor="name" className="col-sm-2 col-form-label">Nama</CFormLabel>
                       <div className="col-sm-10">
                         <CFormInput 
                           type="input" 
@@ -342,7 +343,7 @@ const Pendaftaran = () => {
                 </CRow>
                 <CRow className="mb-3">
                   <CInputGroup>
-                    <CFormLabel htmlFor="input" className="col-sm-2 col-form-label">Jabatan</CFormLabel>
+                    <CFormLabel htmlFor="position" className="col-sm-2 col-form-label">Jabatan</CFormLabel>
                       <div className="col-sm-10">
                         <CFormInput
                           type="input" 
@@ -356,7 +357,7 @@ const Pendaftaran = () => {
                 </CRow>
                 <CRow className="mb-3">
                   <CInputGroup>
-                    <CFormLabel htmlFor="input" className="col-sm-2 col-form-label">Grade</CFormLabel>
+                    <CFormLabel htmlFor="grade" className="col-sm-2 col-form-label">Grade</CFormLabel>
                       <div className="col-sm-10">
                         <CFormInput 
                           type="input" 
@@ -370,12 +371,12 @@ const Pendaftaran = () => {
                 </CRow>
                 <CRow className="mb-3">
                   <CInputGroup>
-                    <CFormLabel htmlFor="input" className="col-sm-2 col-form-label">Jadwal Pelaksanaan</CFormLabel>
+                    <CFormLabel htmlFor="schedule" className="col-sm-2 col-form-label">Jadwal Pelaksanaan</CFormLabel>
                       <div className="col-sm-10">
                         <CFormInput 
                           type="date" 
                           id="schedule" 
-                          name="schedule"s
+                          name="schedule"
                           defaultValue={ state.status == "edit" ? state?.data?.attributes?.schedule : ""}
                           placeholder='Masukkan Tanggal'/>
                       </div>
@@ -383,7 +384,7 @@ const Pendaftaran = () => {
                 </CRow>
                 <CRow className="mb-3">
                   <CInputGroup>
-                    <CFormLabel htmlFor="input" className="col-sm-2 col-form-label">Jabatan Proyeksi</CFormLabel>
+                    <CFormLabel htmlFor="projection" className="col-sm-2 col-form-label">Jabatan Proyeksi</CFormLabel>
                     <div className="col-sm-10">
                       <CFormSelect name="projection" id="projection" aria-label="Large select example">
                         <option>Pilih Proyeksi</option>
@@ -396,7 +397,7 @@ const Pendaftaran = () => {
                 </CRow>
                 <CRow className="mb-3">
                   <CInputGroup>
-                    <CFormLabel htmlFor="input" className="col-sm-2 col-form-label">Jenjang Jabatan</CFormLabel>
+                    <CFormLabel htmlFor="level" className="col-sm-2 col-form-label">Jenjang Jabatan</CFormLabel>
                     <div className="col-sm-10">
                       <CFormSelect name="level" id="level" aria-label="Large select example">
                         <option>Pilih Jenjang</option>
@@ -409,7 +410,7 @@ const Pendaftaran = () => {
                 </CRow>
                 <CRow className="mb-3">
                   <CInputGroup>
-                    <CFormLabel htmlFor="input" className="col-sm-2 col-form-label">Jenis Fit and Propper</CFormLabel>
+                    <CFormLabel htmlFor="fitproper_type" className="col-sm-2 col-form-label">Jenis Fit and Propper</CFormLabel>
                     <div className="col-sm-10">
                       <CFormSelect id="fitproper_type" aria-label="Default select example">
                         <option>Pilih Jenis Fit & Proper</option>
@@ -421,7 +422,7 @@ const Pendaftaran = () => {
                 </CRow>
                 <CRow className="mb-3">
                   <CInputGroup>
-                    <CFormLabel htmlFor="input" className="col-sm-2 col-form-label">Uraian Jabatan</CFormLabel>
+                    <CFormLabel htmlFor="jobdesc" className="col-sm-2 col-form-label">Uraian Jabatan</CFormLabel>
                     <div className="col-sm-10">
                       <CFormInput 
                         type="text" 
@@ -434,7 +435,7 @@ const Pendaftaran = () => {
                 </CRow>
                 <CRow className="mb-3">
                   <CInputGroup>
-                    <CFormLabel htmlFor="input" className="col-sm-2 col-form-label">Upload PPT *.ppt/.pptx</CFormLabel>
+                    <CFormLabel htmlFor="ppt" className="col-sm-2 col-form-label">Upload PPT *.ppt/.pptx</CFormLabel>
                       <div className="col-sm-10">
                         { state.status == "edit" ? <a target="_blank" href={url + state?.data?.attributes?.registrant?.data?.attributes?.ppt?.data?.attributes?.url }><CImage style={{ marginTop: "-10px", marginLeft: "-5px", marginBottom: "10px", width: "70px", height: "70px" }} src={logoPDF} height={35} /></a> : null }                         
                         <CFormInput type="file" id="ppt" name="ppt" onChange={ (e) => setState({ ...state, ppt: e.target.files[0] }) } />
@@ -443,7 +444,7 @@ const Pendaftaran = () => {
                 </CRow>
                 <CRow className="mb-3">
                   <CInputGroup>
-                    <CFormLabel htmlFor="input" className="col-sm-2 col-form-label">Upload CV *.doc/.docs</CFormLabel>
+                    <CFormLabel htmlFor="cv" className="col-sm-2 col-form-label">Upload CV *.doc/.docs</CFormLabel>
                       <div className="col-sm-10">
                         { state.status == "edit" ? <a target="_blank" href={url + state?.data?.attributes?.registrant?.data?.attributes?.cv?.data?.attributes?.url }><CImage style={{ marginTop: "-10px", marginLeft: "-5px", marginBottom: "10px", width: "70px", height: "70px" }} src={logoPDF} height={35} /></a> : null }
                         <CFormInput type="file" id="cv" name="cv" onChange={ (e) => setState({ ...state, cv: e.target.files[0] }) } />
@@ -452,7 +453,7 @@ const Pendaftaran = () => {
                 </CRow>
                 <CRow className="mb-3">
                   <CInputGroup>
-                    <CFormLabel htmlFor="input" className="col-sm-2 col-form-label">Penguji 1</CFormLabel>
+                    <CFormLabel htmlFor="penguji1" className="col-sm-2 col-form-label">Penguji 1</CFormLabel>
                     <div className="col-sm-10">
                       <CFormSelect 
                         name="penguji1" 
@@ -471,7 +472,7 @@ const Pendaftaran = () => {
                 </CRow>
                 <CRow className="mb-3">
                   <CInputGroup>
-                    <CFormLabel htmlFor="input" className="col-sm-2 col-form-label">Penguji 2</CFormLabel>
+                    <CFormLabel htmlFor="penguji2" className="col-sm-2 col-form-label">Penguji 2</CFormLabel>
                     <div className="col-sm-10">
                       <CFormSelect 
                         name="penguji2" 
@@ -490,7 +491,7 @@ const Pendaftaran = () => {
                 </CRow>
                 <CRow className="mb-3">
                   <CInputGroup>
-                    <CFormLabel htmlFor="input" className="col-sm-2 col-form-label">Penguji 3</CFormLabel>
+                    <CFormLabel htmlFor="penguji3" className="col-sm-2 col-form-label">Penguji 3</CFormLabel>
                     <div className="col-sm-10">
                       <CFormSelect name="penguji3" id="penguji3" aria-label="Large select example">
                         <option value="0">Pilih Penguji 3</option>
