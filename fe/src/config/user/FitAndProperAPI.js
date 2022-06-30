@@ -8,9 +8,9 @@ export default {
 
   getRekapManualFitProper : (registrant, projection) => api.get(`/line-mappings?populate[1]=mapping&populate[2]=mapping.position&populate[3]=scores_fitproper&populate[4]=scores_fitproper.criterion&populate[5]=examiner.employee&populate[6]=mapping.registrant.employee&populate[7]=mapping.level&filters[mapping][registrant][id][$eq]=${registrant}&filters[mapping][position][id][$eq]=${projection}`),
   getRekapManualWawancara : (registrant, projection) => api.get(`/line-mappings?populate[1]=mapping&populate[2]=mapping.position&populate[3]=scores_interview&populate[4]=scores_interview.criterion&populate[5]=examiner.employee&populate[6]=mapping.registrant.employee&populate[7]=mapping.level&filters[mapping][registrant][id][$eq]=${registrant}&filters[mapping][position][id][$eq]=${projection}&filters[is_interview][$eq]=true`),
-
-  findRegistrants: (query) => api.get(`/registrants/?populate[1]=employee&populate[2]=employee.Photo&populate[3]=employee.position&populate[4]=employee.position.grade&populate[5]=cv&populate[6]=ppt&filters[employee][NIP][$eq]=${query}`),  
+  
   getLineMapping: () => api.get(`/line-mappings?populate[1]=examiner.employee&populate[2]=mapping.registrant.employee&populate[3]=mapping.position&populate[4]=mapping.registrant.employee.position&populate[5]=mapping.registrant.cv&populate[6]=mapping.registrant.ppt&filters[examiner][employee][NIP][$eq]=${JSON.parse(sessionStorage.getItem("auth")).user.employee.NIP}`),
+  findLineMapping: (query) => api.get(`/line-mappings?populate[1]=examiner.employee&populate[2]=mapping.registrant.employee&populate[3]=mapping.position&populate[4]=mapping.registrant.employee.position&populate[5]=mapping.registrant.cv&populate[6]=mapping.registrant.ppt&filters[examiner][employee][NIP][$eq]=${JSON.parse(sessionStorage.getItem("auth")).user.employee.NIP}${query}`),
   addLineMapping: (data) => api.post('/line-mappings', data),
   editLineMapping: (id, data) => api.put(`/line-mappings/${id}`, data),  
 }

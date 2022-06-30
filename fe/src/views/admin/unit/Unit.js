@@ -62,7 +62,7 @@ const Unit = () => {
     UnitAPI.find(query).then(
       (res) => {
         if(res.data.length != 0){
-          setUnits(res.data)
+          setUnits(res.data.data)
         } else {
           setUnits([])
         }
@@ -72,7 +72,7 @@ const Unit = () => {
 
   const getData = () => {
     UnitAPI.get().then((res) => {
-      setUnits(res.data)
+      setUnits(res.data.data)
     })
   }
 
@@ -95,7 +95,7 @@ const Unit = () => {
                 <CForm onSubmit={filterSearch}>
                   <CRow className='mt-2'>
                     <CCol xs={6}>
-                      <CFormLabel htmlFor="exampleFormControlInput1">Nama Unit</CFormLabel>
+                      <CFormLabel htmlFor="filter_nama">Nama Unit</CFormLabel>
                       <CFormInput
                         type="text"
                         name='filter_nama'
@@ -104,7 +104,7 @@ const Unit = () => {
                       />
                     </CCol>
                     <CCol xs={6}>
-                      <CFormLabel htmlFor="exampleFormControlInput1">Alamat Unit</CFormLabel>
+                      <CFormLabel htmlFor="filter_address">Alamat Unit</CFormLabel>
                       <CFormInput
                         type="text"
                         name='filter_address'
@@ -165,13 +165,13 @@ const Unit = () => {
                   { units.map( (unit, index) =>
                     <CTableRow key={unit.id}>
                       <CTableHeaderCell scope="row">{ index+1 }</CTableHeaderCell>
-                      <CTableDataCell>{unit.attributes.unit_name}</CTableDataCell>
-                      <CTableDataCell>{unit.attributes.address}</CTableDataCell>
+                      <CTableDataCell>{unit?.attributes?.unit_name}</CTableDataCell>
+                      <CTableDataCell>{unit?.attributes?.address}</CTableDataCell>
                       <CTableDataCell>
                         <CButton 
                           color={'warning'} 
                           variant="outline"
-                          style={{width: '75px'}}                            
+                          style={{width: '75px', margin: '5px 5px'}}
                           onClick={() => navigate(
                             '/unit/edit', 
                             {state: { data: unit, status: 'edit' }})}>
@@ -180,7 +180,7 @@ const Unit = () => {
                         <CButton 
                           color={'danger'} 
                           variant="outline" 
-                          style={{marginTop: '10px'}}
+                          style={{margin: '5px 5px'}}
                           onClick={() => setChosenUnit({ 
                             visible: true, 
                             id: unit.id, 

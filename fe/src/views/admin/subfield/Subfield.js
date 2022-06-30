@@ -61,7 +61,7 @@ const SubField = () => {
       query += `&filters[subfield_name][$contains]=${document.getElementById("filter_nama").value}`
     }
     if(document.getElementById("filter_field").value.length != 0){
-      query += `&filters[fields][id][$eq]=${document.getElementById("filter_field").value}`
+      query += `&filters[field][id][$eq]=${document.getElementById("filter_field").value}`
     }
     SubFieldAPI.find(query).then(
       (res) => {
@@ -99,7 +99,7 @@ const SubField = () => {
                 <CForm onSubmit={filterSearch}>
                   <CRow className='mt-2'>
                     <CCol xs={6}>
-                      <CFormLabel htmlFor="exampleFormControlInput1">Sub Bidang</CFormLabel>
+                      <CFormLabel htmlFor="filter_nama">Sub Bidang</CFormLabel>
                       <CFormInput
                         type="text"
                         name='filter_nama'
@@ -108,7 +108,7 @@ const SubField = () => {
                       />
                     </CCol>
                     <CCol xs={6}>
-                      <CFormLabel htmlFor="exampleFormControlInput1">Bidang</CFormLabel>
+                      <CFormLabel htmlFor="filter_field">Bidang</CFormLabel>
                       <CFormSelect name="filter_field" id="filter_field" className="mb-3" aria-label="Large select example">
                         <option value="">Pilih Bidang</option>
                         { fields.map(field =>
@@ -175,6 +175,7 @@ const SubField = () => {
                         <CButton 
                           color={'warning'} 
                           variant="outline" 
+                          style={{width: '75px', margin: '5px 5px'}}
                           onClick={() => navigate(
                             '/subfield/edit', 
                             {state: { data: subField, status: 'edit' }})}>
@@ -182,7 +183,7 @@ const SubField = () => {
                         <CButton 
                           color={'danger'} 
                           variant="outline" 
-                          style={{marginLeft: '10px'}}
+                          style={{margin: '5px 5px'}}
                           onClick={() => setChosenSubField({ 
                             visible: true, 
                             id: subField.id, 

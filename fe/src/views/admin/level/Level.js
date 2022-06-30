@@ -96,7 +96,7 @@ const Level = () => {
                 <CForm onSubmit={filterSearch}>
                   <CRow className='mt-2'>
                     <CCol xs={6}>
-                      <CFormLabel htmlFor="exampleFormControlInput1">Nama Struktural</CFormLabel>
+                      <CFormLabel htmlFor="filter_snama">Nama Struktural</CFormLabel>
                       <CFormInput
                         type="text"
                         name='filter_snama'
@@ -105,7 +105,7 @@ const Level = () => {
                       />
                     </CCol>
                     <CCol xs={6}>
-                      <CFormLabel htmlFor="exampleFormControlInput1">Nama Fungsional</CFormLabel>
+                      <CFormLabel htmlFor="filter_fnama">Nama Fungsional</CFormLabel>
                       <CFormInput
                         type="text"
                         name='filter_fnama'
@@ -172,6 +172,7 @@ const Level = () => {
                         <CButton 
                           color={'warning'} 
                           variant="outline"
+                          style={{width: '75px', margin: '5px 5px'}}
                           onClick={() => navigate(
                             '/level/edit', 
                             {state: { data: level, status: 'edit' }})}>
@@ -179,7 +180,7 @@ const Level = () => {
                         <CButton 
                           color={'danger'} 
                           variant="outline" 
-                          style={{marginLeft: '10px'}}
+                          style={{margin: '5px 5px'}}
                           onClick={() => setChosenLevel({ 
                             visible: true, 
                             id: level.id, 

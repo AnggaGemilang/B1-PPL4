@@ -26,6 +26,7 @@ import {
   CAlert,
   CForm,
   CImage,
+  CFormSelect
 } from '@coreui/react'
 import { useLocation, useNavigate } from "react-router-dom"
 import { cilSearch } from '@coreui/icons'
@@ -33,6 +34,7 @@ import CIcon from '@coreui/icons-react'
 import FitAndProperAPI from '../../../config/user/FitAndProperAPI'
 import WawancaraAPI from '../../../config/user/WawancaraAPI'
 import MappingAPI from '../../../config/user/MappingAPI'
+import PositionAPI from 'src/config/admin/PositionAPI'
 import url from "../../../config/setting"
 import logoPDF from 'src/assets/images/pdf-icon.png'
 
@@ -41,6 +43,7 @@ const DataPenilaian = () => {
   const navigate = useNavigate()
 
   const [lineMappings, setLineMappings] = useState([])
+  const [positions, setPositions] = useState([])
   const [message, setMessage] = useState("")
   const [chosenLineMapping, setChosenLineMapping] = useState({
     visible: false,
@@ -51,28 +54,34 @@ const DataPenilaian = () => {
   useEffect(() => {
     setMessage(location?.state?.successMessage)
     getData()
-  }, [])  
+    PositionAPI.get().then((res) => {
+      setPositions(res.data.data)
+    })    
+  }, [])
 
   const filterSearch = (e) => {
     e.preventDefault()
 
     let query = ""
     if(document.getElementById("filter_nama").value.length != 0){
-      query += `&filters[employee][Name][$contains]=${document.getElementById("filter_nama").value}`
+      query += `&filters[mapping][registrant][employee][Name][$contains]=${document.getElementById("filter_nama").value}`
     }
     if(document.getElementById("filter_nip").value.length != 0){
-      query += `&filters[employee][NIP][$contains]=${document.getElementById("filter_nip").value}`
+      query += `&filters[mapping][registrant][employee][NIP][$contains]=${document.getElementById("filter_nip").value}`
     }
+    if(document.getElementById("filter_position").value.length != 0){
+      query += `&filters[mapping][registrant][employee][position][id][$eq]=${document.getElementById("filter_position").value}`
+    }
+    if(document.getElementById("filter_projection").value.length != 0){
+      query += `&filters[mapping][position][id][$eq]=${document.getElementById("filter_projection").value}`
+    }
+    if(document.getElementById("filter_status").value.length != 0){
+      query += `&filters[status_fitproper][$eq]=${document.getElementById("filter_status").value}`
+    }    
 
-    DataPesertaAPI.findRegistrants(query).then(
-      (res) => {
-        if(res.data.data.length != 0){
-          setRegistrants(res.data.data)
-        } else {
-          setRegistrants([])         
-        }
-      }
-    )    
+    FitAndProperAPI.findLineMapping(query).then((res) => {
+      setLineMappings(res.data.data)
+    })
   }
   
   const getData = () => {
@@ -133,7 +142,37 @@ const DataPenilaian = () => {
                       placeholder="Masukkan Kata Kunci Pencarian . . ."
                     />
                   </CCol>
-                </CRow>               
+                </CRow>
+                <CRow className='mt-3'>
+                  <CCol xs={6}>
+                    <CFormLabel htmlFor="filter_position">Jabatan</CFormLabel>
+                    <CFormSelect name="filter_position" id="filter_position" aria-label="Large select example">
+                      <option value="">Pilih Jabatan</option>
+                      { positions.map(position =>
+                        <option key={ position.id } value={ position.id } >{ position.attributes.position_name }</option>
+                      )}
+                    </CFormSelect>
+                  </CCol>
+                  <CCol xs={6}>
+                    <CFormLabel htmlFor="filter_projection">Proyeksi</CFormLabel>
+                    <CFormSelect name="filter_projection" id="filter_projection" aria-label="Large select example">
+                      <option value="">Pilih Proyeksi</option>
+                      { positions.map(position =>
+                        <option key={ position.id } value={ position.id } >{ position.attributes.position_name }</option>
+                      )}
+                    </CFormSelect>
+                  </CCol>                
+                </CRow>
+                <CRow className='mt-3'>
+                  <CCol xs={12}>
+                    <CFormLabel htmlFor="filter_status">Status</CFormLabel>
+                    <CFormSelect name="filter_status" id="filter_status" aria-label="Large select example">
+                      <option value="">Pilih Status</option>
+                      <option value="true">Sudah Dinilai</option>
+                      <option value="false">Belum Dinilai</option>
+                    </CFormSelect>
+                  </CCol>       
+                </CRow>                 
                 <CRow>
                   <hr className='mt-4' style={{ marginLeft: "12px", width: "97.6%" }} />
                 </CRow>
@@ -201,11 +240,11 @@ const DataPenilaian = () => {
                         <CButton
                           color='primary'
                           variant="outline" 
+                          style={{width: '75px', margin: '5px 5px'}}                    
                           onClick={() => setChosenLineMapping({ 
                             visible: true, 
                             lineMapping: linemapping
-                          })}
-                          style={{marginLeft: '10px', marginBottom: '10px'}} >
+                          })} >
                             Ajukan
                         </CButton>
                         : null
@@ -214,6 +253,7 @@ const DataPenilaian = () => {
                         <CButton
                           color='success'
                           variant="outline"
+                          style={{width: '75px', margin: '5px 5px'}}                          
                           onClick={() => navigate(
                             '/fitandproper/datapenilaian/datanilai', 
                             { state: { 
@@ -221,8 +261,7 @@ const DataPenilaian = () => {
                                 registrant: linemapping?.attributes?.mapping?.data?.attributes?.registrant?.data?.id,
                                 examiner: linemapping?.attributes?.examiner?.data?.id
                             }}
-                          )}
-                          style={{marginLeft: '10px', marginBottom: '10px', width: "80px"}} >
+                          )} >
                             Lihat Nilai
                         </CButton>
                         : null
@@ -231,28 +270,28 @@ const DataPenilaian = () => {
                         <CButton
                           color='warning'
                           variant="outline"
+                          style={{width: '75px', margin: '5px 5px'}}                          
                           onClick={() => navigate(
                             '/fitandproper/datapenilaian/nilai/edit', 
                             { state: { data: linemapping }}
-                          )}
-                          style={{marginLeft: '10px', marginBottom: '10px', width: "80px"}} >
+                          )} >
                             Edit
                         </CButton>
                         : null
-                      }                      
+                      }
                       { (!linemapping?.attributes?.status_fitproper) ?
                         <CButton
                           color='primary'
                           variant="outline" 
+                          style={{width: '75px', margin: '5px 5px'}}
                           onClick={() => navigate(
                             '/fitandproper/datapenilaian/nilai', 
                             { state: { data: linemapping } }
-                          )}
-                          style={{marginLeft: '10px', marginBottom: '10px'}} >
+                          )} >
                             Nilai
                         </CButton>
                         : null
-                      }                              
+                      }
                     </CTableDataCell>
                   </CTableRow>
                 )}

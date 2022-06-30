@@ -31,6 +31,7 @@ import GradeAPI from '../../../config/admin/GradeAPI'
 import LevelAPI from '../../../config/admin/LevelAPI'
 import SubFieldAPI from '../../../config/admin/SubFieldAPI'
 import AdministrasiUserAPI from '../../../config/admin/AdministrasiUserAPI'
+import axios from "axios";
 
 const Administrasi = () => {
   const [employees, setEmployees] = useState([])
@@ -68,13 +69,13 @@ const Administrasi = () => {
       query += `&filters[Email][$contains]=${document.getElementById("filter_email").value}`
     }
     if(document.getElementById("filter_grade").value.length != 0){
-      query += `&filters[grades][id][$eq]=${document.getElementById("filter_grade").value}`
+      query += `&filters[grade][id][$eq]=${document.getElementById("filter_grade").value}`
     }
     if(document.getElementById("filter_level").value.length != 0){
-      query += `&filters[levels][id][$eq]=${document.getElementById("filter_level").value}`
+      query += `&filters[level][id][$eq]=${document.getElementById("filter_level").value}`
     }
     if(document.getElementById("filter_subfield").value.length != 0){
-      query += `&filters[sub_fields][id][$eq]=${document.getElementById("filter_subfield").value}`
+      query += `&filters[sub_field][id][$eq]=${document.getElementById("filter_subfield").value}`
     }
     if(document.getElementById("filter_role").value.length != 0){
       query += `&filters[account][cp_role][$eq]=${document.getElementById("filter_role").value}`
@@ -165,13 +166,13 @@ const Administrasi = () => {
                     </CCol>
                   </CCol>
                   <CCol xs={6}>
-                    <CFormLabel htmlFor="exampleFormControlInput1">Email</CFormLabel>
+                    <CFormLabel htmlFor="filter_email">Email</CFormLabel>
                     <CFormInput type="email" name="filter_email" id="filter_email" placeholder='Masukkan Email . . .'/>
                   </CCol>
                 </CRow>
                 <CRow className='mt-3'>
                   <CCol xs={6}>
-                    <CFormLabel htmlFor="exampleFormControlInput1">Grade</CFormLabel>
+                    <CFormLabel htmlFor="filter_grade">Grade</CFormLabel>
                     <CFormSelect name="filter_grade" id="filter_grade" className="mb-3" aria-label="Large select example">
                       <option value="">Pilih Grade</option>
                       { grades.map(grade =>
@@ -180,7 +181,7 @@ const Administrasi = () => {
                     </CFormSelect>
                   </CCol>
                   <CCol xs={6}>
-                    <CFormLabel htmlFor="exampleFormControlInput1">Jenjang</CFormLabel>
+                    <CFormLabel htmlFor="filter_level">Jenjang</CFormLabel>
                     <CFormSelect name="filter_level" id="filter_level" className="mb-3" aria-label="Large select example">
                       <option value="">Pilih Jenjang</option>
                       { levels.map(level =>
@@ -191,7 +192,7 @@ const Administrasi = () => {
                 </CRow>
                 <CRow className='mt-3'>
                   <CCol xs={6}>
-                    <CFormLabel htmlFor="exampleFormControlInput1">Sub Bidang</CFormLabel>
+                    <CFormLabel htmlFor="filter_subfield">Sub Bidang</CFormLabel>
                     <CFormSelect name="filter_subfield" id="filter_subfield" className="mb-3" aria-label="Large select example">
                       <option value="">Pilih Sub Bidang</option>
                       { subfields.map(subfield =>
@@ -200,12 +201,12 @@ const Administrasi = () => {
                     </CFormSelect>
                   </CCol>
                   <CCol xs={6}>
-                    <CFormLabel htmlFor="exampleFormControlInput1">Peran</CFormLabel>
+                    <CFormLabel htmlFor="filter_role">Peran</CFormLabel>
                     <CFormSelect name="filter_role" id="filter_role" className="mb-3" aria-label="Large select example">
                       <option value=''>Pilih Role</option>
-                      <option value="1">Administrator</option>
-                      <option value="2">HR Manager</option>
-                      <option value="3">HR Specialist</option>
+                      <option value="3">Administrator</option>
+                      <option value="5">HR Manager</option>
+                      <option value="6">HR Specialist</option>
                       <option value="4">Penguji</option>
                     </CFormSelect>
                   </CCol>

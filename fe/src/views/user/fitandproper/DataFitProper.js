@@ -26,11 +26,13 @@ import {
   CAlert,
   CForm,
   CImage,
+  CFormSelect
 } from '@coreui/react'
 import { useLocation, useNavigate } from "react-router-dom"
 import { cilSearch, cilPlus } from '@coreui/icons'
 import CIcon from '@coreui/icons-react'
 import MappingAPI from '../../../config/user/MappingAPI'
+import PositionAPI from '../../../config/admin/PositionAPI'
 import url from "../../../config/setting"
 import logoPDF from 'src/assets/images/pdf-icon.png'
 
@@ -39,6 +41,7 @@ const DataFitProper = () => {
   const navigate = useNavigate() 
 
   const [mappings, setMappings] = useState([])
+  const [positions, setPositions] = useState([])
   const [message, setMessage] = useState("")
   const [chosenMapping, setChosenMapping] = useState({
     visible: false,
@@ -49,6 +52,9 @@ const DataFitProper = () => {
   useEffect(() => {
     setMessage(location?.state?.successMessage)
     getData()
+    PositionAPI.get().then((res) => {
+      setPositions(res.data.data)
+    })    
   }, [])  
 
   const filterSearch = (e) => {
@@ -56,21 +62,21 @@ const DataFitProper = () => {
 
     let query = ""
     if(document.getElementById("filter_nama").value.length != 0){
-      query += `&filters[employee][Name][$contains]=${document.getElementById("filter_nama").value}`
+      query += `&filters[registrant][employee][Name][$contains]=${document.getElementById("filter_nama").value}`
     }
     if(document.getElementById("filter_nip").value.length != 0){
-      query += `&filters[employee][NIP][$contains]=${document.getElementById("filter_nip").value}`
+      query += `&filters[registrant][employee][NIP][$contains]=${document.getElementById("filter_nip").value}`
+    }
+    if(document.getElementById("filter_position").value.length != 0){
+      query += `&filters[registrant][employee][position][id][$eq]=${document.getElementById("filter_position").value}`
+    }
+    if(document.getElementById("filter_projection").value.length != 0){
+      query += `&filters[position][id][$eq]=${document.getElementById("filter_projection").value}`
     }
 
-    DataPesertaAPI.findRegistrants(query).then(
-      (res) => {
-        if(res.data.data.length != 0){
-          setRegistrants(res.data.data)
-        } else {
-          setRegistrants([])         
-        }
-      }
-    )    
+    MappingAPI.findFitProper(query).then((res) => {
+      setMappings(res.data.data)
+    })  
   }
   
   const getData = () => {
@@ -97,7 +103,7 @@ const DataFitProper = () => {
               <CForm onSubmit={filterSearch}>
                 <CRow className='mt-2'>
                   <CCol xs={6}>
-                    <CFormLabel htmlFor="exampleFormControlInput1">Nama lengkap</CFormLabel>
+                    <CFormLabel htmlFor="filter_nama">Nama lengkap</CFormLabel>
                     <CFormInput
                       type="text"
                       name='filter_nama'
@@ -106,7 +112,7 @@ const DataFitProper = () => {
                     />
                   </CCol>
                   <CCol xs={6}>
-                    <CFormLabel htmlFor="exampleFormControlInput1">NIP</CFormLabel>
+                    <CFormLabel htmlFor="filter_nip">NIP</CFormLabel>
                     <CFormInput
                       type="text"
                       name='filter_nip'
@@ -114,7 +120,27 @@ const DataFitProper = () => {
                       placeholder="Masukkan Kata Kunci Pencarian . . ."
                     />
                   </CCol>
-                </CRow>               
+                </CRow>
+                <CRow className='mt-3'>
+                  <CCol xs={6}>
+                    <CFormLabel htmlFor="filter_position">Jabatan</CFormLabel>
+                    <CFormSelect name="filter_position" id="filter_position" className="mb-3" aria-label="Large select example">
+                      <option value="">Pilih Jabatan</option>
+                      { positions.map(position =>
+                        <option key={ position.id } value={ position.id } >{ position.attributes.position_name }</option>
+                      )}
+                    </CFormSelect>
+                  </CCol>
+                  <CCol xs={6}>
+                    <CFormLabel htmlFor="filter_projection">Proyeksi</CFormLabel>
+                    <CFormSelect name="filter_projection" id="filter_projection" className="mb-3" aria-label="Large select example">
+                      <option value="">Pilih Proyeksi</option>
+                      { positions.map(position =>
+                        <option key={ position.id } value={ position.id } >{ position.attributes.position_name }</option>
+                      )}
+                    </CFormSelect>
+                  </CCol>                
+                </CRow>                
                 <CRow>
                   <hr className='mt-4' style={{ marginLeft: "12px", width: "97.6%" }} />
                 </CRow>
@@ -202,26 +228,26 @@ const DataFitProper = () => {
                         <CButton
                           color='success'
                           variant="outline"
+                          style={{width: '75px', margin: '5px 5px'}}
                           onClick={() => navigate(
                             '/fitandproper/datapenilaian/datanilai', 
                             { state: { position: mapping?.attributes?.position?.data?.id, registrant: mapping?.attributes?.registrant?.data?.id } }
-                          )}
-                          style={{width: '75px', marginBottom: '10px'}} >
+                          )}>
                             Lihat Nilai
                         </CButton>
                         <CButton 
                           color={'warning'} 
                           variant="outline" 
-                          style={{width: '75px', marginBottom: '10px'}}
+                          style={{width: '75px', margin: '5px 5px'}}
                           onClick={() => 
                             navigate('/fitandproper/edit', {state: { data: mapping, status: 'edit' } })
                           }>
-                          Edit
+                            Edit
                         </CButton>                        
                         <CButton
                           color='danger'
-                          variant="outline" 
-                          style={{width: '75px'}}                          
+                          variant="outline"                
+                          style={{width: '75px', margin: '5px 5px'}}
                           onClick={() => setChosenMapping({ 
                             visible: true, 
                             id: mapping.id
