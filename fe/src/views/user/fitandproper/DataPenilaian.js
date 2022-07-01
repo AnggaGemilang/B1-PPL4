@@ -210,7 +210,7 @@ const DataPenilaian = () => {
                   <CTableHeaderCell scope="col">Tanggal</CTableHeaderCell>
                   <CTableHeaderCell scope="col">Status</CTableHeaderCell>
                   <CTableHeaderCell scope="col">Lampiran File</CTableHeaderCell>
-                  <CTableHeaderCell scope="col">Action</CTableHeaderCell>
+                  <CTableHeaderCell scope="col">Aksi</CTableHeaderCell>
                 </CTableRow>
               </CTableHead>
               <CTableBody>
@@ -240,7 +240,7 @@ const DataPenilaian = () => {
                         <CButton
                           color='primary'
                           variant="outline" 
-                          style={{width: '75px', margin: '5px 5px'}}                    
+                          style={{width: '80px', margin: '5px 5px'}}                    
                           onClick={() => setChosenLineMapping({ 
                             visible: true, 
                             lineMapping: linemapping
@@ -253,7 +253,7 @@ const DataPenilaian = () => {
                         <CButton
                           color='success'
                           variant="outline"
-                          style={{width: '75px', margin: '5px 5px'}}                          
+                          style={{width: '80px', margin: '5px 5px'}}                          
                           onClick={() => navigate(
                             '/fitandproper/datapenilaian/datanilai', 
                             { state: { 
@@ -270,7 +270,7 @@ const DataPenilaian = () => {
                         <CButton
                           color='warning'
                           variant="outline"
-                          style={{width: '75px', margin: '5px 5px'}}                          
+                          style={{width: '80px', margin: '5px 5px'}}                          
                           onClick={() => navigate(
                             '/fitandproper/datapenilaian/nilai/edit', 
                             { state: { data: linemapping }}
