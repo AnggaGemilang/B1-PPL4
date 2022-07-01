@@ -38,7 +38,6 @@ const Penilaian = () => {
   const [selectedCriteria, setSelectedCriteria] = useState([])
   const [criterias, setCriterias] = useState([])
   const [message, setMessage] = useState("")
-  const [lineMapping, setLineMapping] = useState()
   const [state, setState] = useState({
     lineMapping: location?.state?.data,
     visibleSubmit: false,
@@ -130,17 +129,31 @@ const Penilaian = () => {
     }
   }
 
+  const removeRow = (index) => {
+    let temp = [...selectedCriteria]
+    setCriterias([...criterias, temp[index]])
+    temp.splice(index, 1)
+    setSelectedCriteria([...temp])
+  }
+
   const addRow = (id) => {
-    console.log(id)
     CriteriaAPI.findById(id).then((res) => {
       setSelectedCriteria([...selectedCriteria, res.data.data[0]])
+      let temp = [...criterias]
+      const index = criterias.map( e => {
+        return e.id
+      }).indexOf(res.data.data[0].id)
+      temp.splice(index, 1)
+      setCriterias([...temp])
     })
   }
 
   const getData = () => {
-    CriteriaAPI.get().then((res) => {
-      setCriterias(res.data.data)
-    })
+    CriteriaAPI.find(state.lineMapping?.attributes?.mapping?.data?.attributes?.registrant?.data?.attributes?.employee?.data?.attributes?.level?.data?.attributes?.functional_name.includes("Manajemen Dasar") ? "&filters[useFor][$contains]=md" : "&filters[useFor][$contains]=am").then(
+      (res) => {
+        setCriterias(res.data.data)
+      }
+    )
   }
 
   return (
@@ -250,9 +263,13 @@ const Penilaian = () => {
                         <CFormInput type="number" min={0} max={100} id="nilai" name='nilai' />
                       </CTableDataCell>
                       <CTableDataCell>
-                        <CIcon 
-                          icon={cilX} 
-                          style={{ width: "30px", height: "30px" }}/>
+                        <CButton
+                          color='transparent'
+                          onClick={ () => removeRow(index) }>
+                          <CIcon
+                            icon={cilX} 
+                            style={{ width: "30px", height: "30px" }}/>
+                        </CButton>
                       </CTableDataCell>
                     </CTableRow>
                   ))}                    

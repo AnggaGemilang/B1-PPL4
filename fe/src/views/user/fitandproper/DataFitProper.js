@@ -35,6 +35,8 @@ import MappingAPI from '../../../config/user/MappingAPI'
 import PositionAPI from '../../../config/admin/PositionAPI'
 import url from "../../../config/setting"
 import logoPDF from 'src/assets/images/pdf-icon.png'
+import ScoreAPI from 'src/config/user/ScoreAPI'
+import FitAndProperAPI from 'src/config/user/FitAndProperAPI'
 
 const DataFitProper = () => {
   const location = useLocation()
@@ -86,10 +88,21 @@ const DataFitProper = () => {
   }
 
   const deleteData = () => {
-    MappingAPI.delete(chosenMapping.id).then((res) => {
-      setMessage("Pendaftaran Telah Dihapus")
-      setChosenMapping({ visible: false })
-      getData()
+    MappingAPI.getOne(chosenMapping.id).then((res) => {
+      res.data.data.attributes.line_mappings.data.forEach(line_mapping => {
+        line_mapping.attributes.scores_fitproper.data.forEach(score_fitproper => {
+          ScoreAPI.delete(score_fitproper.id)
+        })
+        line_mapping.attributes.scores_interview.data.forEach(score_interview => {
+          ScoreAPI.delete(score_interview.id)
+        })
+        FitAndProperAPI.deleteLineMapping(line_mapping.id)
+      })
+      MappingAPI.delete(res.data.data.id).then(res => {
+        setMessage("Pendaftaran Telah Dihapus")
+        setChosenMapping({ visible: false })
+        getData()
+      })
     })
   }
 
@@ -192,7 +205,7 @@ const DataFitProper = () => {
                     <CTableHeaderCell scope="col">Tanggal</CTableHeaderCell>
                     <CTableHeaderCell scope="col">Penguji</CTableHeaderCell>
                     <CTableHeaderCell scope="col">Lampiran File</CTableHeaderCell>
-                    <CTableHeaderCell scope="col">Action</CTableHeaderCell>
+                    <CTableHeaderCell scope="col">Aksi</CTableHeaderCell>
                   </CTableRow>
                 </CTableHead>
                 <CTableBody>

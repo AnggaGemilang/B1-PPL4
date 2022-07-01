@@ -76,6 +76,15 @@ const CetakRekapFitAndProper = () => {
   }
 
   const generatePDF = (e) => {
+
+    const months = ['Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'];    
+
+    const date = new Date();
+    const day = date.getDate();
+    const month = date.getMonth();
+    var yy = date.getYear();
+    var year = (yy < 1000) ? yy + 1900 : yy;
+
     FitAndProperAPI.getRekapManualFitProper(e.target.getAttribute("registrant_val"), e.target.getAttribute("projection_val")).then((res) => {
       console.log(e.target.getAttribute("registrant_val"))
       console.log(e.target.getAttribute("projection_val"))
@@ -122,8 +131,8 @@ const CetakRekapFitAndProper = () => {
         doc.setFontSize("12")
         doc.setFont('helvetica', 'normal')
 
-        doc.text(40, finalY+=38, "Bandung, 28 Juni 2022")
-        doc.text(650, finalY, "Bandung, 28 Juni 2022")
+        doc.text(40, finalY+=38, "Bandung, " + day + ' ' + months[month] + ' ' + year)
+        doc.text(650, finalY, "Bandung, " + day + ' ' + months[month] + ' ' + year)
 
         doc.text(40, finalY+=18, "Kepala Pusat Fit Proper")
         doc.text(650, finalY, "Kepala Pusat Fit Proper")

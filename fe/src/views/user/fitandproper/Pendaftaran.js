@@ -51,7 +51,6 @@ const Pendaftaran = () => {
   })
 
   useEffect(() => {
-    getExaminerData()
     if (nipValue.length > 1) {
       DataPesertaAPI.findRegistrants(nipValue).then(
       (res) => {
@@ -60,16 +59,25 @@ const Pendaftaran = () => {
             ...state,
             registrant: res.data.data[0],
           });
-          CriteriaAPI.find(res.data.data[0]?.attributes?.employee?.data?.attributes?.level?.data?.attributes?.functional_name.includes("Manajemen Dasar") ? "&filters[useFor][$contains]=md" : "&filters[useFor][$contains]=am").then(
+          CriteriaAPI.find(res.data.data[0]?.attributes?.employee?.data?.attributes?.level?.data?.attributes?.functional_name.includes("Manajemen Dasar") ? "&filters[defaultUsed][$eq]=fitproper&filters[useFor][$contains]=md" : "&filters[defaultUsed][$eq]=fitproper&filters[useFor][$contains]=am").then(
             (res) => {
               if(res.data.data.length != 0){
                 setCriterias(res.data.data)
-                console.log(res.data.data)
               } else {
                 setCriterias([])
               }
             }
-          )          
+          )
+          DataPengujiAPI.findExaminers(`&filters[employee][NIP][$ne]=${res.data.data[0].attributes.employee.data.attributes.NIP}`).then((res) => {
+            console.log(res)
+            console.log(state?.registrant?.id)
+            setExaminers1(res.data.data)
+            if(state.status == "edit"){
+              setNipValue(state?.data?.attributes?.registrant?.data?.attributes?.employee?.data?.attributes?.NIP)
+              setExaminers2(res.data.data)
+              setExaminers3(res.data.data)
+            }
+          })
         } else {
           setState({ 
             ...state, 
@@ -85,17 +93,6 @@ const Pendaftaran = () => {
       })
     );
   }, [nipValue])
-
-  const getExaminerData = () => {
-    DataPengujiAPI.get().then((res) => {
-      setExaminers1(res.data.data)
-      if(state.status == "edit"){
-        setNipValue(state?.data?.attributes?.registrant?.data?.attributes?.employee?.data?.attributes?.NIP      )
-        setExaminers2(res.data.data)
-        setExaminers3(res.data.data)
-      }
-    })
-  }  
 
   const deleteNode = (value, arr) => {
     const temp = [...arr]
