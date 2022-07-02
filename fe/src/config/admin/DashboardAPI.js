@@ -10,7 +10,7 @@ export default {
   getKeteragan4Publik : () => api.get(`/mappings?filters[status][$eq]=done`),
 
   getKeteragan1Penguji : () => api.get(`/line-mappings?populate[1]=mapping.examiner.employee&filters[status_fitproper][$eq]=false&filters[examiner][employee][NIP][$eq]=${JSON.parse(sessionStorage.getItem("auth")).user.employee.NIP}`),
-  getKeteragan3Penguji : () => api.get(`/line-mappings?populate[1]=mapping.examiner.employee&filters[status_interview][$eq]=false&filters[examiner][employee][NIP][$eq]=${JSON.parse(sessionStorage.getItem("auth")).user.employee.NIP}`),
-  getKeteragan2Penguji : () => api.get(`/line-mappings?populate[1]=mapping.examiner.employee&filters[status_fitproper][$eq]=true&filters[examiner][employee][NIP][$eq]=${JSON.parse(sessionStorage.getItem("auth")).user.employee.NIP}`),
+  getKeteragan2Penguji : () => api.get(`/line-mappings?populate[1]=mapping.examiner.employee&filters[status_interview][$eq]=false&filters[is_interview][$eq]=true&filters[examiner][employee][NIP][$eq]=${JSON.parse(sessionStorage.getItem("auth")).user.employee.NIP}`),
+  getKeteragan3Penguji : () => api.get(`/line-mappings?populate[1]=mapping.examiner.employee&filters[status_fitproper][$eq]=true&filters[examiner][employee][NIP][$eq]=${JSON.parse(sessionStorage.getItem("auth")).user.employee.NIP}`),
   getKeteragan4Penguji : () => api.get(`/line-mappings?populate[1]=mapping.examiner.employee&filters[status_interview][$eq]=true&filters[examiner][employee][NIP][$eq]=${JSON.parse(sessionStorage.getItem("auth")).user.employee.NIP}`)
 }

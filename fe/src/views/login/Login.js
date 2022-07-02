@@ -38,6 +38,7 @@ const Login = () => {
       password: document.getElementById("password").value
     }
     LoginAPI.login(data).then((res) => {
+      console.log(res.data)
       sessionStorage.setItem("auth", JSON.stringify(res.data))
       window.location.href = "/"
     }).catch((err) => {

@@ -98,14 +98,10 @@ const DataPenilaian = () => {
       }
     }
     WawancaraAPI.edit(chosenLineMapping?.lineMapping?.id, body).then(res => {
-      let examiners = 
-        (chosenLineMapping?.lineMapping?.attributes?.mapping?.data?.attributes?.examiners_interview == null) ? 
-        [] : chosenLineMapping?.lineMapping?.attributes?.mapping?.data?.attributes?.examiners_interview
-      examiners.push(chosenLineMapping?.lineMapping?.attributes?.examiner?.data?.id)
       const body = {
         data: {
           is_interview: true,
-          examiners_interview: examiners
+          examiners_interview: [...chosenLineMapping?.lineMapping?.attributes?.mapping?.data?.attributes?.examiners_interview?.data, chosenLineMapping?.lineMapping?.attributes?.examiner?.data?.id]
         }
       }
       MappingAPI.edit(chosenLineMapping?.lineMapping?.attributes?.mapping?.data?.id, body).then(res => {
@@ -273,7 +269,7 @@ const DataPenilaian = () => {
                           style={{width: '80px', margin: '5px 5px'}}                          
                           onClick={() => navigate(
                             '/fitandproper/datapenilaian/nilai/edit', 
-                            { state: { data: linemapping }}
+                            { state: { data: linemapping, status: 'edit' }}
                           )} >
                             Edit
                         </CButton>
@@ -286,7 +282,7 @@ const DataPenilaian = () => {
                           style={{width: '75px', margin: '5px 5px'}}
                           onClick={() => navigate(
                             '/fitandproper/datapenilaian/nilai', 
-                            { state: { data: linemapping } }
+                            { state: { data: linemapping, status: 'tambah' } }
                           )} >
                             Nilai
                         </CButton>

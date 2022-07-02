@@ -223,7 +223,7 @@ const DataPenilaian = () => {
                           style={{width: '75px', margin: '5px 5px'}}
                           onClick={() => navigate(
                             '/wawancara/datapenilaian/nilai/edit', 
-                            { state: { data: linemapping }}
+                            { state: { data: linemapping, status: 'edit' }}
                           )}>
                             Edit
                         </CButton>
@@ -236,7 +236,7 @@ const DataPenilaian = () => {
                           style={{width: '75px', margin: '5px 5px'}}
                           onClick={() => navigate(
                             '/wawancara/datapenilaian/nilai', 
-                            { state: { data: linemapping } }
+                            { state: { data: linemapping, status: 'tambah' } }
                           )}>
                             Nilai
                         </CButton>

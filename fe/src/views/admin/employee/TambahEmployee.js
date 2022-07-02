@@ -21,21 +21,23 @@ import LevelAPI from '../../../config/admin/LevelAPI'
 import url from "../../../config/setting"
 import EmployeeAPI from '../../../config/admin/EmployeeAPI'
 import SubFieldAPI from '../../../config/admin/SubFieldAPI'
+import axios from "axios"
+import AdministrasiUserAPI from 'src/config/admin/AdministrasiUserAPI'
 
 const TambahEmployee = () => {
-  const navigate = useNavigate();
-  const location = useLocation();
+  const navigate = useNavigate()
+  const location = useLocation()
 
   const [positions, setPositions] = useState([])
   const [subfields, setSubfields] = useState([])
   const [levels, setLevels] = useState([])
-  const [message, setMessage] = useState("");
+  const [message, setMessage] = useState("")
   const [state, setState] = useState({
     photo: null,
     data: location?.state?.data,
     status: location?.state?.status,
     visibleSubmit: false    
-  });
+  })
 
   useEffect(() => {
     axios.all([LevelAPI.get(), PositionAPI.get(), SubFieldAPI.get()]).then(
@@ -44,7 +46,7 @@ const TambahEmployee = () => {
         setPositions(res[1]?.data.data)
         setSubfields(res[2]?.data.data)
       })
-    );
+    )
   }, [])  
 
   const postData = (event) => {
@@ -56,7 +58,7 @@ const TambahEmployee = () => {
         data: {
           NIP: document.getElementById("nip").value,        
           Name: document.getElementById("name").value,
-          Gender: document.getElementById("gender").value,
+          Gender: document.querySelector("input[name='gender']:checked").value,
           BirthDate: document.getElementById("birth_date").value,
           BirthPlace: document.getElementById("birth_place").value,
           Email: document.getElementById("email").value,
@@ -66,7 +68,7 @@ const TambahEmployee = () => {
           position: document.getElementById("position").value,
           sub_field: document.getElementById("sub_field").value,
         }
-      };
+      }
       EmployeeAPI.add(body).then(
         (res) => {
           let formData = new FormData()
@@ -76,24 +78,24 @@ const TambahEmployee = () => {
           formData.append('field', 'Photo')
           EmployeeAPI.addPhoto(formData).then(
             (res) => {
-              navigate('/employee', {state: { successMessage: 'Pegawai telah berhasil ditambahkan' } });            
+              navigate('/employee', {state: { successMessage: 'Pegawai telah berhasil ditambahkan' } })            
             },
             (err) => {
               setMessage(err.message)
               setState({ ...state, visibleSubmit: false })
             }
-          );  
+          )  
         },
         (err) => {
           setMessage(err.message)
           setState({ ...state, visibleSubmit: false })
         }
-      );
+      )
     } else {
       let body = {
         data: {   
           Name: document.getElementById("name").value,
-          Gender: document.getElementById("gender").value,
+          Gender: document.querySelector("input[name='gender']:checked").value,
           BirthDate: document.getElementById("birth_date").value,
           BirthPlace: document.getElementById("birth_place").value,
           Religion: document.getElementById("religion").value,
@@ -102,14 +104,14 @@ const TambahEmployee = () => {
           position: document.getElementById("position").value,
           sub_field: document.getElementById("sub_field").value,
         }
-      };
+      }
       EmployeeAPI.edit(state?.data?.id, body).then(
         (res) => {
           if(state.photo != null){
             if(state?.data?.attributes?.Photo?.data != null){
               EmployeeAPI.deletePhoto(state?.data?.attributes?.Photo?.data?.id).then(res => {
                 console.log("Foto Berhasil Dihapus")
-              });
+              })
             }
             let formData = new FormData()
             formData.append('files', state?.photo)
@@ -118,21 +120,31 @@ const TambahEmployee = () => {
             formData.append('field', 'Photo')
             EmployeeAPI.addPhoto(formData).then(
               (res) => {
-                navigate('/employee', {state: { successMessage: 'Pegawai telah berhasil diperbaharui' } });            
+                if(state?.data?.id == JSON.parse(sessionStorage.getItem("auth"))?.user?.employee?.id){
+                  let temp = JSON.parse(sessionStorage.getItem("auth"))
+                  temp.user.cp_photo = res.data[0]?.formats?.thumbnail?.url
+                  sessionStorage.setItem('auth', JSON.stringify(temp))
+                }
+                const body = {
+                  cp_photo: res.data[0]?.formats?.thumbnail?.url
+                }
+                AdministrasiUserAPI.edit(state?.data?.attributes?.account?.data?.id, body).then(res => {
+                  window.location.href = "/employee"
+                })
               },
               (err) => {
                 setMessage(err.message)
                 setState({ ...state, visibleSubmit: false })
               }
-            );               
+            )               
           }
-          navigate('/employee', {state: { successMessage: 'Pegawai telah berhasil diperbaharui' } });
+          navigate('/employee', {state: { successMessage: 'Pegawai telah berhasil diperbaharui' } })
         },
         (err) => {
           setMessage(err.message)
           setState({ ...state, visibleSubmit: false })
         }
-      );      
+      )      
     }
   }
 
@@ -188,7 +200,7 @@ const TambahEmployee = () => {
                   </CCol>
                 </CRow>
                 <CRow className="mt-3">
-                  <CFormLabel htmlFor="gender" className="col-sm-2 col-form-label">
+                  <CFormLabel htmlFor="gender2" className="col-sm-2 col-form-label">
                     Jenis Kelamin
                   </CFormLabel>
                   <CCol sm={10} className="d-flex align-items-center">
@@ -196,7 +208,7 @@ const TambahEmployee = () => {
                       inline
                       type="radio"
                       name="gender"
-                      id="gender"
+                      id="gender1"
                       value="Male"
                       label="Laki-laki"
                       defaultChecked={state?.status == "edit" && state?.data?.attributes?.Gender == "Male"}
@@ -205,7 +217,7 @@ const TambahEmployee = () => {
                       inline
                       type="radio"
                       name="gender"
-                      id="gender"
+                      id="gender2"
                       value="Female"
                       defaultChecked={state?.status == "edit" && state?.data?.attributes?.Gender == "Female"}
                       label="Perempuan"

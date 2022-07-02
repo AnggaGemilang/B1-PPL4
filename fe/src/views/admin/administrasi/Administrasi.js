@@ -31,7 +31,7 @@ import GradeAPI from '../../../config/admin/GradeAPI'
 import LevelAPI from '../../../config/admin/LevelAPI'
 import SubFieldAPI from '../../../config/admin/SubFieldAPI'
 import AdministrasiUserAPI from '../../../config/admin/AdministrasiUserAPI'
-import axios from "axios";
+import axios from "axios"
 
 const Administrasi = () => {
   const [employees, setEmployees] = useState([])

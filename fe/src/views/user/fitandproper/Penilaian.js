@@ -30,11 +30,14 @@ const Penilaian = () => {
   const [message, setMessage] = useState("")
   const [state, setState] = useState({
     lineMapping: location?.state?.data,
+    status: location?.state?.status,
     visibleSubmit: false,
   })
 
   useEffect(() => {
     getScore()
+    console.log(location?.state?.data)
+    console.log(location?.state?.status)
   }, [])  
   
   const postData = (e) => {
@@ -113,7 +116,7 @@ const Penilaian = () => {
                       <CTableDataCell id='score' id_val={ score?.id }>{ score?.attributes?.criterion?.data?.attributes?.criteria }</CTableDataCell>
                       <CTableDataCell>{ score?.attributes?.criterion?.data?.attributes?.value + "%" }</CTableDataCell>
                       <CTableDataCell>
-                        <CFormInput type="number" min={0} max={100} id="nilai" name='nilai' />
+                        <CFormInput type="number" min={0} max={100} id="nilai" name='nilai' defaultValue={ state.status == "edit" ? score?.attributes?.score : '' } />
                       </CTableDataCell>
                     </CTableRow>
                   ))}  

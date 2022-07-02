@@ -20,13 +20,15 @@ import {
   CAccordionHeader,
   CAccordionItem,
   CAlert,
-  CFormSelect    
+  CFormSelect,
+  CSpinner
 } from '@coreui/react'
 import { cilSearch } from '@coreui/icons'
 import CIcon from '@coreui/icons-react'
 import DataPesertaAPI from '../../../config/user/DataPesertaAPI'
 import FitAndProperAPI from '../../../config/user/FitAndProperAPI'
 import PositionAPI from 'src/config/admin/PositionAPI'
+import ScoreAPI from 'src/config/user/ScoreAPI'
 
 const RekapMFitAndProper = () => {
 
@@ -34,7 +36,10 @@ const RekapMFitAndProper = () => {
   const [projections, setProjections] = useState([])
   const [lineMappings, setLineMappings] = useState([])
   const [state, setState] = useState({
-    visible: false
+    visible: false,
+    visibleSubmit: false,    
+    message: "",
+    color: ""
   })
 
   useEffect(() => {
@@ -50,10 +55,10 @@ const RekapMFitAndProper = () => {
 
     FitAndProperAPI.getRekapManualFitProper(registrant, projection).then((res) => {
       if(res.data.data.length != 0){
-        setState({ ...state, visible: true })
+        setState({ ...state, visible: true, message: "", color: "" })
         setLineMappings(res.data.data)
       } else {
-        setState({ ...state, visible: false })        
+        setState({ ...state, visible: false, message: "Data Tidak Ditemukan!", color: "danger" })        
         setLineMappings([])        
       }
     })    
@@ -71,9 +76,40 @@ const RekapMFitAndProper = () => {
     })
   }
 
+  const postData = (e) => {
+    e.preventDefault()    
+    setState({ ...state, visibleSubmit: true })
+
+    const data = document.querySelector('#body').children
+    for (let i = 0; i < data.length; i++) {
+      const score = data[i].querySelectorAll('#score')
+      for (let i = 0; i < score.length; i++) {
+        const body = {
+          data : {
+            score: score[i].value
+          }
+        }
+        ScoreAPI.edit(score[i].getAttribute('score_id'), body).then(
+          (res) => {
+            setState({ ...state, visibleSubmit: false, message: "Nilai Berhasil Diperbaharui", color: 'success' })
+            // document.getElementById('filter_projection').value = '0'
+            // document.getElementById('filter_registrat').value = '0'
+          }, 
+          (err) => {
+            setMessage(err.message)
+            setState({ ...state, visibleSubmit: false })
+          }
+        )                
+      }
+    }
+  }
+
   return (
     <CRow>
       <CCol xs={12}>
+        <CCol xs={12}>
+          { state.message && <CAlert color={state.color} dismissible onClose={() => { setState({ ...state, message: "" }) }}> { state.message } </CAlert> }
+        </CCol> 
         <CCol xs={12}>
           <CAccordion>
             <CAccordionItem itemKey={1}>
@@ -84,7 +120,7 @@ const RekapMFitAndProper = () => {
                     <CCol xs={6}>
                       <CFormLabel htmlFor="exampleFormControlInput1">Peserta</CFormLabel>
                       <CFormSelect name="filter_registrant" id="filter_registrant" className="mb-3" aria-label="Large select example">
-                        <option value="">Pilih Peserta</option>
+                        <option value="0">Pilih Peserta</option>
                         { registrants?.map(registrant =>
                           <option key={ registrant.id } value={ registrant.id } >{ registrant?.attributes?.employee?.data?.attributes?.Name }</option>
                         )}
@@ -93,7 +129,7 @@ const RekapMFitAndProper = () => {
                     <CCol xs={6}>
                       <CFormLabel htmlFor="filter_usefor">Proyeksi</CFormLabel>
                       <CFormSelect name="filter_projection" id="filter_projection" className="mb-3" aria-label="Large select example">
-                        <option value="">Pilih Proyeksi</option>
+                        <option value="0">Pilih Proyeksi</option>
                         { projections?.map(projection =>
                           <option value={ projection.id } key={ projection.id } >{ projection.attributes.position_name }</option>
                         )}
@@ -125,7 +161,7 @@ const RekapMFitAndProper = () => {
                 <strong>Rekap Penilaian Manual Peserta Fit Proper</strong>
               </CCardHeader>
                 <CCardBody>
-                  <CTable striped style={{ display:'block', overflowX:'auto'}}>
+                  <CTable striped id='my-table' style={{ display:'block', overflowX:'auto'}}>
                     <CTableHead>
                       <CTableRow>
                         <CTableHeaderCell scope="col">No</CTableHeaderCell>
@@ -135,23 +171,28 @@ const RekapMFitAndProper = () => {
                         )}
                       </CTableRow>
                     </CTableHead>
-                    <CTableBody>
+                    <CTableBody id="body">
                       { lineMappings?.map( (lineMapping, index) =>
-                        <CTableRow key={lineMapping.id}>
+                        <CTableRow key={lineMapping.id} id="row-data">
                           <CTableHeaderCell scope="row">{index+1}</CTableHeaderCell>
-                          <CTableDataCell key={lineMapping?.id} scope="col">{ lineMapping?.attributes?.examiner?.data?.attributes?.employee?.data?.attributes?.Name }</CTableDataCell>
+                          <CTableDataCell id='examiner' key={lineMapping?.id} examiner_id={lineMapping?.attributes?.examiner?.data?.id} scope="col">{ lineMapping?.attributes?.examiner?.data?.attributes?.employee?.data?.attributes?.Name }</CTableDataCell>
                           { lineMapping?.attributes?.scores_fitproper?.data.map(score =>
-                            <CTableDataCell key={score?.id}><CFormInput type="text" id="inputEmail3" defaultValue={score?.attributes?.score || 0}/></CTableDataCell>
+                            <CTableDataCell key={score?.id}>
+                              <CFormInput type="text" id="score" score_id={score?.id} defaultValue={score?.attributes?.score || 0}/>
+                            </CTableDataCell>
                           )}
                         </CTableRow>
                       )}
                     </CTableBody>
                   </CTable>
-                    <CButton
-                      color='primary'
-                      style={{width: '100%', marginBottom: '10px'}} >
+                  <CRow className='mt-4'>
+                    <CCol xs={12} className="position-relative">
+                      <CButton disabled={state.visibleSubmit} type="submit" style={{width:'100%'}} className="p-2 w-100" onClick={postData}>
                         Ubah Data
-                    </CButton>                  
+                      </CButton>
+                      { state.visibleSubmit && <CSpinner color="primary" className='position-absolute' style={{right: "20px", top: "5px"}} /> }
+                    </CCol>
+                  </CRow>
                 </CCardBody>
             </CCard>
           : null
