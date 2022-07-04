@@ -21,15 +21,24 @@ import {
   CAlert,
   CForm,
   CImage,
-  CFormSelect  
+  CFormSelect,
+  CModal,
+  CModalBody,
+  CModalFooter,
+  CModalHeader,
+  CModalTitle,
 } from '@coreui/react'
 import { useLocation, useNavigate } from "react-router-dom"
 import { cilSearch } from '@coreui/icons'
 import CIcon from '@coreui/icons-react'
 import WawancaraAPI from '../../../config/user/WawancaraAPI'
 import PositionAPI from 'src/config/admin/PositionAPI'
+import MappingAPI from '../../../config/user/MappingAPI'
+import FitAndProperAPI from '../../../config/user/FitAndProperAPI'
 import url from "../../../config/setting"
 import logoPDF from 'src/assets/images/pdf-icon.png'
+import DataPesertaAPI from 'src/config/user/DataPesertaAPI'
+import EmployeeAPI from 'src/config/admin/EmployeeAPI'
 
 const DataPenilaian = () => {
   const location = useLocation()
@@ -38,6 +47,10 @@ const DataPenilaian = () => {
   const [lineMappings, setLineMappings] = useState([])
   const [positions, setPositions] = useState([])
   const [message, setMessage] = useState("")
+  const [chosenLineMapping, setChosenLineMapping] = useState({
+    visible_finalized: false,
+    lineMapping: 0    
+  })  
 
   useEffect(() => {
     setMessage(location?.state?.successMessage)
@@ -75,6 +88,101 @@ const DataPenilaian = () => {
   const getData = () => {
     WawancaraAPI.getLineMapping().then((res) => {
       setLineMappings(res.data.data)
+    })
+  }
+
+  const interviewFinalized = () => {
+    let lolos = 0
+    let tidak_lolos = 0
+    let sudah_finalisasi = true
+
+    let body = {
+      data: {
+        interview_finalized: true
+      }
+    }
+    FitAndProperAPI.editLineMapping(chosenLineMapping?.lineMapping.id, body).then(res => {
+      FitAndProperAPI.findLineMappingAll(`&filters[mapping][id][$eq]=${chosenLineMapping?.lineMapping?.attributes?.mapping?.data?.id}`)
+        .then(res => {
+          console.log(res.data.data)
+          res.data.data.map(line_mapping => {
+            if(line_mapping?.attributes?.is_interview == "true"){
+              if(line_mapping?.attributes?.status_interview == false){
+                sudah_finalisasi = false
+              }
+            } else if (line_mapping?.attributes?.is_interview == "false") {
+              if(line_mapping?.attributes?.status_fitproper == false){
+                sudah_finalisasi = false
+              }
+            } else if (line_mapping?.attributes?.is_interview == "not_decided"){
+              sudah_finalisasi = false
+            }
+          })
+          if(sudah_finalisasi){
+            res.data.data.map(line_mapping => {
+              console.log(line_mapping)
+              if(line_mapping?.attributes?.is_interview == "true"){
+                if(line_mapping?.attributes?.passed_interview == "passed"){
+                  lolos++
+                } else if (line_mapping?.attributes?.passed_interview == "not_passed"){
+                  tidak_lolos++
+                }
+              } else {
+                if(line_mapping?.attributes?.passed_fitproper == "passed"){
+                  lolos++
+                } else if(line_mapping?.attributes?.passed_fitproper == "not_passed"){
+                  tidak_lolos++
+                }
+              }
+            })
+            body = {
+              data: {
+                status: (lolos > tidak_lolos) ? "passed" : "not_passed"
+              }
+            }
+            MappingAPI.edit(chosenLineMapping?.lineMapping?.attributes?.mapping?.data?.id, body).then(
+              (res) => {
+                body = {
+                  data: {
+                    status: 'non_active'
+                  }
+                }
+                DataPesertaAPI.edit(chosenLineMapping?.lineMapping?.attributes?.mapping?.data?.attributes?.registrant?.data?.id, body).then(
+                  (res) => {
+                    console.log(res.data.data)
+                    if(lolos > tidak_lolos){
+                      body = {
+                        data: {
+                          position: chosenLineMapping?.lineMapping?.attributes?.mapping?.data?.attributes?.position?.data?.id,
+                          level: chosenLineMapping?.lineMapping?.attributes?.mapping?.data?.attributes?.level?.data?.id
+                        }
+                      }
+                      EmployeeAPI.edit(chosenLineMapping?.lineMapping?.attributes?.mapping?.data?.attributes?.registrant?.data?.attributes?.employee?.data?.attributes?.NIP, body).then(
+                        (res) => {
+                          console.log(res.data.data)                          
+                          setChosenLineMapping({ ...chosenLineMapping, visible_finalized: false })   
+                          getData()                        
+                        },
+                        (err) => {
+                          console.log(err.message)
+                        }
+                      )
+                    }
+                  },
+                  (err) => {
+                    console.log(err.message)
+                  }
+                )
+              },
+              (err) => {
+                console.log(err.message)
+              }
+            )
+          }
+        } 
+      )
+      setChosenLineMapping({ ...chosenLineMapping, visible_finalized: false })   
+      getData()
     })
   }
 
@@ -203,7 +311,7 @@ const DataPenilaian = () => {
                         <CButton
                           color='success'
                           variant="outline"
-                          style={{width: '75px', margin: '5px 5px'}}
+                          style={{width: '105px', margin: '5px 5px'}}
                           onClick={() => navigate(
                             '/wawancara/datapenilaian/datanilai', 
                             { state: { 
@@ -216,27 +324,40 @@ const DataPenilaian = () => {
                         </CButton>
                         : null
                       }
-                      { (linemapping?.attributes?.status_interview) ? 
+                      { (linemapping?.attributes?.status_interview && !linemapping?.attributes?.interview_finalized) ? 
                         <CButton
                           color='warning'
                           variant="outline"
-                          style={{width: '75px', margin: '5px 5px'}}
+                          style={{width: '105px', margin: '5px 5px'}}
                           onClick={() => navigate(
                             '/wawancara/datapenilaian/nilai/edit', 
-                            { state: { data: linemapping }}
+                            { state: { data: linemapping, status: 'edit' }}
                           )}>
                             Edit
                         </CButton>
                         : null
-                      }                      
+                      }       
+                      { (linemapping?.attributes?.status_interview && !linemapping?.attributes?.interview_finalized) ? 
+                        <CButton
+                          color='primary'
+                          variant="outline"
+                          style={{width: '105px', margin: '5px 5px'}}                          
+                          onClick={() => setChosenLineMapping({ 
+                            visible_finalized: true, 
+                            lineMapping: linemapping
+                          })}  >
+                            Finalisasi
+                        </CButton>
+                        : null
+                      }                                     
                       { (!linemapping?.attributes?.status_interview) ?
                         <CButton
                           color='primary'
                           variant="outline" 
-                          style={{width: '75px', margin: '5px 5px'}}
+                          style={{width: '105px', margin: '5px 5px'}}
                           onClick={() => navigate(
                             '/wawancara/datapenilaian/nilai', 
-                            { state: { data: linemapping } }
+                            { state: { data: linemapping, status: 'tambah' } }
                           )}>
                             Nilai
                         </CButton>
@@ -246,7 +367,21 @@ const DataPenilaian = () => {
                   </CTableRow>
                 )}
               </CTableBody>
-            </CTable>        
+            </CTable>      
+            <CModal backdrop="static" visible={chosenLineMapping.visible_finalized} onClose={() => setChosenLineMapping({ visible: false })}>
+              <CModalHeader>
+                <CModalTitle>Apakah Anda Yakin?</CModalTitle>
+              </CModalHeader>
+              <CModalBody>
+                Dengan ini nilai akan difinalisasi dan data tidak dapat diubah kembali!
+              </CModalBody>
+              <CModalFooter>
+                <CButton color="secondary" onClick={() => setChosenLineMapping({ visible: false })}>
+                  Close
+                </CButton>
+                <CButton color="primary" onClick={() => interviewFinalized()}>Finalisasi</CButton>
+              </CModalFooter>
+            </CModal>              
           </CCardBody>
         </CCard>
       </CCol>

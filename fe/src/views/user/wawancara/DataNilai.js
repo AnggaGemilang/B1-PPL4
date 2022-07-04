@@ -3,7 +3,8 @@ import {
   CCol,
   CRow,
   CCallout,  
-  CFormSelect  
+  CFormSelect,
+  CAlert
 } from '@coreui/react'
 import { useLocation } from "react-router-dom"
 import MappingAPI from '../../../config/user/MappingAPI'
@@ -19,6 +20,7 @@ const DataNilai = () => {
     registrant: location?.state?.registrant,
     position: location?.state?.position,
     examiner: location?.state?.examiner,
+    message: "",
     visible: location?.state?.examiner == null ? false : true,
     total: 0
   })
@@ -37,15 +39,17 @@ const DataNilai = () => {
   const getData = e => {
     const examiner = (location?.state?.examiner == null) ? e?.target?.value : state.examiner
     ScoreAPI.getNilaiWawancara(state.registrant, examiner, state.position).then((res) => {
-      if(res.data.data.length > 0){
+      if(res?.data?.data[0]?.attributes?.scores_interview?.data?.length > 0){
         let value = 0
         setScores(res.data.data[0])
-        res?.data[0]?.attributes?.scores_interview?.data.forEach((element) => { 
+        res?.data?.data[0]?.attributes?.scores_interview?.data.forEach((element) => { 
           value += parseInt(element.attributes.score / 100 * element.attributes.criterion.data.attributes.value)
         })     
-        setState({ ...state, visible: true, total: value })        
+        console.log(value)
+        console.log(state.total)
+        setState({ ...state, visible: true, total: value, message: "" })        
       } else {
-        setState({ ...state, visible: false })
+        setState({ ...state, visible: false, message: "Penguji Belum Menilai!" })
       }
     })
   }
@@ -64,6 +68,9 @@ const DataNilai = () => {
             </ul>
           </CCallout>
         </CCol>
+        <CCol xs={12}>
+          { state.message && <CAlert color="danger" dismissible onClose={() => { setState({ ...state, message: "" }) }}> { state.message } </CAlert> }
+        </CCol>        
         <CCol xs={3}>
           { state?.examiner == null ?
             <CFormSelect name="examiner" id="examiner" className="mb-3" aria-label="Large select example" onChange={getData}>

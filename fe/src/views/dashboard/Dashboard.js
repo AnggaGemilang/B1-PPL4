@@ -78,11 +78,12 @@ const Dashboard = () => {
       DashboardAPI.getKeteragan4Penguji()
     ]).then(
       axios.spread((...res) => {
+        console.log(res)
         setState({
           ...state,
           keterangan1: res[0]?.data?.meta?.pagination?.total,
-          keterangan2: res[2]?.data?.meta?.pagination?.total,
-          keterangan3: res[1]?.data?.meta?.pagination?.total,
+          keterangan2: res[1]?.data?.meta?.pagination?.total,
+          keterangan3: res[2]?.data?.meta?.pagination?.total,
           keterangan4: res[3]?.data?.meta?.pagination?.total,
         })
       })

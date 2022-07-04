@@ -3,7 +3,8 @@ import {
   CCol,
   CRow,
   CCallout,  
-  CFormSelect  
+  CFormSelect,
+  CAlert  
 } from '@coreui/react'
 import { useLocation } from "react-router-dom"
 import MappingAPI from '../../../config/user/MappingAPI'
@@ -20,7 +21,8 @@ const DataNilai = () => {
     position: location?.state?.position,
     examiner: location?.state?.examiner,
     visible: location?.state?.examiner == null ? false : true,
-    total: 0
+    total: 0,
+    message: "",
   })
 
   useEffect(() => {
@@ -37,16 +39,16 @@ const DataNilai = () => {
   const getData = e => {
     const examiner = (location?.state?.examiner == null) ? e?.target?.value : state.examiner
     ScoreAPI.getNilaiFitProper(state.registrant, examiner, state.position).then((res) => {
-      if(res.data.data.length > 0){
+      if(res?.data?.data[0]?.attributes?.scores_fitproper?.data[0]?.attributes?.score != 0){
         let value = 0
         setScores(res.data.data[0])
         console.log(res.data.data[0])
         res?.data.data[0]?.attributes?.scores_fitproper?.data.forEach((element) => { 
           value += parseInt(element.attributes.score / 100 * element.attributes.criterion.data.attributes.value)
         })     
-        setState({ ...state, visible: true, total: value })        
+        setState({ ...state, visible: true, total: value, message: "" })        
       } else {
-        setState({ ...state, visible: false })
+        setState({ ...state, visible: false, message: "Penguji belum menilai" })
       }
     })
   }
@@ -65,10 +67,13 @@ const DataNilai = () => {
             </ul>
           </CCallout>
         </CCol>
+        <CCol xs={12}>
+          { state.message && <CAlert color="danger" dismissible onClose={() => { setState({ ...state, message: "" }) }}> { state.message } </CAlert> }
+        </CCol>
         <CCol xs={3}>
           { state?.examiner == null ?
             <CFormSelect name="examiner" id="examiner" className="mb-3" aria-label="Large select example" onChange={getData}>
-              <option value='0'>Pilih Penguji</option>            
+              <option value=''>Pilih Penguji</option>            
                 { examiners.map(examiner => (
                   <option key={examiner.id} value={examiner.id}>{ examiner?.attributes?.employee?.data?.attributes?.Name }</option>
                 ))}  

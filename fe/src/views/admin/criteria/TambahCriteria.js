@@ -82,12 +82,12 @@ const TambahCriteria = () => {
       <CCol xs={12}>
         <CCol xs={12} >
           <CCallout color="info" className="bg-white">
-            <p style={{ fontSize: "18px", marginBottom: "0px" }}><b>Catatan</b></p>
-            <ul className='catatan' style={{ marginBottom: "0px" }}>
-              <li>Pastikan data yang dimasukkan valid</li>
+            <p style={{ fontSize: "18px", marginBottom: "4px" }}><b>Catatan Pengisian</b></p>
+            <ul className='catatan'>
+              <li>Sebelum submit, pastikan seluruh data yang dimasukkan valid</li>
+              <li>Masukkan kalimat dengan format huruf kapital pada setiap awal katanya</li>
               <li>Data yang dimasukkan meliputi nama kriteria, bobot, kategori, dan penggunaan</li>
-              <li>Jika kategori berupa wawancara, tidak perlu lagi memilih penggunaan</li>
-              <li>Sedangkan jika kategori berupa fit & proper, kita harus memilih penggunaan</li>
+              <li>Jika kategori berupa wawancara, kita tidak perlu lagi memilih penggunaan</li>
             </ul>
           </CCallout>
         </CCol>

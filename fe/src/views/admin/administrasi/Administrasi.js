@@ -22,6 +22,7 @@ import {
   CForm,
   CFormCheck,
   CFormSelect,  
+  CCallout  
 } from '@coreui/react'
 import CIcon from '@coreui/icons-react'
 import { cilSearch } from '@coreui/icons'
@@ -31,7 +32,7 @@ import GradeAPI from '../../../config/admin/GradeAPI'
 import LevelAPI from '../../../config/admin/LevelAPI'
 import SubFieldAPI from '../../../config/admin/SubFieldAPI'
 import AdministrasiUserAPI from '../../../config/admin/AdministrasiUserAPI'
-import axios from "axios";
+import axios from "axios"
 
 const Administrasi = () => {
   const [employees, setEmployees] = useState([])
@@ -109,6 +110,18 @@ const Administrasi = () => {
 
   return (
     <CRow>
+      <CCol xs={12}>
+        <CCallout color="info" className="bg-white">
+          <p style={{ fontSize: "18px", marginBottom: "4px" }}><b>Catatan Pengisian</b></p>
+          <ul className='catatan'>
+            <li>Sebelum mengubah peran, pastikan terlebih dahulu peran dari seorang pegawai telah valid</li>
+            <li>Pilih peran sesuai dengan opsi yang telah diberikan</li>
+            <li>Pilihann peran terdiri dari Administrator, HR Manager, HR Specialist, dan Penguji</li>
+            <li>Sistem memungkinkan untuk mengubah dan menghapus peran pegawai</li>
+            <li>Jika peran pegawai dikembalikan menjadi 'Pilih Penggunaan', sistem akan menghapus peran pegawai</li>
+          </ul>
+        </CCallout>
+      </CCol>
       <CCol xs={12}>
         <CAccordion>
           <CAccordionItem itemKey={1}>

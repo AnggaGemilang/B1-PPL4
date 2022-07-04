@@ -34,6 +34,8 @@ import CIcon from '@coreui/icons-react'
 import FitAndProperAPI from '../../../config/user/FitAndProperAPI'
 import WawancaraAPI from '../../../config/user/WawancaraAPI'
 import MappingAPI from '../../../config/user/MappingAPI'
+import EmployeeAPI from 'src/config/admin/EmployeeAPI'
+import DataPesertaAPI from 'src/config/user/DataPesertaAPI'
 import PositionAPI from 'src/config/admin/PositionAPI'
 import url from "../../../config/setting"
 import logoPDF from 'src/assets/images/pdf-icon.png'
@@ -47,6 +49,7 @@ const DataPenilaian = () => {
   const [message, setMessage] = useState("")
   const [chosenLineMapping, setChosenLineMapping] = useState({
     visible: false,
+    visible_finalized: false,
     name: "",
     lineMapping: 0    
   })
@@ -94,18 +97,14 @@ const DataPenilaian = () => {
     const body = {
       data: {
         schedule_interview: document.getElementById("schedule").value,
-        is_interview: true
+        is_interview: 'true'
       }
     }
     WawancaraAPI.edit(chosenLineMapping?.lineMapping?.id, body).then(res => {
-      let examiners = 
-        (chosenLineMapping?.lineMapping?.attributes?.mapping?.data?.attributes?.examiners_interview == null) ? 
-        [] : chosenLineMapping?.lineMapping?.attributes?.mapping?.data?.attributes?.examiners_interview
-      examiners.push(chosenLineMapping?.lineMapping?.attributes?.examiner?.data?.id)
       const body = {
         data: {
-          is_interview: true,
-          examiners_interview: examiners
+          is_interview: 'true',
+          examiners_interview: [...chosenLineMapping?.lineMapping?.attributes?.mapping?.data?.attributes?.examiners_interview?.data, chosenLineMapping?.lineMapping?.attributes?.examiner?.data?.id]
         }
       }
       MappingAPI.edit(chosenLineMapping?.lineMapping?.attributes?.mapping?.data?.id, body).then(res => {
@@ -113,6 +112,112 @@ const DataPenilaian = () => {
         getData()
       })      
     })
+  }
+
+  const fitproperFinalized = () => {
+    let lolos = 0
+    let tidak_lolos = 0
+    let sudah_finalisasi = true
+
+    let body = {
+      data: {
+        fitproper_finalized: true
+      }
+    }
+    FitAndProperAPI.editLineMapping(chosenLineMapping?.lineMapping.id, body).then(res => {
+      FitAndProperAPI.findLineMappingAll(`&filters[mapping][id][$eq]=${chosenLineMapping?.lineMapping?.attributes?.mapping?.data?.id}`)
+        .then(res => {
+          res.data.data.map(line_mapping => {
+            console.log(line_mapping)
+            if(line_mapping?.attributes?.is_interview == "true"){
+              if(line_mapping?.attributes?.status_interview == false){
+                sudah_finalisasi = false
+              }
+            } else if (line_mapping?.attributes?.is_interview == "false") {
+              if(line_mapping?.attributes?.status_fitproper == false){
+                sudah_finalisasi = false
+              }          
+            } else if (line_mapping?.attributes?.is_interview == "not_decided"){
+              sudah_finalisasi = false
+            }
+          })
+          if(sudah_finalisasi){
+            res.data.data.map(line_mapping => {
+              if(line_mapping?.attributes?.is_interview == "true"){
+                if(line_mapping?.attributes?.passed_interview == "passed"){
+                  lolos++
+                } else if (line_mapping?.attributes?.passed_interview == "not_passed"){
+                  tidak_lolos++
+                }
+              } else if (line_mapping?.attributes?.is_interview == "false") {
+                if(line_mapping?.attributes?.passed_fitproper == "passed"){
+                  lolos++
+                } else if(line_mapping?.attributes?.passed_fitproper == "not_passed"){
+                  tidak_lolos++
+                }
+              }
+            })      
+            body = {
+              data: {
+                status: (lolos > tidak_lolos) ? "passed" : "not_passed"
+              }
+            }    
+            MappingAPI.edit(chosenLineMapping?.lineMapping?.attributes?.mapping?.data?.id, body).then(
+              (res) => {
+                body = {
+                  data: {
+                    status: 'non_active'
+                  }
+                }
+                DataPesertaAPI.edit(chosenLineMapping?.lineMapping?.attributes?.mapping?.data?.attributes?.registrant?.data?.id, body).then(
+                  (res) => {
+                    console.log(res.data.data)
+                    if(lolos > tidak_lolos){
+                      body = {
+                        data: {
+                          position: chosenLineMapping?.lineMapping?.attributes?.mapping?.data?.attributes?.position?.data?.id,
+                          level: chosenLineMapping?.lineMapping?.attributes?.mapping?.data?.attributes?.level?.data?.id
+                        }
+                      }
+                      EmployeeAPI.edit(chosenLineMapping?.lineMapping?.attributes?.mapping?.data?.attributes?.registrant?.data?.attributes?.employee?.data?.id, body).then(
+                        (res) => {
+                          console.log(res.data.data)                          
+                          setChosenLineMapping({ ...chosenLineMapping, visible_finalized: false })   
+                          getData()                        
+                        },
+                        (err) => {
+                          console.log(err.message)
+                        }
+                      )
+                    }
+                  },
+                  (err) => {
+                    console.log(err.message)
+                  }
+                )
+              },
+              (err) => {
+                console.log(err.message)
+              }              
+            )
+          }
+        }
+      )
+      setChosenLineMapping({ ...chosenLineMapping, visible_finalized: false })    
+      getData()        
+    })
+  }
+
+  const tidakPerluWawancara = () => {
+    const body = {
+      data: {
+        is_interview: 'false'
+      }
+    }
+    FitAndProperAPI.editLineMapping(chosenLineMapping?.lineMapping.id, body).then(res => {
+      setChosenLineMapping({ ...chosenLineMapping, visible: false })
+      getData()      
+    })    
   }
 
   return (
@@ -236,16 +341,16 @@ const DataPenilaian = () => {
                       </ul>
                     </CTableDataCell>
                     <CTableDataCell>
-                      { (linemapping?.attributes?.status_fitproper && !linemapping?.attributes?.is_interview) ? 
+                      { (linemapping?.attributes?.status_fitproper && linemapping?.attributes?.is_interview == 'not_decided') ? 
                         <CButton
-                          color='primary'
+                          color='dark'
                           variant="outline" 
-                          style={{width: '80px', margin: '5px 5px'}}                    
+                          style={{width: '120px', margin: '5px 5px'}}                    
                           onClick={() => setChosenLineMapping({ 
                             visible: true, 
                             lineMapping: linemapping
                           })} >
-                            Ajukan
+                            Wawancara
                         </CButton>
                         : null
                       }
@@ -253,7 +358,7 @@ const DataPenilaian = () => {
                         <CButton
                           color='success'
                           variant="outline"
-                          style={{width: '80px', margin: '5px 5px'}}                          
+                          style={{width: '120px', margin: '5px 5px'}}                          
                           onClick={() => navigate(
                             '/fitandproper/datapenilaian/datanilai', 
                             { state: { 
@@ -266,16 +371,29 @@ const DataPenilaian = () => {
                         </CButton>
                         : null
                       }
-                      { (linemapping?.attributes?.status_fitproper) ? 
+                      { (linemapping?.attributes?.status_fitproper && !linemapping?.attributes?.fitproper_finalized) ? 
                         <CButton
                           color='warning'
                           variant="outline"
-                          style={{width: '80px', margin: '5px 5px'}}                          
+                          style={{width: '120px', margin: '5px 5px'}}                          
                           onClick={() => navigate(
                             '/fitandproper/datapenilaian/nilai/edit', 
-                            { state: { data: linemapping }}
+                            { state: { data: linemapping, status: 'edit' }}
                           )} >
                             Edit
+                        </CButton>
+                        : null
+                      }
+                      { (linemapping?.attributes?.status_fitproper && !linemapping?.attributes?.fitproper_finalized && linemapping?.attributes?.is_interview != 'not_decided') ? 
+                        <CButton
+                          color='primary'
+                          variant="outline"
+                          style={{width: '120px', margin: '5px 5px'}}                          
+                          onClick={() => setChosenLineMapping({ 
+                            visible_finalized: true, 
+                            lineMapping: linemapping
+                          })} >
+                            Finalisasi
                         </CButton>
                         : null
                       }
@@ -283,10 +401,10 @@ const DataPenilaian = () => {
                         <CButton
                           color='primary'
                           variant="outline" 
-                          style={{width: '75px', margin: '5px 5px'}}
+                          style={{width: '120px', margin: '5px 5px'}}
                           onClick={() => navigate(
                             '/fitandproper/datapenilaian/nilai', 
-                            { state: { data: linemapping } }
+                            { state: { data: linemapping, status: 'tambah' } }
                           )} >
                             Nilai
                         </CButton>
@@ -299,10 +417,10 @@ const DataPenilaian = () => {
             </CTable>
             <CModal backdrop="static" visible={chosenLineMapping.visible} onClose={() => setChosenLineMapping({ visible: false })}>
               <CModalHeader>
-                <CModalTitle>Apakah Anda Yakin?</CModalTitle>
+                <CModalTitle>Apakah Diperlukan Wawancara?</CModalTitle>
               </CModalHeader>
               <CModalBody>
-                Dengan ini peserta akan melanjutkan penilaian ke tahap wawancara, yang akan dilaksanakan pada:
+                Tentukan tanggal dan klik tombol ajukan untuk melanjutkan penilaian ke tahap wawancara:
                 <CRow className='mt-2'>
                   <CCol>
                     <CFormInput 
@@ -317,9 +435,26 @@ const DataPenilaian = () => {
                 <CButton color="secondary" onClick={() => setChosenLineMapping({ visible: false })}>
                   Close
                 </CButton>
-                <CButton color="primary" onClick={() => daftarWawancara()}>Submit</CButton>
+                <CButton color="danger" onClick={() => tidakPerluWawancara()}>
+                  Tidak Perlu
+                </CButton>
+                <CButton color="primary" onClick={() => daftarWawancara()}>Ajukan</CButton>
               </CModalFooter>
             </CModal>             
+            <CModal backdrop="static" visible={chosenLineMapping.visible_finalized} onClose={() => setChosenLineMapping({ visible: false })}>
+              <CModalHeader>
+                <CModalTitle>Apakah Anda Yakin?</CModalTitle>
+              </CModalHeader>
+              <CModalBody>
+                Dengan ini nilai akan difinalisasi dan data tidak dapat diubah kembali!
+              </CModalBody>
+              <CModalFooter>
+                <CButton color="secondary" onClick={() => setChosenLineMapping({ visible: false })}>
+                  Close
+                </CButton>
+                <CButton color="primary" onClick={() => fitproperFinalized()}>Finalisasi</CButton>
+              </CModalFooter>
+            </CModal>                         
           </CCardBody>
         </CCard>
       </CCol>

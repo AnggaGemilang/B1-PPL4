@@ -51,6 +51,9 @@ const Pendaftaran = () => {
   })
 
   useEffect(() => {
+    if(state.status == "edit"){
+      setNipValue(state?.data?.attributes?.registrant?.data?.attributes?.employee?.data?.attributes?.NIP)      
+    }
     if (nipValue.length > 1) {
       DataPesertaAPI.findRegistrants(nipValue).then(
       (res) => {
@@ -69,11 +72,8 @@ const Pendaftaran = () => {
             }
           )
           DataPengujiAPI.findExaminers(`&filters[employee][NIP][$ne]=${res.data.data[0].attributes.employee.data.attributes.NIP}`).then((res) => {
-            console.log(res)
-            console.log(state?.registrant?.id)
             setExaminers1(res.data.data)
             if(state.status == "edit"){
-              setNipValue(state?.data?.attributes?.registrant?.data?.attributes?.employee?.data?.attributes?.NIP)
               setExaminers2(res.data.data)
               setExaminers3(res.data.data)
             }
@@ -125,7 +125,8 @@ const Pendaftaran = () => {
           fitproper_type: document.getElementById("fitproper_type").value,
           level: document.getElementById("level").value,
           position: document.getElementById("projection").value,
-          is_interview: false
+          is_interview: false,
+          status: "on_progress"
         }
       };  
       MappingAPI.add(body).then(
@@ -137,13 +138,13 @@ const Pendaftaran = () => {
                 examiner: examinersVal[i],
                 status_fitproper: false,
                 status_interview: false,
-                is_interview: false                
+                is_interview: 'not_decided',
+                fitproper_finalized: false,
+                interview_finalized: false
               }
             }; 
             FitAndProperAPI.addLineMapping(body).then(
               (res) => {
-                console.log("LINE MAPPING")
-                console.log(criterias)
                 for(let i = 0; i < criterias.length; i++){
                   const body = {
                     data : {
@@ -155,13 +156,7 @@ const Pendaftaran = () => {
                       type: 1
                     }
                   }
-                  console.log(body)
-                  ScoreAPI.add(body).then(
-                    (res) => {
-                      console.log("Data tersimpan dengan aman")
-                    }, (err) => {
-                      console.log(err)
-                  })
+                  ScoreAPI.add(body)
                 }
               }, 
               (err) => {
@@ -171,14 +166,10 @@ const Pendaftaran = () => {
             )
           }          
           if(state?.registrant?.attributes?.cv?.data != null){
-            DataPesertaAPI.deletePhoto(state?.registrant?.attributes?.cv?.data?.id).then(res => {
-              console.log("CV Dihapus dulu")
-            })
+            DataPesertaAPI.deletePhoto(state?.registrant?.attributes?.cv?.data?.id)
           }
           if(state?.registrant?.attributes?.ppt?.data != null){
-            DataPesertaAPI.deletePhoto(state?.registrant?.attributes?.ppt?.data?.id).then(res => {
-              console.log("PPT Dihapus dulu")
-            })
+            DataPesertaAPI.deletePhoto(state?.registrant?.attributes?.ppt?.data?.id)
           }
           let formData = new FormData()
           formData.append('files', state.ppt)
@@ -216,10 +207,8 @@ const Pendaftaran = () => {
     } else {
       const body = {
         data: {
-          examiners: examinersVal,
-          registrant: state?.registrant?.id,
-          jobdesc: document.getElementById("jobdesc").value,
           schedule: document.getElementById("schedule").value,
+          jobdesc: document.getElementById("jobdesc").value,
           fitproper_type: document.getElementById("fitproper_type").value,
           level: document.getElementById("level").value,
           position: document.getElementById("projection").value,
@@ -227,30 +216,9 @@ const Pendaftaran = () => {
       };  
       MappingAPI.edit(state?.data?.id, body).then(
         (res) => {
-          for(let i = 0; i < examinersVal.length; i++){
-            const body = {
-              data: {
-                mapping: res.data.data.id,
-                examiner: examinersVal[i],
-                status_fitproper: false,
-                status_interview: false
-              }
-            };
-            MappingAPI.addLineMapping(body).then(
-              (res) => {
-                console.log("success", res)
-              }, 
-              (err) => {
-                setMessage(err.message)
-                setState({ ...state, visibleSubmit: false })
-              }
-            )
-          }
           if(state.ppt != null){
             if(state?.registrant?.attributes?.cv?.data != null){
-              DataPesertaAPI.deletePhoto(state?.registrant?.attributes?.ppt?.data?.id).then(res => {
-                console.log("Hapus foto berhasil")
-              })
+              DataPesertaAPI.deletePhoto(state?.registrant?.attributes?.ppt?.data?.id)
             }
             let formData = new FormData()
             formData.append('files', state.ppt)
@@ -269,9 +237,7 @@ const Pendaftaran = () => {
           }
           if(state.cv != null){
             if(state?.registrant?.attributes?.cv?.data != null){
-              DataPesertaAPI.deletePhoto(state?.registrant?.attributes?.cv?.data?.id).then(res => {
-                console.log("Foto berhasil dihapus")
-              })
+              DataPesertaAPI.deletePhoto(state?.registrant?.attributes?.cv?.data?.id)
             }
             let formData = new FormData()
             formData.append('files', state.cv)
@@ -303,12 +269,13 @@ const Pendaftaran = () => {
       <CCol xs={12}>
         <CCol xs={12}>
           <CCallout color="info" className="bg-white">
-            <p style={{ fontSize: "18px", marginBottom: "0px" }}><b>Catatan</b></p>
-            <ul className='catatan' style={{ marginBottom: "0px" }}>
-              <li>Lorem Ipsum is simply dummy text of the printing and typesetting industry</li>
-              <li>Contrary to popular belief, Lorem Ipsum is not simply random text</li>
-              <li>It is a long established fact that a reader will be distracted by the</li>
-              <li>There are many variations of passages of Lorem Ipsum available</li>
+            <p style={{ fontSize: "18px", marginBottom: "4px" }}><b>Catatan Pengisian</b></p>
+            <ul className='catatan'>
+              <li>Sistem memungkinkan administrator untuk mengisikan nilai peserta</li>
+              <li>Sebelum submit, pastikan seluruh data yang dimasukkan valid</li>
+              <li>(1) Data yang dimasukkan meliputi NIP, Jadwal Pelaksanaan, Jabatan Proyeksi, Jenjang Jabatan, Jenis Fit & Proper</li>
+              <li>(2) Data yang dimasukkan meliputi Uraian Jabatan, PPT, CV, Penguji 1, Penguji 2, dan Penguji 3</li>
+              <li>Pilih Proyeksi, Jenjang, Jenis Fit & Proper, Penguji 1, Penguji 2, dan Penguji 3 sesuai opsi yang telah diberikan</li>
             </ul>
           </CCallout>
         </CCol>
@@ -346,7 +313,10 @@ const Pendaftaran = () => {
                           name="name" 
                           placeholder='Masukkan Nama Peserta' 
                           disabled
-                          value={state?.registrant?.attributes?.employee?.data?.attributes?.Name || ''} />
+                          value={(state.status == "tambah") 
+                            ? state?.registrant?.attributes?.employee?.data?.attributes?.Name || ''
+                            : state?.data?.attributes?.registrant?.data?.attributes?.employee?.data?.attributes?.Name || ''
+                          } />
                       </div>
                   </CInputGroup>
                 </CRow>
@@ -360,7 +330,10 @@ const Pendaftaran = () => {
                           name="position" 
                           placeholder='Masukkan Jabatan Peserta' 
                           disabled 
-                          value={state?.registrant?.attributes?.employee?.data?.attributes?.position?.data?.attributes?.position_name || ''}/>
+                          value={(state.status == "tambah") 
+                            ? state?.registrant?.attributes?.employee?.data?.attributes?.position?.data?.attributes?.position_name || ''
+                            : state?.data?.attributes?.registrant?.data?.attributes?.employee?.data?.attributes?.position?.data?.attributes?.position_name || ''
+                          }/>
                       </div>
                   </CInputGroup>
                 </CRow>
@@ -374,7 +347,10 @@ const Pendaftaran = () => {
                           name="grade" 
                           placeholder='Masukkan Grade Peserta' 
                           disabled 
-                          value={state?.registrant?.attributes?.employee?.data?.attributes?.position?.data?.attributes?.grade?.data?.attributes?.grade_name || ''}/>
+                          value={(state.status == "tambah") 
+                            ? state?.registrant?.attributes?.employee?.data?.attributes?.position?.data?.attributes?.grade?.data?.attributes?.grade_name || ''
+                            : state?.data?.attributes?.registrant?.data?.attributes?.employee?.data?.attributes?.position?.data?.attributes?.grade?.data?.attributes?.grade_name || ''
+                          }/>
                       </div>
                   </CInputGroup>
                 </CRow>
@@ -467,13 +443,14 @@ const Pendaftaran = () => {
                       <CFormSelect 
                         name="penguji1" 
                         id="penguji1" 
+                        disabled={ state.status == "edit" }
                         aria-label="Large select example"
                         onChange={ (e) => 
                           setExaminers2(deleteNode(e.target.value, examiners1))
                         }>
                         <option value="0">Pilih Penguji 1</option>
                         { examiners1?.map(examiner =>
-                          <option selected={state.status == "edit" && state?.data?.attributes?.examiners?.data[0]?.id == examiner?.id } value={examiner?.id} key={examiner?.id}>{examiner?.attributes?.employee?.data?.attributes?.Name}</option>                      
+                          <option selected={state.status == "edit" && state?.data?.attributes?.examiners?.data[0]?.id == examiner?.id } value={examiner?.id} key={examiner?.id}>{examiner?.attributes?.employee?.data?.attributes?.Name}</option>
                         )}
                       </CFormSelect>
                     </div>
@@ -486,6 +463,7 @@ const Pendaftaran = () => {
                       <CFormSelect 
                         name="penguji2" 
                         id="penguji2" 
+                        disabled={ state.status == "edit" }
                         aria-label="Large select example"
                         onChange={ (e) => 
                           setExaminers3(deleteNode(e.target.value, examiners2))
@@ -502,7 +480,7 @@ const Pendaftaran = () => {
                   <CInputGroup>
                     <CFormLabel htmlFor="penguji3" className="col-sm-2 col-form-label">Penguji 3</CFormLabel>
                     <div className="col-sm-10">
-                      <CFormSelect name="penguji3" id="penguji3" aria-label="Large select example">
+                      <CFormSelect name="penguji3" id="penguji3" aria-label="Large select example" disabled={ state.status == "edit" }>
                         <option value="0">Pilih Penguji 3</option>
                         { examiners3?.map(examiner =>
                           <option selected={state.status == "edit" && state?.data?.attributes?.examiners?.data[2]?.id == examiner?.id } value={examiner?.id} key={examiner?.id}>{examiner?.attributes?.employee?.data?.attributes?.Name}</option>                      

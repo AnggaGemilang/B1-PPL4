@@ -248,15 +248,19 @@ const DataFitProper = () => {
                           )}>
                             Lihat Nilai
                         </CButton>
-                        <CButton 
-                          color={'warning'} 
-                          variant="outline" 
-                          style={{width: '75px', margin: '5px 5px'}}
-                          onClick={() => 
-                            navigate('/fitandproper/edit', {state: { data: mapping, status: 'edit' } })
-                          }>
-                            Edit
-                        </CButton>                        
+                        {
+                          ( mapping.attributes.status == 'on_progress' ) 
+                          ? <CButton 
+                              color={'warning'} 
+                              variant="outline" 
+                              style={{width: '75px', margin: '5px 5px'}}
+                              onClick={() => 
+                                navigate('/fitandproper/edit', {state: { data: mapping, status: 'edit' } })
+                              }>
+                                Edit
+                            </CButton>  
+                          : null                                              
+                        }
                         <CButton
                           color='danger'
                           variant="outline"                

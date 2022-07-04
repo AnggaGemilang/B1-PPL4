@@ -40,11 +40,17 @@ const Penilaian = () => {
   const [message, setMessage] = useState("")
   const [state, setState] = useState({
     lineMapping: location?.state?.data,
+    status: location?.state?.status,
     visibleSubmit: false,
-    visiblePenggunaan: false    
+    visiblePenggunaan: false,
+    nilaiMax: 0,
+    totalNilai: 0    
   })
 
   useEffect(() => {
+    if(state.status == "edit"){
+      getEditScore()
+    }
     getData()
   }, [])  
   
@@ -90,43 +96,72 @@ const Penilaian = () => {
 
   const postData = (e) => {
     e.preventDefault()
-    setState({ ...state, visibleSubmit: true })
 
     const data = document.querySelector('#body').children
-    for (let i = 0; i < data.length; i++) {
-      const body = {
-        data : {
-          line_mapping_interview: state?.lineMapping?.id,
-          registrant: state?.lineMapping?.attributes?.mapping?.data?.attributes?.registrant?.data?.id,
-          examiner: state?.lineMapping?.attributes?.examiner?.data?.id,
-          criterion: data[i].querySelector('.criteria').getAttribute('id_val'),
-          score: data[i].querySelector('#nilai').value,
-          type: 2
-        }
-      }
-      ScoreAPI.add(body).then(
-        (res) => {
-          const body = {
-            data : {
-              status_interview: true
-            }
+    for (let i = 0; i < data.length-1; i++) {
+      setState({ 
+        ...state, 
+        visibleSubmit: true,
+        nilaiMax: state.nilaiMax += parseInt(100 / 100 * data[i].querySelector('#criteria').getAttribute('bobot_val')),
+        totalNilai: state.totalNilai += parseInt(data[i].querySelector('#nilai').value / 100 * data[i].querySelector('#criteria').getAttribute('bobot_val'))
+      })
+      if(state.status == "tambah"){
+        const body = {
+          data : {
+            line_mapping_interview: state?.lineMapping?.id,
+            registrant: state?.lineMapping?.attributes?.mapping?.data?.attributes?.registrant?.data?.id,
+            examiner: state?.lineMapping?.attributes?.examiner?.data?.id,
+            criterion: data[i].querySelector('#criteria').getAttribute('id_val'),
+            score: data[i].querySelector('#nilai').value,
+            type: 2
           }
-          FitAndProperAPI.editLineMapping(state?.lineMapping?.id, body).then(
-            (res) => {
-              navigate('/fitandproper/datapenilaian', {state: { successMessage: 'Penilaian Berhasil' } })        
-            }, 
-            (err) => {
-              setMessage(err.message)
-              setState({ ...state, visibleSubmit: false })
-            }
-          )
-        }, 
-        (err) => {
-          setMessage(err.message)
-          setState({ ...state, visibleSubmit: false })
         }
-      )
+        ScoreAPI.add(body).then(
+          (res) => {
+            const body = {
+              data : {
+                status_interview: true,
+                passed_interview: (state.totalNilai >= ((75*state.nilaiMax)/100)) ? 'passed' : 'not_passed'
+              }
+            }
+            FitAndProperAPI.editLineMapping(state?.lineMapping?.id, body).then(
+              (res) => {
+                navigate('/wawancara/datapenilaian', {state: { successMessage: 'Penilaian Berhasil' } })        
+              }, 
+              (err) => {
+                setMessage(err.message)
+                setState({ ...state, visibleSubmit: false })
+              }
+            )
+          }, 
+          (err) => {
+            setMessage(err.message)
+            setState({ ...state, visibleSubmit: false })
+          }
+        )
+      } else {
+        const body = {
+          data : {
+            score: data[i].querySelector('#nilai').value,
+          }
+        }
+        ScoreAPI.edit(data[i].querySelector('#nilai').getAttribute('id_score'), body).then(
+          (res) => {
+            navigate('/wawancara/datapenilaian', {state: { successMessage: 'Penilaian Berhasil Diperbaharui' } })        
+          }, 
+          (err) => {
+            setMessage(err.message)
+            setState({ ...state, visibleSubmit: false })
+          }
+        )        
+      }
     }
+  }
+
+  const getEditScore = () => {
+    ScoreAPI.getWawancaraPenilaian(state?.lineMapping?.id).then((res) => {
+      setSelectedCriteria(res.data.data)
+    })    
   }
 
   const removeRow = (index) => {
@@ -161,79 +196,84 @@ const Penilaian = () => {
       <CCol>
         <CCol xs={12}>
           <CCallout color="info" className="bg-white">
-            <p style={{ fontSize: "18px", marginBottom: "0px" }}><b>Catatan</b></p>
-            <ul className='catatan' style={{ marginBottom: "0px" }}>
-              <li>Lorem Ipsum is simply dummy text of the printing and typesetting industry</li>
-              <li>Contrary to popular belief, Lorem Ipsum is not simply random text</li>
-              <li>It is a long established fact that a reader will be distracted by the</li>
-              <li>There are many variations of passages of Lorem Ipsum available</li>
+            <p style={{ fontSize: "18px", marginBottom: "4px" }}><b>Catatan Pengisian</b></p>
+            <ul className='catatan'>
+              <li>Sebelum submit, pastikan seluruh data yang dimasukkan valid</li>
+              <li>Data yang dimasukkan berupa pemilihan dan penilaian pada setiap kriteria</li>
+              <li>Untuk memaksimalkan penilaian, perhatikan bobot pada setiap kriteria</li>
+              <li>Nilai yang dapat dimasukkan memiliki jangkauan 0 - 100</li>
+              <li>Sistem memungkinkan penguji untuk dapat menambahkan kriteria baru</li>
             </ul>
           </CCallout>
         </CCol>
-        <CAccordion>
-          <CAccordionItem itemKey={1}>
-            <CAccordionHeader><CIcon icon={cilPlus} style={{ marginRight: "10px" }}/>Tambah Kriteria</CAccordionHeader>
-            <CAccordionBody>
-              <CForm onSubmit={tambahKriteria}>
-                <CRow className='mt-2'>
-                  <CCol xs={6}>
-                    <CFormLabel htmlFor="criteria">Nama Kriteria</CFormLabel>
-                    <CFormInput 
-                      type="text" 
-                      name="criteria" 
-                      id="criteria" 
-                      placeholder='Masukkan Kriteria Penilaian . . .' />
-                  </CCol>
-                  <CCol xs={6}>
-                    <CFormLabel htmlFor="value">Bobot</CFormLabel>
-                    <CFormInput 
-                      type="number"
-                      name="value"
-                      id="value"
-                      placeholder='Masukkan Bobot . . .' />
-                  </CCol>
-                </CRow>               
-                <CRow className='mt-3'>                  
-                  <CCol xs={6}>
-                    <CFormLabel htmlFor="defaultused">Kategori</CFormLabel>
-                    <CFormSelect 
-                      name="defaultused" 
-                      id="defaultused" 
-                      className="mb-3" 
-                      aria-label="Large select example"
-                      onChange={(e) => (e.target.value == "fitproper") ? setState({ ...state, visiblePenggunaan: true }) : setState({ ...state, visiblePenggunaan: false }) } >
-                      <option value="999">Pilih Kategori</option>
-                      <option value="fitproper">Fit & Proper</option>
-                      <option value="interview">Wawancara</option>
-                    </CFormSelect>
-                  </CCol>
-                  <CCol xs={6}>
-                    <CFormLabel htmlFor="usefor">Penggunaan</CFormLabel>
-                    <CFormSelect name="usefor" id="usefor" className="mb-3" aria-label="Large select example" disabled={ state.visiblePenggunaan == false }>
-                      <option value="999">Pilih Penggunaan</option>
-                      <option value="am">Manajemen Atas</option>
-                      <option value="md">Manajemen Dasar</option>
-                    </CFormSelect>
-                  </CCol>
-                </CRow>
-                <CRow>
-                  <hr className='mt-4' style={{ marginLeft: "12px", width: "97.6%" }} />
-                </CRow>
-                <CRow>
-                  <CCol style={{ display: "flex", justifyContent: "right" }}>
-                    <CButton
-                      type='submit'
-                      color='primary'
-                      style={{ width:'18%', borderRadius: "50px", fontSize: "14px" }} >
-                        <CIcon icon={cilPlus} style={{ marginRight: "10px", color: "#FFFFFF" }}/>
-                        Tambah Kriteria
-                    </CButton>                                          
-                  </CCol>
-                </CRow>
-              </CForm>
-            </CAccordionBody>
-          </CAccordionItem>
-        </CAccordion>            
+        {
+          state.status == "tambah" ?
+            <CAccordion>
+              <CAccordionItem itemKey={1}>
+                <CAccordionHeader><CIcon icon={cilPlus} style={{ marginRight: "10px" }}/>Tambah Kriteria</CAccordionHeader>
+                <CAccordionBody>
+                  <CForm onSubmit={tambahKriteria}>
+                    <CRow className='mt-2'>
+                      <CCol xs={6}>
+                        <CFormLabel htmlFor="criteria">Nama Kriteria</CFormLabel>
+                        <CFormInput 
+                          type="text" 
+                          name="criteria" 
+                          id="criteria" 
+                          placeholder='Masukkan Kriteria Penilaian . . .' />
+                      </CCol>
+                      <CCol xs={6}>
+                        <CFormLabel htmlFor="value">Bobot</CFormLabel>
+                        <CFormInput 
+                          type="number"
+                          name="value"
+                          id="value"
+                          placeholder='Masukkan Bobot . . .' />
+                      </CCol>
+                    </CRow>               
+                    <CRow className='mt-3'>                  
+                      <CCol xs={6}>
+                        <CFormLabel htmlFor="defaultused">Kategori</CFormLabel>
+                        <CFormSelect 
+                          name="defaultused" 
+                          id="defaultused" 
+                          className="mb-3" 
+                          aria-label="Large select example"
+                          onChange={(e) => (e.target.value == "fitproper") ? setState({ ...state, visiblePenggunaan: true }) : setState({ ...state, visiblePenggunaan: false }) } >
+                          <option value="999">Pilih Kategori</option>
+                          <option value="fitproper">Fit & Proper</option>
+                          <option value="interview">Wawancara</option>
+                        </CFormSelect>
+                      </CCol>
+                      <CCol xs={6}>
+                        <CFormLabel htmlFor="usefor">Penggunaan</CFormLabel>
+                        <CFormSelect name="usefor" id="usefor" className="mb-3" aria-label="Large select example" disabled={ state.visiblePenggunaan == false }>
+                          <option value="999">Pilih Penggunaan</option>
+                          <option value="am">Manajemen Atas</option>
+                          <option value="md">Manajemen Dasar</option>
+                        </CFormSelect>
+                      </CCol>
+                    </CRow>
+                    <CRow>
+                      <hr className='mt-4' style={{ marginLeft: "12px", width: "97.6%" }} />
+                    </CRow>
+                    <CRow>
+                      <CCol style={{ display: "flex", justifyContent: "right" }}>
+                        <CButton
+                          type='submit'
+                          color='primary'
+                          style={{ width:'18%', borderRadius: "50px", fontSize: "14px" }} >
+                            <CIcon icon={cilPlus} style={{ marginRight: "10px", color: "#FFFFFF" }}/>
+                            Tambah Kriteria
+                        </CButton>                                          
+                      </CCol>
+                    </CRow>
+                  </CForm>
+                </CAccordionBody>
+              </CAccordionItem>
+            </CAccordion>
+          : null
+        }         
         <CCol xs={12} className="mt-3">
           { message && <CAlert color="success" dismissible onClose={() => { setMessage("") }}> { message } </CAlert> }
         </CCol>                 
@@ -257,10 +297,10 @@ const Penilaian = () => {
                   { selectedCriteria?.map( (criteria, index) => (
                     <CTableRow key={criteria?.id}>
                       <CTableHeaderCell scope="row">{ index+1 }</CTableHeaderCell>
-                      <CTableDataCell className='criteria' id_val={ criteria?.id }>{ criteria?.attributes?.criteria }</CTableDataCell>
-                      <CTableDataCell>{ criteria?.attributes?.value + "%" }</CTableDataCell>
+                      <CTableDataCell id='criteria' id_val={ criteria?.id } bobot_val={criteria?.attributes?.value}>{ (state.status == "tambah") ? criteria?.attributes?.criteria : criteria?.attributes?.criterion?.data?.attributes?.criteria }</CTableDataCell>
+                      <CTableDataCell>{  (state.status == "tambah") ? criteria?.attributes?.value + "%" : criteria?.attributes?.criterion?.data?.attributes?.value }</CTableDataCell>
                       <CTableDataCell>
-                        <CFormInput type="number" min={0} max={100} id="nilai" name='nilai' />
+                        <CFormInput type="number" min={0} max={100} id="nilai" id_score={ (state.status == "edit") ? criteria?.id : '' } name='nilai' defaultValue={state.status == "edit" ? criteria?.attributes?.score : '' } />
                       </CTableDataCell>
                       <CTableDataCell>
                         <CButton
@@ -272,25 +312,29 @@ const Penilaian = () => {
                         </CButton>
                       </CTableDataCell>
                     </CTableRow>
-                  ))}                    
-                  <CTableRow>
-                    <CTableDataCell colSpan={2} className='criteria'>
-                      <CFormSelect style={{ marginTop: "15px" }} className="mb-3" aria-label="Large select example" name="used_criteria" id="used_criteria">
-                        <option>Pilih Kriteria</option>
-                        {criterias.map(criteria => (
-                          <option key={criteria.id} value={criteria.id}>{ criteria.attributes.criteria }</option>
-                        ))}  
-                      </CFormSelect>
-                    </CTableDataCell>
-                    <CTableDataCell colSpan={3}>
-                      <CButton
-                        color='primary'
-                        style={{ width: "100%", borderRadius: "50px", fontSize: "14px" }}
-                        onClick={() => addRow(document.getElementById("used_criteria").value)} >
-                          Tambah Penilaian
-                      </CButton>
-                    </CTableDataCell>
-                  </CTableRow>
+                  ))}
+                  {
+                    state.status == "tambah" ?                              
+                    <CTableRow id='set-criteria'>
+                      <CTableDataCell colSpan={2} className='criteria'>
+                        <CFormSelect style={{ marginTop: "15px" }} className="mb-3" aria-label="Large select example" name="used_criteria" id="used_criteria">
+                          <option>Pilih Kriteria</option>
+                          {criterias.map(criteria => (
+                            <option key={criteria.id} value={criteria.id}>{ criteria.attributes.criteria }</option>
+                          ))}  
+                        </CFormSelect>
+                      </CTableDataCell>
+                      <CTableDataCell colSpan={3}>
+                        <CButton
+                          color='primary'
+                          style={{ width: "100%", borderRadius: "50px", fontSize: "14px" }}
+                          onClick={() => addRow(document.getElementById("used_criteria").value)} >
+                            Tambah Penilaian
+                        </CButton>
+                      </CTableDataCell>
+                    </CTableRow>
+                    : null 
+                  }
                 </CTableBody>
               </CTable>
               <CRow className='mt-4'>

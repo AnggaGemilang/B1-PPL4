@@ -126,7 +126,17 @@ const CetakRekapFitAndProper = () => {
         doc.text(40, finalY+=30, "Dengan ini, anda dinyatakan . . .")        
         doc.setFont('helvetica', 'bold')
         doc.setFontSize("18")
-        doc.text(40, finalY+=25, "Lolos")
+
+        let status = ""
+        if(res.data.data[0].attributes?.mapping?.data?.attributes?.status == "passed"){
+          status = "Lolos"
+        } else if(res.data.data[0].attributes?.mapping?.data?.attributes?.status == "not_passed"){
+          status = "Tidak Lolos"
+        } else {
+          status = "Penguji Belum Menilai Semua"
+        }
+
+        doc.text(40, finalY+=25, status)
 
         doc.setFontSize("12")
         doc.setFont('helvetica', 'normal')
