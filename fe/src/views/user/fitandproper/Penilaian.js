@@ -32,43 +32,48 @@ const Penilaian = () => {
     lineMapping: location?.state?.data,
     status: location?.state?.status,
     visibleSubmit: false,
+    nilaiMax: 0,
+    totalNilai: 0
   })
 
   useEffect(() => {
     getScore()
-    console.log(location?.state?.data)
-    console.log(location?.state?.status)
   }, [])  
   
   const postData = (e) => {
     e.preventDefault()
-    setState({ ...state, visibleSubmit: true })
 
     const data = document.querySelector('#body').children
     for (let i = 0; i < data.length; i++) {
+      setState({ 
+        ...state, 
+        visibleSubmit: true,
+        nilaiMax: state.nilaiMax += parseInt(100 / 100 * data[i].querySelector('#criteria').getAttribute('bobot_val')),
+        totalNilai: state.totalNilai += parseInt(data[i].querySelector('#nilai').value / 100 * data[i].querySelector('#criteria').getAttribute('bobot_val'))
+      })
       const body = {
         data : {
           score: data[i].querySelector('#nilai').value,
           examiner: state?.lineMapping?.attributes?.examiner?.data?.id,
         }
       }
-      FitAndProperAPI.nilai(data[i].querySelector('#score').getAttribute('id_val'), body).then(
-        (res) => {
-          const body = {
-            data : {
-              status_fitproper: true
-            }
-          }
-          FitAndProperAPI.editLineMapping(state?.lineMapping?.id, body).then((res) => {
-            navigate('/fitandproper/datapenilaian', {state: { successMessage: 'Penilaian Berhasil' } })        
-          })
-        }, 
-        (err) => {
-          setMessage(err.message)
-          setState({ ...state, visibleSubmit: false })
-        }
-      )
+      FitAndProperAPI.nilai(data[i].querySelector('#criteria').getAttribute('id_val'), body)
     }
+    const body = {
+      data : {
+        status_fitproper: true,
+        passed_fitproper: (state.totalNilai >= ((75*state.nilaiMax)/100)) ? 'passed' : 'not_passed'
+      }
+    }
+    FitAndProperAPI.editLineMapping(state?.lineMapping?.id, body).then(
+      (res) => {
+        navigate('/fitandproper/datapenilaian', {state: { successMessage: 'Penilaian Berhasil' } })        
+      },
+      (err) => {
+        setMessage(err.message)
+        setState({ ...state, visibleSubmit: false })
+      }      
+    )    
   }
 
   const getScore = () => {
@@ -82,12 +87,12 @@ const Penilaian = () => {
       <CCol>
         <CCol xs={12}>
           <CCallout color="info" className="bg-white">
-            <p style={{ fontSize: "18px", marginBottom: "0px" }}><b>Catatan</b></p>
-            <ul className='catatan' style={{ marginBottom: "0px" }}>
-              <li>Lorem Ipsum is simply dummy text of the printing and typesetting industry</li>
-              <li>Contrary to popular belief, Lorem Ipsum is not simply random text</li>
-              <li>It is a long established fact that a reader will be distracted by the</li>
-              <li>There are many variations of passages of Lorem Ipsum available</li>
+            <p style={{ fontSize: "18px", marginBottom: "4px" }}><b>Catatan Pengisian</b></p>
+            <ul className='catatan'>
+              <li>Sebelum submit, pastikan seluruh data yang dimasukkan valid</li>
+              <li>Data yang dimasukkan berupa penilaian pada setiap kriteria terhadap peserta</li>
+              <li>Nilai yang dapat dimasukkan memiliki jangkauan 0 - 100</li>
+              <li>Untuk memaksimalkan penilaian, perhatikan bobot pada setiap kriteria</li>
             </ul>
           </CCallout>
         </CCol>        
@@ -113,7 +118,7 @@ const Penilaian = () => {
                   { scores?.map( (score, index) => (
                     <CTableRow key={score?.id}>
                       <CTableHeaderCell scope="row">{ index+1 }</CTableHeaderCell>
-                      <CTableDataCell id='score' id_val={ score?.id }>{ score?.attributes?.criterion?.data?.attributes?.criteria }</CTableDataCell>
+                      <CTableDataCell id='criteria' id_val={ score?.id } bobot_val={score?.attributes?.criterion?.data?.attributes?.value}>{ score?.attributes?.criterion?.data?.attributes?.criteria }</CTableDataCell>
                       <CTableDataCell>{ score?.attributes?.criterion?.data?.attributes?.value + "%" }</CTableDataCell>
                       <CTableDataCell>
                         <CFormInput type="number" min={0} max={100} id="nilai" name='nilai' defaultValue={ state.status == "edit" ? score?.attributes?.score : '' } />

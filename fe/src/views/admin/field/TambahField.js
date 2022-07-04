@@ -75,12 +75,12 @@ const TambahField = () => {
       <CCol xs={12}>
         <CCol xs={12}>
           <CCallout color="info" className="bg-white">
-            <p style={{ fontSize: "18px", marginBottom: "0px" }}><b>Catatan</b></p>
-            <ul className='catatan' style={{ marginBottom: "0px" }}>
-              <li>Lorem Ipsum is simply dummy text of the printing and typesetting industry</li>
-              <li>Contrary to popular belief, Lorem Ipsum is not simply random text</li>
-              <li>It is a long established fact that a reader will be distracted by the</li>
-              <li>There are many variations of passages of Lorem Ipsum available</li>
+            <p style={{ fontSize: "18px", marginBottom: "4px" }}><b>Catatan Pengisian</b></p>
+            <ul className='catatan'>
+              <li>Sebelum submit, pastikan seluruh data yang dimasukkan valid</li>
+              <li>Masukkan kalimat dengan format huruf kapital pada setiap awal katanya</li>
+              <li>Data yang dimasukkan meliputi bidang dan divisi</li>
+              <li>Pilih divisi sesuai dengan opsi yang telah diberikan</li>
             </ul>
           </CCallout>
         </CCol>

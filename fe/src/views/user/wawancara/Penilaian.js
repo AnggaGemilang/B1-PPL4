@@ -42,7 +42,9 @@ const Penilaian = () => {
     lineMapping: location?.state?.data,
     status: location?.state?.status,
     visibleSubmit: false,
-    visiblePenggunaan: false    
+    visiblePenggunaan: false,
+    nilaiMax: 0,
+    totalNilai: 0    
   })
 
   useEffect(() => {
@@ -94,17 +96,22 @@ const Penilaian = () => {
 
   const postData = (e) => {
     e.preventDefault()
-    setState({ ...state, visibleSubmit: true })
 
     const data = document.querySelector('#body').children
-    for (let i = 0; i < data.length; i++) {
+    for (let i = 0; i < data.length-1; i++) {
+      setState({ 
+        ...state, 
+        visibleSubmit: true,
+        nilaiMax: state.nilaiMax += parseInt(100 / 100 * data[i].querySelector('#criteria').getAttribute('bobot_val')),
+        totalNilai: state.totalNilai += parseInt(data[i].querySelector('#nilai').value / 100 * data[i].querySelector('#criteria').getAttribute('bobot_val'))
+      })
       if(state.status == "tambah"){
         const body = {
           data : {
             line_mapping_interview: state?.lineMapping?.id,
             registrant: state?.lineMapping?.attributes?.mapping?.data?.attributes?.registrant?.data?.id,
             examiner: state?.lineMapping?.attributes?.examiner?.data?.id,
-            criterion: data[i].querySelector('.criteria').getAttribute('id_val'),
+            criterion: data[i].querySelector('#criteria').getAttribute('id_val'),
             score: data[i].querySelector('#nilai').value,
             type: 2
           }
@@ -113,7 +120,8 @@ const Penilaian = () => {
           (res) => {
             const body = {
               data : {
-                status_interview: true
+                status_interview: true,
+                passed_interview: (state.totalNilai >= ((75*state.nilaiMax)/100)) ? 'passed' : 'not_passed'
               }
             }
             FitAndProperAPI.editLineMapping(state?.lineMapping?.id, body).then(
@@ -188,12 +196,13 @@ const Penilaian = () => {
       <CCol>
         <CCol xs={12}>
           <CCallout color="info" className="bg-white">
-            <p style={{ fontSize: "18px", marginBottom: "0px" }}><b>Catatan</b></p>
-            <ul className='catatan' style={{ marginBottom: "0px" }}>
-              <li>Lorem Ipsum is simply dummy text of the printing and typesetting industry</li>
-              <li>Contrary to popular belief, Lorem Ipsum is not simply random text</li>
-              <li>It is a long established fact that a reader will be distracted by the</li>
-              <li>There are many variations of passages of Lorem Ipsum available</li>
+            <p style={{ fontSize: "18px", marginBottom: "4px" }}><b>Catatan Pengisian</b></p>
+            <ul className='catatan'>
+              <li>Sebelum submit, pastikan seluruh data yang dimasukkan valid</li>
+              <li>Data yang dimasukkan berupa pemilihan dan penilaian pada setiap kriteria</li>
+              <li>Untuk memaksimalkan penilaian, perhatikan bobot pada setiap kriteria</li>
+              <li>Nilai yang dapat dimasukkan memiliki jangkauan 0 - 100</li>
+              <li>Sistem memungkinkan penguji untuk dapat menambahkan kriteria baru</li>
             </ul>
           </CCallout>
         </CCol>
@@ -288,7 +297,7 @@ const Penilaian = () => {
                   { selectedCriteria?.map( (criteria, index) => (
                     <CTableRow key={criteria?.id}>
                       <CTableHeaderCell scope="row">{ index+1 }</CTableHeaderCell>
-                      <CTableDataCell className='criteria' id_val={ criteria?.id }>{ (state.status == "tambah") ? criteria?.attributes?.criteria : criteria?.attributes?.criterion?.data?.attributes?.criteria }</CTableDataCell>
+                      <CTableDataCell id='criteria' id_val={ criteria?.id } bobot_val={criteria?.attributes?.value}>{ (state.status == "tambah") ? criteria?.attributes?.criteria : criteria?.attributes?.criterion?.data?.attributes?.criteria }</CTableDataCell>
                       <CTableDataCell>{  (state.status == "tambah") ? criteria?.attributes?.value + "%" : criteria?.attributes?.criterion?.data?.attributes?.value }</CTableDataCell>
                       <CTableDataCell>
                         <CFormInput type="number" min={0} max={100} id="nilai" id_score={ (state.status == "edit") ? criteria?.id : '' } name='nilai' defaultValue={state.status == "edit" ? criteria?.attributes?.score : '' } />
@@ -306,7 +315,7 @@ const Penilaian = () => {
                   ))}
                   {
                     state.status == "tambah" ?                              
-                    <CTableRow>
+                    <CTableRow id='set-criteria'>
                       <CTableDataCell colSpan={2} className='criteria'>
                         <CFormSelect style={{ marginTop: "15px" }} className="mb-3" aria-label="Large select example" name="used_criteria" id="used_criteria">
                           <option>Pilih Kriteria</option>

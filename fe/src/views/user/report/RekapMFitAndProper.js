@@ -21,7 +21,8 @@ import {
   CAccordionItem,
   CAlert,
   CFormSelect,
-  CSpinner
+  CSpinner,
+  CCallout
 } from '@coreui/react'
 import { cilSearch } from '@coreui/icons'
 import CIcon from '@coreui/icons-react'
@@ -29,6 +30,7 @@ import DataPesertaAPI from '../../../config/user/DataPesertaAPI'
 import FitAndProperAPI from '../../../config/user/FitAndProperAPI'
 import PositionAPI from 'src/config/admin/PositionAPI'
 import ScoreAPI from 'src/config/user/ScoreAPI'
+import axios from "axios"
 
 const RekapMFitAndProper = () => {
 
@@ -43,8 +45,12 @@ const RekapMFitAndProper = () => {
   })
 
   useEffect(() => {
-    getDataPeserta()
-    getDataProyeksi()
+    axios.all([DataPesertaAPI.get(), PositionAPI.get()]).then(
+      axios.spread((...res) => {
+        setRegistrants(res[0]?.data.data),
+        setProjections(res[1]?.data.data)
+      })
+    )
   }, []) 
 
   const generateData = (e) => {
@@ -54,26 +60,18 @@ const RekapMFitAndProper = () => {
     const projection = document.getElementById("filter_projection").value
 
     FitAndProperAPI.getRekapManualFitProper(registrant, projection).then((res) => {
-      if(res.data.data.length != 0){
-        setState({ ...state, visible: true, message: "", color: "" })
-        setLineMappings(res.data.data)
+      if(res?.data?.data?.length != 0){
+        if(res?.data?.data?.attributes?.status == "on_progress"){
+          setState({ ...state, visible: true, message: "", color: "" })
+          setLineMappings(res.data.data)
+        } else {
+          setState({ ...state, visible: false, message: "Data Sudah Difinalisasi!", color: "danger" })        
+        }
       } else {
         setState({ ...state, visible: false, message: "Data Tidak Ditemukan!", color: "danger" })        
         setLineMappings([])        
       }
     })    
-  }
-
-  const getDataPeserta = () => {
-    DataPesertaAPI.get().then((res) => {
-      setRegistrants(res.data.data)
-    })
-  }
-
-  const getDataProyeksi = () => {
-    PositionAPI.get().then((res) => {
-      setProjections(res.data.data)
-    })
   }
 
   const postData = (e) => {
@@ -92,8 +90,6 @@ const RekapMFitAndProper = () => {
         ScoreAPI.edit(score[i].getAttribute('score_id'), body).then(
           (res) => {
             setState({ ...state, visibleSubmit: false, message: "Nilai Berhasil Diperbaharui", color: 'success' })
-            // document.getElementById('filter_projection').value = '0'
-            // document.getElementById('filter_registrat').value = '0'
           }, 
           (err) => {
             setMessage(err.message)
@@ -107,6 +103,17 @@ const RekapMFitAndProper = () => {
   return (
     <CRow>
       <CCol xs={12}>
+        <CCol xs={12}>
+          <CCallout color="info" className="bg-white">
+            <p style={{ fontSize: "18px", marginBottom: "4px" }}><b>Catatan Pengisian</b></p>
+            <ul className='catatan'>
+              <li>Sistem memungkinkan administrator untuk mengisikan nilai peserta</li>
+              <li>Pilih terlebih dahulu peserta dan proyeksi untuk menampilkan nilai</li>
+              <li>Nilai hanya dapat diubah sebelum pengajuan telah difinalisasi</li>
+              <li>Sebelum submit, pastikan nilai peserta sudah benar</li>
+            </ul>
+          </CCallout>
+        </CCol>
         <CCol xs={12}>
           { state.message && <CAlert color={state.color} dismissible onClose={() => { setState({ ...state, message: "" }) }}> { state.message } </CAlert> }
         </CCol> 

@@ -138,13 +138,13 @@ const Pendaftaran = () => {
                 examiner: examinersVal[i],
                 status_fitproper: false,
                 status_interview: false,
-                is_interview: false,
+                is_interview: 'not_decided',
+                fitproper_finalized: false,
+                interview_finalized: false
               }
             }; 
             FitAndProperAPI.addLineMapping(body).then(
               (res) => {
-                console.log("LINE MAPPING")
-                console.log(criterias)
                 for(let i = 0; i < criterias.length; i++){
                   const body = {
                     data : {
@@ -156,13 +156,7 @@ const Pendaftaran = () => {
                       type: 1
                     }
                   }
-                  console.log(body)
-                  ScoreAPI.add(body).then(
-                    (res) => {
-                      console.log("Data tersimpan dengan aman")
-                    }, (err) => {
-                      console.log(err)
-                  })
+                  ScoreAPI.add(body)
                 }
               }, 
               (err) => {
@@ -172,14 +166,10 @@ const Pendaftaran = () => {
             )
           }          
           if(state?.registrant?.attributes?.cv?.data != null){
-            DataPesertaAPI.deletePhoto(state?.registrant?.attributes?.cv?.data?.id).then(res => {
-              console.log("CV Dihapus dulu")
-            })
+            DataPesertaAPI.deletePhoto(state?.registrant?.attributes?.cv?.data?.id)
           }
           if(state?.registrant?.attributes?.ppt?.data != null){
-            DataPesertaAPI.deletePhoto(state?.registrant?.attributes?.ppt?.data?.id).then(res => {
-              console.log("PPT Dihapus dulu")
-            })
+            DataPesertaAPI.deletePhoto(state?.registrant?.attributes?.ppt?.data?.id)
           }
           let formData = new FormData()
           formData.append('files', state.ppt)
@@ -228,9 +218,7 @@ const Pendaftaran = () => {
         (res) => {
           if(state.ppt != null){
             if(state?.registrant?.attributes?.cv?.data != null){
-              DataPesertaAPI.deletePhoto(state?.registrant?.attributes?.ppt?.data?.id).then(res => {
-                console.log("Hapus foto berhasil")
-              })
+              DataPesertaAPI.deletePhoto(state?.registrant?.attributes?.ppt?.data?.id)
             }
             let formData = new FormData()
             formData.append('files', state.ppt)
@@ -249,9 +237,7 @@ const Pendaftaran = () => {
           }
           if(state.cv != null){
             if(state?.registrant?.attributes?.cv?.data != null){
-              DataPesertaAPI.deletePhoto(state?.registrant?.attributes?.cv?.data?.id).then(res => {
-                console.log("Foto berhasil dihapus")
-              })
+              DataPesertaAPI.deletePhoto(state?.registrant?.attributes?.cv?.data?.id)
             }
             let formData = new FormData()
             formData.append('files', state.cv)
@@ -283,12 +269,13 @@ const Pendaftaran = () => {
       <CCol xs={12}>
         <CCol xs={12}>
           <CCallout color="info" className="bg-white">
-            <p style={{ fontSize: "18px", marginBottom: "0px" }}><b>Catatan</b></p>
-            <ul className='catatan' style={{ marginBottom: "0px" }}>
-              <li>Lorem Ipsum is simply dummy text of the printing and typesetting industry</li>
-              <li>Contrary to popular belief, Lorem Ipsum is not simply random text</li>
-              <li>It is a long established fact that a reader will be distracted by the</li>
-              <li>There are many variations of passages of Lorem Ipsum available</li>
+            <p style={{ fontSize: "18px", marginBottom: "4px" }}><b>Catatan Pengisian</b></p>
+            <ul className='catatan'>
+              <li>Sistem memungkinkan administrator untuk mengisikan nilai peserta</li>
+              <li>Sebelum submit, pastikan seluruh data yang dimasukkan valid</li>
+              <li>(1) Data yang dimasukkan meliputi NIP, Jadwal Pelaksanaan, Jabatan Proyeksi, Jenjang Jabatan, Jenis Fit & Proper</li>
+              <li>(2) Data yang dimasukkan meliputi Uraian Jabatan, PPT, CV, Penguji 1, Penguji 2, dan Penguji 3</li>
+              <li>Pilih Proyeksi, Jenjang, Jenis Fit & Proper, Penguji 1, Penguji 2, dan Penguji 3 sesuai opsi yang telah diberikan</li>
             </ul>
           </CCallout>
         </CCol>

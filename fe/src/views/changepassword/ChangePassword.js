@@ -27,18 +27,27 @@ const ChangePassword = () => {
     setState({ ...state, visibleSubmit: true })
 
     if(document.getElementById("password_baru").value == document.getElementById("ulangi_password").value){
-      const body = {
-        password: document.getElementById("password_baru").value,
-      }
-      AdministrasiUserAPI.edit(JSON.parse(sessionStorage.getItem("auth")).user.id, body).then(
-        (res) => {
-          document.getElementById("password_baru").value = ""
-          document.getElementById("ulangi_password").value = ""
-          setState({ message: "Password Berhasil Diperbaharui!", color: "success", visibleSubmit: false })
-        }, (err) => {
-          setState({ message: "Password Gagal Diperbaharui!", color: "danger", visibleSubmit: false })
+      if(document.getElementById("password_baru").value.length >= 8){
+        const regExp = /^(?=.*[0-9])(?=.*[!@#$%^&*])(?=.*[a-z])(?=.*[A-Z])[a-zA-Z0-9!@#$%^&*]{6,16}$/;
+        if(regExp.test(document.getElementById("password_baru").value)){
+          const body = {
+            password: document.getElementById("password_baru").value,
+          }
+          AdministrasiUserAPI.edit(JSON.parse(sessionStorage.getItem("auth")).user.id, body).then(
+            (res) => {
+              document.getElementById("password_baru").value = ""
+              document.getElementById("ulangi_password").value = ""
+              setState({ message: "Password Berhasil Diperbaharui!", color: "success", visibleSubmit: false })
+            }, (err) => {
+              setState({ message: "Password Gagal Diperbaharui!", color: "danger", visibleSubmit: false })
+            }
+          )
+        } else {
+          setState({ message: "Gunakan kombinasi huruf, angka, dan karakter!", color: "danger", visibleSubmit: false })
         }
-      )
+      } else {
+        setState({ message: "Password minimal terdiri dari 8 karakter!", color: "danger", visibleSubmit: false })
+      }
     } else {
       setState({ message: "Kedua Password Tidak Sama!", color: "danger", visibleSubmit: false })
     }
@@ -49,12 +58,12 @@ const ChangePassword = () => {
       <CCol xs={12}>
         <CCol xs={12}>
           <CCallout color="info" className="bg-white">
-            <p style={{ fontSize: "18px", marginBottom: "0px" }}><b>Catatan</b></p>
-            <ul className='catatan' style={{ marginBottom: "0px" }}>
-              <li>Lorem Ipsum is simply dummy text of the printing and typesetting industry</li>
-              <li>Contrary to popular belief, Lorem Ipsum is not simply random text</li>
-              <li>It is a long established fact that a reader will be distracted by the</li>
-              <li>There are many variations of passages of Lorem Ipsum available</li>
+            <p style={{ fontSize: "18px", marginBottom: "4px" }}><b>Catatan Pengisian</b></p>
+            <ul className='catatan'>
+              <li>Sistem memungkinkan pengguna untuk mengubah passwordnya</li>
+              <li>Sebelum submit, pastikan password baru dan ulangi password telah sama</li>
+              <li>Password minimal terdiri dari dari 8 karakter</li>
+              <li>Gunakan kombinasi huruf, angka, dan karakter pada password</li>
             </ul>
           </CCallout>
         </CCol>
