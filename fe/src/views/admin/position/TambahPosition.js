@@ -50,7 +50,7 @@ const TambahPosition = () => {
     if(state.status == "tambah"){
       PositionAPI.add(body).then(
         (res) => {
-          navigate('/position', {state: { successMessage: 'Jabatan Telah Berhasil Dihapus!' } })  
+          navigate('/position', {state: { successMessage: 'Jabatan Telah Berhasil Ditambahkan!' } })  
         },
         (err) => {
           setMessage(err.message)
@@ -115,7 +115,7 @@ const TambahPosition = () => {
                     <CFormSelect name="grade" id="grade" aria-label="Large select example">
                       <option>Pilih Grade</option>
                       { grades.map(grade =>
-                        <option selected={grade.id == state?.data?.attributes?.grades?.data[0]?.id} key={ grade.id } value={ grade.id } >{ grade.attributes.grade_name }</option>
+                        <option selected={grade.id == state?.data?.attributes?.grade?.data?.id} key={ grade.id } value={ grade.id } >{ grade.attributes.grade_name }</option>
                       )}
                     </CFormSelect>
                   </CCol>

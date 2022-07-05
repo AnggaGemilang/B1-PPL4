@@ -28,8 +28,7 @@ const ChangePassword = () => {
 
     if(document.getElementById("password_baru").value == document.getElementById("ulangi_password").value){
       if(document.getElementById("password_baru").value.length >= 8){
-        const regExp = /^(?=.*[0-9])(?=.*[!@#$%^&*])(?=.*[a-z])(?=.*[A-Z])[a-zA-Z0-9!@#$%^&*]{6,16}$/;
-        if(regExp.test(document.getElementById("password_baru").value)){
+        if(document.getElementById("password_baru").value.match(/^(?=.*[A-Za-z])(?=.*\d)(?=.*[$@$!%* #+=\(\)\^?&])[A-Za-z\d$@$!%* #+=\(\)\^?&]{3,}$/)){
           const body = {
             password: document.getElementById("password_baru").value,
           }

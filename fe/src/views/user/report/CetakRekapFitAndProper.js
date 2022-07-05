@@ -77,23 +77,17 @@ const CetakRekapFitAndProper = () => {
 
   const generatePDF = (e) => {
 
-    const months = ['Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'];    
+    const months = ['Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember']
 
-    const date = new Date();
-    const day = date.getDate();
-    const month = date.getMonth();
-    var yy = date.getYear();
-    var year = (yy < 1000) ? yy + 1900 : yy;
+    const date = new Date()
+    const day = date.getDate()
+    const month = date.getMonth()
+    var yy = date.getYear()
+    var year = (yy < 1000) ? yy + 1900 : yy
 
     FitAndProperAPI.getRekapManualFitProper(e.target.getAttribute("registrant_val"), e.target.getAttribute("projection_val")).then((res) => {
-      console.log(e.target.getAttribute("registrant_val"))
-      console.log(e.target.getAttribute("projection_val"))
-      console.log(res.data.data)
-
       if(res.data.data.length != 0){
         setLineMappings(res.data.data)
-
-        console.log(res.data.data)
 
         var doc = new jsPDF({
             orientation: 'l',

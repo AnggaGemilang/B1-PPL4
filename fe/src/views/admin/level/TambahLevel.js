@@ -41,7 +41,7 @@ const TambahLevel = () => {
     if(state.status == "tambah"){
       LevelAPI.add(body).then(
         (res) => {
-          navigate('/level', {state: { successMessage: 'Jenjang Telah Berhasil Ditambah!' } }) 
+          navigate('/level', {state: { successMessage: 'Jenjang Telah Berhasil Ditambahkan!' } }) 
         },
         (err) => {
           setMessage(err.message)

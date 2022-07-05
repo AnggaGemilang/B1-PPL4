@@ -82,7 +82,7 @@ const SubField = () => {
 
   const deleteData = () => {
     SubFieldAPI.delete(chosenSubField.id).then((res) => {
-      setChosenSubField({ ...state, visible: false })
+      setChosenSubField({ ...chosenSubField, visible: false })
       setMessage("Sub Bidang Telah Berhasil Dihapus!")        
       getData()
     })

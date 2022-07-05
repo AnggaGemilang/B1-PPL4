@@ -42,7 +42,6 @@ const DataNilai = () => {
       if(res?.data?.data[0]?.attributes?.scores_fitproper?.data[0]?.attributes?.score != 0){
         let value = 0
         setScores(res.data.data[0])
-        console.log(res.data.data[0])
         res?.data.data[0]?.attributes?.scores_fitproper?.data.forEach((element) => { 
           value += parseInt(element.attributes.score / 100 * element.attributes.criterion.data.attributes.value)
         })     

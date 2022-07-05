@@ -79,14 +79,13 @@ const Directorate = () => {
   const getData = () => {
     DirectorateAPI.get().then((res) => {
       setDirectorates(res.data.data)
-      console.log(res.data.data)
     })
   }
 
   const deleteData = () => {
     DirectorateAPI.delete(chosenDirectorate.id).then((res) => {
-      setChosenDirectorate({ ...state, visible: false })
-      setMessage("Directorate has deleted successfully")      
+      setChosenDirectorate({ ...chosenDirectorate, visible: false })
+      setMessage("Direktorat Telah Berhasil Dihapus!")      
       getData()
     })
   }

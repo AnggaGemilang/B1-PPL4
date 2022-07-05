@@ -115,7 +115,7 @@ const TambahField = () => {
                     <CFormSelect name="division" id="division" aria-label="Large select example">
                       <option>Pilih Divisi</option>
                       { divisions.map(division =>
-                        <option selected={division.id == state?.data?.attributes?.divisions?.data[0]?.id} key={ division.id } value={ division.id } >{ division.attributes.division_name }</option>
+                        <option selected={division.id == state?.data?.attributes?.division?.data?.id} key={ division.id } value={ division.id } >{ division.attributes.division_name }</option>
                       )}
                     </CFormSelect>
                   </CCol>

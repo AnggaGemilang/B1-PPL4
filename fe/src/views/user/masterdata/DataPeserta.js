@@ -71,7 +71,7 @@ const DataPeserta = () => {
   }
   
   const getData = () => {
-    DataPesertaAPI.get().then((res) => {
+    DataPesertaAPI.getActive().then((res) => {
       setRegistrants(res.data.data)
     })
   }

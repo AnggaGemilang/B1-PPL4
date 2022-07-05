@@ -33,7 +33,7 @@ import { cilSearch, cilPlus } from '@coreui/icons'
 import GradeAPI from '../../../config/admin/GradeAPI'
 import PositionAPI from '../../../config/admin/PositionAPI'
 
-const Grade = () => {
+const Position = () => {
   const location = useLocation()
   const navigate = useNavigate()
 
@@ -84,7 +84,7 @@ const Grade = () => {
 
   const deleteData = () => {
     PositionAPI.delete(chosenPosition.id).then((res) => {
-      setChosenPosition({ ...state, visible: false })
+      setChosenPosition({ ...chosenPosition, visible: false })
       setMessage("Jabatan Telah Berhasil Dihapus!")        
       getData()
     })
@@ -219,4 +219,4 @@ const Grade = () => {
   )
 }
 
-export default Grade
+export default Position

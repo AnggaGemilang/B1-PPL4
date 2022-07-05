@@ -84,8 +84,8 @@ const Division = () => {
 
   const deleteData = () => {
     DivisionAPI.delete(chosenDivision.id).then((res) => {
-      setChosenDivision({ ...state, visible: false })
-      setMessage("Division has deleted successfully")        
+      setChosenDivision({ ...chosenDivision, visible: false })
+      setMessage("Divisi Telah Berhasil Dihapus!")        
       getData()
     })
   }

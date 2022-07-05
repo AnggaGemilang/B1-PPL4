@@ -60,7 +60,7 @@ const TambahSubfield = () => {
     } else {
       SubFieldAPI.edit(state.data.id, body).then(
         (res) => {
-          navigate('/subfield', {state: { successMessage: 'Sub Bidang Gagal Ditambahkan!' } })  
+          navigate('/subfield', {state: { successMessage: 'Sub Bidang Telah Berhasil Diperbaharui!' } })  
         },
         (err) => {
           setMessage(err.message)
@@ -115,7 +115,7 @@ const TambahSubfield = () => {
                     <CFormSelect name="field" id="field" aria-label="Large select example">
                       <option>Pilih Bidang</option>
                       { fields.map(field =>
-                        <option selected={field.id == state?.data?.attributes?.fields?.data[0]?.id} key={ field.id } value={ field.id } >{ field.attributes.field_name }</option>
+                        <option selected={field.id == state?.data?.attributes?.field?.data?.id} key={ field.id } value={ field.id } >{ field.attributes.field_name }</option>
                       )}
                     </CFormSelect>
                   </CCol>

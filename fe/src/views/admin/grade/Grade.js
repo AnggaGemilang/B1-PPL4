@@ -70,13 +70,12 @@ const Grade = () => {
   const getData = () => {
     GradeAPI.get().then((res) => {
       setGrades(res.data.data)
-      console.log(res.data.data)
     })
   }
 
   const deleteData = () => {
     GradeAPI.delete(chosenGrade.id).then((res) => {
-      setChosenGrade({ ...state, visible: false })
+      setChosenGrade({ ...chosenGrade, visible: false })
       setMessage("Grade Telah Berhasil Dihapus!")  
       getData()
     })

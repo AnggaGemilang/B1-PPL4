@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import {
   CButton,
   CCard,
@@ -26,7 +26,8 @@ const TambahCriteria = () => {
     status: location.state.status,
     data: location?.state?.data,
     visibleSubmit: false,
-    visiblePenggunaan: false
+    visiblePenggunaan: location?.state?.data?.attributes?.defaultUsed == "fitproper" ? true : false,
+    interviewValue: ""
   })
 
   const postData = (event) => {
@@ -57,7 +58,7 @@ const TambahCriteria = () => {
     if(state.status == "tambah"){
       CriteriaAPI.add(body).then(
         (res) => {
-          navigate('/criteria', {state: { successMessage: 'Kriteria telah berhasil ditambah' } })
+          navigate('/criteria', {state: { successMessage: 'Kriteria Telah Berhasil Ditambah!' } })
         },
         (err) => {
           setMessage(err.message)
@@ -67,7 +68,7 @@ const TambahCriteria = () => {
     } else {
       CriteriaAPI.edit(state.data.id, body).then(
         (res) => {
-          navigate('/criteria', {state: { successMessage: 'Kriteria gagal ditambah' } })
+          navigate('/criteria', {state: { successMessage: 'Kriteria Telah Berhasil Diperbaharui!' } })
         },
         (err) => {
           setMessage(err.message)
@@ -136,7 +137,7 @@ const TambahCriteria = () => {
                       name="defaultused" 
                       id="defaultused"
                       aria-label="Large select example" 
-                      onChange={(e) => (e.target.value == "fitproper") ? setState({ ...state, visiblePenggunaan: true }) : setState({ ...state, visiblePenggunaan: false }) }>
+                      onChange={(e) => (e.target.value == "fitproper") ? setState({ ...state, visiblePenggunaan: true, interviewValue: "" }) : setState({ ...state, visiblePenggunaan: false, interviewValue: "am/md" }) }>
                         <option>Pilih Kategori</option>
                         <option selected={ state?.data?.attributes?.defaultUsed == "fitproper" } value="fitproper">Fit & Proper</option>
                         <option selected={ state?.data?.attributes?.defaultUsed == "interview" } value="interview">Wawancara</option>
@@ -150,8 +151,9 @@ const TambahCriteria = () => {
                   <CCol sm={10} >
                     <CFormSelect name="usefor" id="usefor" aria-label="Large select example" disabled={ state.visiblePenggunaan == false }>
                       <option>Pilih Penggunaan</option>
-                      <option selected={ state?.data?.attributes?.useFor == "am" } value="am">Manajemen Atas</option>
-                      <option selected={ state?.data?.attributes?.useFor == "md" } value="md">Manajemen Dasar</option>
+                      <option selected={ state?.data?.attributes?.useFor == "am"} value="am">Manajemen Atas</option>
+                      <option selected={ state?.data?.attributes?.useFor == "md"} value="md">Manajemen Dasar</option>
+                      <option selected={ state?.data?.attributes?.useFor == "am/md" || state.interviewValue == "am/md" } value="am/md">Manajemen Atas/Manajemen Dasar</option>
                     </CFormSelect>
                   </CCol>
                 </CRow>

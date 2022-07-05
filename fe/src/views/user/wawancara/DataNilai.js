@@ -44,9 +44,7 @@ const DataNilai = () => {
         setScores(res.data.data[0])
         res?.data?.data[0]?.attributes?.scores_interview?.data.forEach((element) => { 
           value += parseInt(element.attributes.score / 100 * element.attributes.criterion.data.attributes.value)
-        })     
-        console.log(value)
-        console.log(state.total)
+        })
         setState({ ...state, visible: true, total: value, message: "" })        
       } else {
         setState({ ...state, visible: false, message: "Penguji Belum Menilai!" })
