@@ -36,7 +36,7 @@ import EmployeeAPI from '../../../config/admin/EmployeeAPI'
 import PositionAPI from '../../../config/admin/PositionAPI'
 import LevelAPI from '../../../config/admin/LevelAPI'
 import SubFieldAPI from '../../../config/admin/SubFieldAPI'
-import axios from "axios";
+import axios from "axios"
 
 const Employee = () => {
   const location = useLocation()
@@ -61,7 +61,7 @@ const Employee = () => {
         setPositions(res[1]?.data.data)
         setSubfields(res[2]?.data.data)
       })
-    );
+    )
     getData()
   }, [])    
 
@@ -82,7 +82,7 @@ const Employee = () => {
       query += `&filters[BirthPlace][$contains]=${document.getElementById("filter_birthplace").value}`
     }        
     if(document.querySelector('input[type="date"]').value.length != 0){
-      query += `&filters[BirthDate][$gte]=${document.querySelector('input[type="date"]').value}`
+      query += `&filters[BirthDate][$eq]=${document.querySelector('input[type="date"]').value}`
     }
     if(document.getElementById("filter_email").value.length != 0){
       query += `&filters[Email][$contains]=${document.getElementById("filter_email").value}`
@@ -105,7 +105,6 @@ const Employee = () => {
 
     EmployeeAPI.find(query).then(
       (res) => {
-        console.log(res.data.data)
         if(res.data.data.length != 0){
           setEmployees(res.data.data)
         } else {
@@ -123,7 +122,7 @@ const Employee = () => {
 
   const deleteData = () => {
     EmployeeAPI.delete(chosenEmployee.id).then((res) => {
-      setChosenEmployee({ ...state, visible:false })
+      setChosenEmployee({ ...chosenEmployee, visible:false })
       setMessage("Pegawai Telah Berhasil Dihapus!")
       getData()
     })
@@ -145,7 +144,7 @@ const Employee = () => {
                         type="text"
                         name='filter_nip'
                         id="filter_nip"
-                        placeholder="Enter NIP . . ."
+                        placeholder="Masukkan NIP . . ."
                       />
                     </CCol>
                     <CCol xs={6}>
@@ -154,7 +153,7 @@ const Employee = () => {
                         type="text"
                         name='filter_nama'
                         id="filter_nama"
-                        placeholder="Enter Full Name . . ."
+                        placeholder="Masukkan Nama Lengkap . . ."
                       />
                     </CCol>
                   </CRow>
@@ -176,7 +175,7 @@ const Employee = () => {
                           name="filter_gender"
                           id="filter_gender2"
                           value="Male"
-                          label="Male"
+                          label="Laki-laki"
                         />
                         <CFormCheck
                           inline
@@ -184,13 +183,13 @@ const Employee = () => {
                           name="filter_gender"
                           id="filter_gender3"
                           value="Female"
-                          label="Female"
+                          label="Perempuan"
                         />
                       </CCol>
                     </CCol>
                     <CCol xs={6}>
                       <CFormLabel htmlFor="filter_birthplace">Tempat Lahir</CFormLabel>
-                      <CFormInput type="text" name="filter_birthplace" id="filter_birthplace" placeholder='Enter Birth Place . . .' />
+                      <CFormInput type="text" name="filter_birthplace" id="filter_birthplace" placeholder='Masukkan Tempat Lahir . . .' />
                     </CCol>
                   </CRow>
                   <CRow className='mt-3'>
@@ -200,18 +199,18 @@ const Employee = () => {
                     </CCol>
                     <CCol xs={6}>
                       <CFormLabel htmlFor="filter_email">Email</CFormLabel>
-                      <CFormInput type="email" name="filter_email" id="filter_email" placeholder='Enter Email . . .'/>
+                      <CFormInput type="email" name="filter_email" id="filter_email" placeholder='Masukkan Email . . .'/>
                     </CCol>
                   </CRow> 
                   <CRow className='mt-3'>
                     <CCol xs={6}>
-                      <CFormLabel htmlFor="filter_phonenumber">Nomor Handphone</CFormLabel>
-                      <CFormInput type="number" name="filter_phonenumber" id="filter_phonenumber" placeholder='Enter Phone Number . . .'/>
+                      <CFormLabel htmlFor="filter_phonenumber">Nomor Telepon</CFormLabel>
+                      <CFormInput type="number" name="filter_phonenumber" id="filter_phonenumber" placeholder='Masukkan Nomor Telepon . . .'/>
                     </CCol>
                     <CCol xs={6}>
                       <CFormLabel htmlFor="filter_religion">Agama</CFormLabel>
                       <CFormSelect name="filter_religion" id="filter_religion" className="mb-3" aria-label="Large select example">
-                        <option value="">Choose Religion</option>
+                        <option value="">Pilih Agama</option>
                         <option value="Islam">Islam</option>
                         <option value="Kristen">Kristen</option>
                         <option value="Katolik">Katolik</option>
@@ -275,7 +274,7 @@ const Employee = () => {
         </CCol>          
         <CCard className="mb-4 mt-3">
           <CCardHeader>
-            <strong>Data Karyawan</strong>
+            <strong>Data Pegawai</strong>
           </CCardHeader>
           <CCardBody style={{ overflowX: "auto"}}>
             <CRow>
@@ -287,7 +286,7 @@ const Employee = () => {
                     navigate('/employee/tambah', {state: { status: 'tambah' } })
                   } >
                   <CIcon icon={cilPlus} style={{ marginRight: "10px", color: "#FFFFFF" }} />
-                  Tambah Karyawan
+                  Tambah Pegawai
                 </CButton>
               </CCol>
             </CRow>

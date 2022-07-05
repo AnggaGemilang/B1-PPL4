@@ -50,7 +50,7 @@ const TambahDirectorate = () => {
     if(state.status == "tambah"){
       DirectorateAPI.add(body).then(
         (res) => {
-          navigate('/directorate', {state: { successMessage: 'Directorate has added successfully' } })  
+          navigate('/directorate', {state: { successMessage: 'Direktorat Telah Berhasil Ditambahkan!' } })  
         },
         (err) => {
           setMessage(err.message)
@@ -60,7 +60,7 @@ const TambahDirectorate = () => {
     } else {
       DirectorateAPI.edit(state.data.id, body).then(
         (res) => {
-          navigate('/directorate', {state: { successMessage: 'Directorate has updated successfully' } })  
+          navigate('/directorate', {state: { successMessage: 'Direktorat Telah Berhasil Diperbaharui!' } })  
         },
         (err) => {
           setMessage(err.message)
@@ -115,7 +115,7 @@ const TambahDirectorate = () => {
                     <CFormSelect name="unit" id="unit" aria-label="Large select example">
                       <option>Pilih Unit</option>
                       { units.map(unit =>
-                        <option selected={unit.id == state?.data?.attributes?.units?.data[0]?.id} key={ unit.id } value={ unit.id } >{ unit.attributes.unit_name }</option>
+                        <option selected={unit.id == state?.data?.attributes?.unit?.data?.id} key={ unit.id } value={ unit.id } >{ unit.attributes.unit_name }</option>
                       )}
                     </CFormSelect>
                   </CCol>

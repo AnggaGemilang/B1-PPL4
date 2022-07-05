@@ -7,7 +7,7 @@ export default {
   getKeteragan1Publik : () => api.get(`/employees`),
   getKeteragan2Publik : () => api.get(`/registrants`),
   getKeteragan3Publik : () => api.get(`/mappings?filters[status][$eq]=on_progress`),
-  getKeteragan4Publik : () => api.get(`/mappings?filters[status][$eq]=done`),
+  getKeteragan4Publik : () => api.get(`/mappings?filters[status][$ne]=on_progress`),
 
   getKeteragan1Penguji : () => api.get(`/line-mappings?populate[1]=mapping.examiner.employee&filters[status_fitproper][$eq]=false&filters[examiner][employee][NIP][$eq]=${JSON.parse(sessionStorage.getItem("auth")).user.employee.NIP}`),
   getKeteragan2Penguji : () => api.get(`/line-mappings?populate[1]=mapping.examiner.employee&filters[status_interview][$eq]=false&filters[is_interview][$eq]=true&filters[examiner][employee][NIP][$eq]=${JSON.parse(sessionStorage.getItem("auth")).user.employee.NIP}`),

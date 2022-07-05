@@ -43,6 +43,7 @@ const Criteria = () => {
     visiblePenggunaan: false,
     name: "",
     id: 0,
+    interviewValue: ""    
   })
 
   useEffect(() => {
@@ -64,7 +65,7 @@ const Criteria = () => {
       query += `&filters[defaultUsed][$eq]=${document.getElementById("filter_defaultused").value}`
     }
     if(document.getElementById("filter_usefor").value.length != 0){
-      query += `&filters[useFor][$contains]=${document.getElementById("filter_usefor").value}`
+      query += `&filters[useFor][$eq]=${document.getElementById("filter_usefor").value}`
     }
 
     CriteriaAPI.find(query).then(
@@ -86,8 +87,8 @@ const Criteria = () => {
 
   const deleteData = () => {
     CriteriaAPI.delete(chosenCriteria.id).then((res) => {
-      setChosenCriteria({ ...state, visible: false })
-      setMessage("Kriteria telah berhasil dihapus")
+      setChosenCriteria({ ...chosenCriteria, visible: false })
+      setMessage("Kriteria Telah Berhasil Dihapus!")
       getData()
     })
   }
@@ -129,7 +130,7 @@ const Criteria = () => {
                         id="filter_defaultused" 
                         className="mb-3" 
                         aria-label="Large select example"
-                        onChange={(e) => (e.target.value == "fitproper") ? setChosenCriteria({ ...chosenCriteria, visiblePenggunaan: true }) : setChosenCriteria({ ...chosenCriteria, visiblePenggunaan: false }) }>
+                        onChange={(e) => (e.target.value == "fitproper") ? setChosenCriteria({ ...chosenCriteria, visiblePenggunaan: true, interviewValue: "" }) : setChosenCriteria({ ...chosenCriteria, visiblePenggunaan: false, interviewValue: "am/md" }) }>
                           <option value="">Pilih Kategori</option>
                           <option value="fitproper">Fit & Proper</option>
                           <option value="interview">Wawancara</option>
@@ -141,7 +142,7 @@ const Criteria = () => {
                         <option value="">Pilih Penggunaan</option>
                         <option value="am">Manajemen Atas</option>
                         <option value="md">Manajemen Dasar</option>
-                        <option value="am/md">Manajemen Dasar/Manajemen Atas</option>
+                        <option selected={ chosenCriteria.interviewValue == "am/md" } value="am/md">Manajemen Dasar/Manajemen Atas</option>
                       </CFormSelect>
                     </CCol>
                   </CRow>
@@ -207,7 +208,7 @@ const Criteria = () => {
                           ? criteria.attributes.useFor == "am" ? "Manajemen Atas" 
                             : criteria.attributes.useFor == "md" ? "Manajemen Dasar" 
                               : "Manajemen Atas/Manajemen Dasar"
-                          : "-"}
+                          : "Manajemen Atas/Manajemen Dasar"}
                       </CTableDataCell>
                       <CTableDataCell>
                         <CButton 

@@ -73,13 +73,12 @@ const Level = () => {
   const getData = () => {
     LevelAPI.get().then((res) => {
       setLevels(res.data.data)
-      console.log(res.data.data)
     })
   }
 
   const deleteData = () => {
     LevelAPI.delete(chosenLevel.id).then((res) => {
-      setChosenLevel({ ...state, visible: false })
+      setChosenLevel({ ...chosenLevel, visible: false })
       setMessage("Jenjang Telah Berhasil Dihapus!")  
       getData()
     })

@@ -27,11 +27,11 @@ import CriteriaAPI from '../../../config/admin/CriteriaAPI'
 import ScoreAPI from '../../../config/user/ScoreAPI'
 import url from "../../../config/setting"
 import logoPDF from 'src/assets/images/pdf-icon.png'
-import axios from "axios";
+import axios from "axios"
 
 const Pendaftaran = () => {
-  const navigate = useNavigate();  
-  const location = useLocation();
+  const navigate = useNavigate()
+  const location = useLocation()
 
   const [nipValue, setNipValue] = useState("")
   const [examiners1, setExaminers1] = useState([])
@@ -61,7 +61,7 @@ const Pendaftaran = () => {
           setState({
             ...state,
             registrant: res.data.data[0],
-          });
+          })
           CriteriaAPI.find(res.data.data[0]?.attributes?.employee?.data?.attributes?.level?.data?.attributes?.functional_name.includes("Manajemen Dasar") ? "&filters[defaultUsed][$eq]=fitproper&filters[useFor][$contains]=md" : "&filters[defaultUsed][$eq]=fitproper&filters[useFor][$contains]=am").then(
             (res) => {
               if(res.data.data.length != 0){
@@ -84,14 +84,14 @@ const Pendaftaran = () => {
             registrant: {}
           })
         }
-      });
+      })
     }
     axios.all([PositionAPI.get(), LevelAPI.get()]).then(
       axios.spread((...res) => {
         setPositions(res[0]?.data.data),
         setLevels(res[1]?.data.data)
       })
-    );
+    )
   }, [nipValue])
 
   const deleteNode = (value, arr) => {
@@ -105,7 +105,7 @@ const Pendaftaran = () => {
   }
 
   const postData = (event) => {
-    event.preventDefault();
+    event.preventDefault()
     setState({ ...state, visibleSubmit: true })
 
     let examinersVal = []
@@ -128,7 +128,7 @@ const Pendaftaran = () => {
           is_interview: false,
           status: "on_progress"
         }
-      };  
+      }
       MappingAPI.add(body).then(
         (res) => {
           for(let i = 0; i < examinersVal.length; i++){
@@ -142,7 +142,7 @@ const Pendaftaran = () => {
                 fitproper_finalized: false,
                 interview_finalized: false
               }
-            }; 
+            }
             FitAndProperAPI.addLineMapping(body).then(
               (res) => {
                 for(let i = 0; i < criterias.length; i++){
@@ -185,25 +185,25 @@ const Pendaftaran = () => {
               formData.append('field', 'cv')
               DataPesertaAPI.addFile(formData).then(
                 (res) => {
-                  navigate('/fitandproper', {state: { successMessage: 'Pendaftaran Berhasil' } });
+                  navigate('/fitandproper', {state: { successMessage: 'Pendaftaran Berhasil' } })
                 },
                 (err) => {
                   setMessage(err.message)
                   setState({ ...state, visibleSubmit: false })
                 }
-              );  
+              )
             },
             (err) => {
               setMessage(err.message)
               setState({ ...state, visibleSubmit: false })
             }
-          );
+          )
         },
         (err) => {
           setMessage(err.message)
           setState({ ...state, visibleSubmit: false })
         }
-      );   
+      )
     } else {
       const body = {
         data: {
@@ -213,7 +213,7 @@ const Pendaftaran = () => {
           level: document.getElementById("level").value,
           position: document.getElementById("projection").value,
         }
-      };  
+      }
       MappingAPI.edit(state?.data?.id, body).then(
         (res) => {
           if(state.ppt != null){
@@ -227,13 +227,13 @@ const Pendaftaran = () => {
             formData.append('field', 'ppt')
             DataPesertaAPI.addFile(formData).then(
               (res) => {
-                console.log("success", res);
+                console.log("success", res)
               },
               (err) => {
                 setMessage(err.message)
                 setState({ ...state, visibleSubmit: false })
               }
-            );            
+            )     
           }
           if(state.cv != null){
             if(state?.registrant?.attributes?.cv?.data != null){
@@ -246,21 +246,21 @@ const Pendaftaran = () => {
             formData.append('field', 'cv')
             DataPesertaAPI.addFile(formData).then(
               (res) => {
-                console.log("success", res);
+                console.log("success", res)
               },
               (err) => {
                 setMessage(err.message)
                 setState({ ...state, visibleSubmit: false })
               }
-            );            
+            )
           }
-          navigate('/fitandproper', {state: { successMessage: 'Pendaftaran Berhasil Diperbaharui' } });
+          navigate('/fitandproper', {state: { successMessage: 'Pendaftaran Berhasil Diperbaharui' } })
         },
         (err) => {
           setMessage(err.message)
           setState({ ...state, visibleSubmit: false })
         }
-      );   
+      )
     } 
   }
 

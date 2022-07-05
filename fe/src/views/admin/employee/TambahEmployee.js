@@ -78,7 +78,7 @@ const TambahEmployee = () => {
           formData.append('field', 'Photo')
           EmployeeAPI.addPhoto(formData).then(
             (res) => {
-              navigate('/employee', {state: { successMessage: 'Pegawai telah berhasil ditambahkan' } })            
+              navigate('/employee', {state: { successMessage: 'Pegawai Telah Berhasil Ditambahkan!' } })            
             },
             (err) => {
               setMessage(err.message)
@@ -109,9 +109,7 @@ const TambahEmployee = () => {
         (res) => {
           if(state.photo != null){
             if(state?.data?.attributes?.Photo?.data != null){
-              EmployeeAPI.deletePhoto(state?.data?.attributes?.Photo?.data?.id).then(res => {
-                console.log("Foto Berhasil Dihapus")
-              })
+              EmployeeAPI.deletePhoto(state?.data?.attributes?.Photo?.data?.id)
             }
             let formData = new FormData()
             formData.append('files', state?.photo)
@@ -138,7 +136,7 @@ const TambahEmployee = () => {
               }
             )               
           }
-          navigate('/employee', {state: { successMessage: 'Pegawai telah berhasil diperbaharui' } })
+          navigate('/employee', {state: { successMessage: 'Pegawai Telah Berhasil Diperbaharui!' } })
         },
         (err) => {
           setMessage(err.message)

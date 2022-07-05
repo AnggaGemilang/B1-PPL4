@@ -50,7 +50,7 @@ const TambahDivision = () => {
     if(state.status == "tambah"){
       DivisionAPI.add(body).then(
         (res) => {
-          navigate('/division', {state: { successMessage: 'Division has added successfully' } })  
+          navigate('/division', {state: { successMessage: 'Divisi Telah Berhasil Ditambahkan!' } })  
         },
         (err) => {
           setMessage(err.message)
@@ -60,7 +60,7 @@ const TambahDivision = () => {
     } else {
       DivisionAPI.edit(state.data.id, body).then(
         (res) => {
-          navigate('/division', {state: { successMessage: 'Division has updated successfully' } })  
+          navigate('/division', {state: { successMessage: 'Divisi Telah Berhasil Diperbaharui!' } })  
         },
         (err) => {
           setMessage(err.message)
@@ -115,7 +115,7 @@ const TambahDivision = () => {
                     <CFormSelect name="directorate" id="directorate" aria-label="Large select example">
                       <option>Pilih Direktorat</option>
                       { directorates.map(directorate =>
-                        <option selected={directorate.id == state?.data?.attributes?.directorates?.data[0]?.id} key={ directorate.id } value={ directorate.id } >{ directorate.attributes.directorate_name }</option>
+                        <option selected={directorate.id == state?.data?.attributes?.directorate?.data?.id} key={ directorate.id } value={ directorate.id } >{ directorate.attributes.directorate_name }</option>
                       )}
                     </CFormSelect>
                   </CCol>

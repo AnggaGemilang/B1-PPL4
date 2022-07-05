@@ -78,7 +78,7 @@ const Unit = () => {
 
   const deleteData = () => {
     UnitAPI.delete(chosenUnit.id).then((res) => {
-      setChosenUnit({ ...state, visible: false })
+      setChosenUnit({ ...chosenUnit, visible: false })
       setMessage("Unit Telah Berhasil Dihapus!")        
       getData()
     })

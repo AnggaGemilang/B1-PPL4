@@ -28,7 +28,7 @@ import CIcon from '@coreui/icons-react'
 import { cilSearch } from '@coreui/icons'
 import url from "../../../config/setting"
 import EmployeeAPI from '../../../config/admin/EmployeeAPI'
-import GradeAPI from '../../../config/admin/GradeAPI'
+import PositionAPI from '../../../config/admin/PositionAPI'
 import LevelAPI from '../../../config/admin/LevelAPI'
 import SubFieldAPI from '../../../config/admin/SubFieldAPI'
 import AdministrasiUserAPI from '../../../config/admin/AdministrasiUserAPI'
@@ -37,20 +37,20 @@ import axios from "axios"
 const Administrasi = () => {
   const [employees, setEmployees] = useState([])
   const [levels, setLevels] = useState([])
-  const [grades, setGrades] = useState([])
+  const [positions, setPositions] = useState([])
   const [subfields, setSubfields] = useState([])
   const [message, setMessage] = useState("")
 
   useEffect(() => {
     setMessage(location?.state?.successMessage)
 
-    axios.all([LevelAPI.get(), GradeAPI.get(), SubFieldAPI.get()]).then(
+    axios.all([LevelAPI.get(), PositionAPI.get(), SubFieldAPI.get()]).then(
       axios.spread((...res) => {
         setLevels(res[0]?.data.data),
-        setGrades(res[1]?.data.data)
+        setPositions(res[1]?.data.data)
         setSubfields(res[2]?.data.data)
       })
-    );
+    )
     getData()
   }, [])    
 
@@ -69,8 +69,8 @@ const Administrasi = () => {
     if(document.getElementById("filter_email").value.length != 0){
       query += `&filters[Email][$contains]=${document.getElementById("filter_email").value}`
     }
-    if(document.getElementById("filter_grade").value.length != 0){
-      query += `&filters[grade][id][$eq]=${document.getElementById("filter_grade").value}`
+    if(document.getElementById("filter_position").value.length != 0){
+      query += `&filters[position][id][$eq]=${document.getElementById("filter_position").value}`
     }
     if(document.getElementById("filter_level").value.length != 0){
       query += `&filters[level][id][$eq]=${document.getElementById("filter_level").value}`
@@ -135,7 +135,7 @@ const Administrasi = () => {
                       type="text"
                       name='filter_nip'
                       id="filter_nip"
-                      placeholder="Enter NIP . . ."
+                      placeholder="Masukkan NIP . . ."
                     />
                   </CCol>
                   <CCol xs={6}>
@@ -185,11 +185,11 @@ const Administrasi = () => {
                 </CRow>
                 <CRow className='mt-3'>
                   <CCol xs={6}>
-                    <CFormLabel htmlFor="filter_grade">Grade</CFormLabel>
-                    <CFormSelect name="filter_grade" id="filter_grade" className="mb-3" aria-label="Large select example">
-                      <option value="">Pilih Grade</option>
-                      { grades.map(grade =>
-                        <option key={ grade.id } value={ grade.id } >{ grade.attributes.grade_name }</option>
+                    <CFormLabel htmlFor="filter_position">Jabatan</CFormLabel>
+                    <CFormSelect name="filter_position" id="filter_position" className="mb-3" aria-label="Large select example">
+                      <option value="">Pilih Jabatan</option>
+                      { positions.map(position =>
+                        <option key={ position.id } value={ position.id } >{ position.attributes.position_name }</option>
                       )}
                     </CFormSelect>
                   </CCol>
@@ -303,7 +303,7 @@ const Administrasi = () => {
                                   }
                                   AdministrasiUserAPI.edit(employee.attributes.account.data.id, body).then(res => {
                                     getData()
-                                    setMessage("Peran Pegawai Berhasil Diperbaharui!")
+                                    setMessage("Peran Pegawai Telah Berhasil Diperbaharui!")
                                   })
                                 } else {
                                   const body = {
@@ -317,7 +317,7 @@ const Administrasi = () => {
                                   }
                                   AdministrasiUserAPI.add(body).then(res => {
                                     getData()
-                                    setMessage("Peran Pegawai Berhasil Ditambahkan!")
+                                    setMessage("Peran Pegawai Telah Berhasil Ditambahkan!")
                                   })
                                 }
                               })

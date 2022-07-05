@@ -38,11 +38,10 @@ const Login = () => {
       password: document.getElementById("password").value
     }
     LoginAPI.login(data).then((res) => {
-      console.log(res.data)
       sessionStorage.setItem("auth", JSON.stringify(res.data))
       window.location.href = "/"
     }).catch((err) => {
-        setState({errorMessage:"Invalid email or password", visible: false})
+        setState({errorMessage:"Username atau Password Tidak Benar", visible: false})
     })
   }
 

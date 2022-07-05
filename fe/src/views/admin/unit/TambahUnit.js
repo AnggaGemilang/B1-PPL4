@@ -52,7 +52,7 @@ const TambahUnit = () => {
     } else {
       UnitAPI.edit(state.data.id, body).then(
         (res) => {
-          navigate('/unit', {state: { successMessage: 'Unit Gagal Ditambahkan!' } }) 
+          navigate('/unit', {state: { successMessage: 'Unit Telah Berhasil Diperbaharui!' } }) 
         },
         (err) => {
           setMessage(err.message)
@@ -83,7 +83,7 @@ const TambahUnit = () => {
         <CCol xs={12}>
           <CCard>
             <CCardHeader>
-              <strong>Tambah Unit</strong>
+              <strong>{ state.status == "edit" ? "Edit" : "Tambah" } Unit</strong>
             </CCardHeader>
             <CCardBody>
               <CForm onSubmit={postData} method="post">

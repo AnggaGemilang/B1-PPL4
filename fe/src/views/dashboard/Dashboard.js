@@ -38,7 +38,7 @@ import url from "src/config/setting"
 import DataPesertaAPI from 'src/config/user/DataPesertaAPI'
 import PositionAPI from 'src/config/admin/PositionAPI'
 import DashboardAPI from 'src/config/admin/DashboardAPI'
-import axios from "axios";
+import axios from "axios"
 import { useNavigate } from "react-router-dom"
 
 const Dashboard = () => {
@@ -46,7 +46,6 @@ const Dashboard = () => {
 
   const [registrants, setRegistrants] = useState([])
   const [projections, setProjections] = useState([])
-  const [message, setMessage] = useState("")  
   const [mappings, setMappings] = useState([])
   const [state, setState] = useState({
     visible: false,
@@ -54,6 +53,7 @@ const Dashboard = () => {
     keterangan2: "",
     keterangan3: "",
     keterangan4: "",
+    message: ""
   })
 
   useEffect(() => {
@@ -67,7 +67,7 @@ const Dashboard = () => {
         setRegistrants(res[0]?.data.data),
         setProjections(res[1]?.data.data)
       })
-    );
+    )
   }, []) 
 
   const getKeteranganPenguji = () => {
@@ -78,7 +78,6 @@ const Dashboard = () => {
       DashboardAPI.getKeteragan4Penguji()
     ]).then(
       axios.spread((...res) => {
-        console.log(res)
         setState({
           ...state,
           keterangan1: res[0]?.data?.meta?.pagination?.total,
@@ -87,7 +86,7 @@ const Dashboard = () => {
           keterangan4: res[3]?.data?.meta?.pagination?.total,
         })
       })
-    );
+    )
   }
 
   const getKeteranganPublic = () => {
@@ -105,7 +104,7 @@ const Dashboard = () => {
           keterangan4: res[3]?.data?.meta?.pagination?.total,
         })
       })
-    );
+    )
   }
 
   const generateData = (e) => {
@@ -115,20 +114,20 @@ const Dashboard = () => {
 
     if(JSON.parse(sessionStorage.getItem("auth"))?.user?.cp_role == 4){
       if (document.getElementById("filter_category").value != ""){
-        setMessage("")
+        setState({ ...state, message: "" })
         if(document.getElementById("filter_registrant").value != ""){
-          query += `&filters[registrant][id][$eq]=${document.getElementById("filter_registrant").value}`
+          query += `&filters[mapping][registrant][id][$eq]=${document.getElementById("filter_registrant").value}`
         }
         if (document.getElementById("filter_projection").value != ""){
-          query += `&filters[position][id][$eq]=${document.getElementById("filter_projection").value}`
+          query += `&filters[mapping][position][id][$eq]=${document.getElementById("filter_projection").value}`
         }
-
         if(document.getElementById("filter_category").value == "fitproper"){
           DashboardAPI.getPenguji(query).then((res) => {
-            console.log(res.data)
             if(res.data.data.length > 0){
               setMappings(res.data.data)
-              setState({ ...state, visible: true })
+              setState({ ...state, visible: true, message: "" })
+            } else {
+              setState({ ...state, visible: false, message: "Data Tidak Ditemukan" })
             }
           })
         } else if (document.getElementById("filter_category").value == "interview"){
@@ -136,16 +135,18 @@ const Dashboard = () => {
           DashboardAPI.getPenguji(query).then((res) => {
             if(res.data.data.length > 0){
               setMappings(res.data.data)
-              setState({ ...state, visible: true })
+              setState({ ...state, visible: true, message: "" })
+            } else {
+              setState({ ...state, visible: false, message: "Data Tidak Ditemukan" })
             }
           })
         }
       } else {
-        setMessage("Pilih Kategori!")
+        setState({ ...state, message: "Pilih Kategori!" })
       }
     } else {
       if (document.getElementById("filter_category").value != ""){
-        setMessage("")
+        setState({ ...state, message: "" })
         if(document.getElementById("filter_registrant").value != ""){
           query += `&filters[registrant][id][$eq]=${document.getElementById("filter_registrant").value}`
         }
@@ -155,10 +156,11 @@ const Dashboard = () => {
         
         if(document.getElementById("filter_category").value == "fitproper"){
           DashboardAPI.getPublic(query).then((res) => {
-            console.log(res.data)
             if(res.data.data.length > 0){
               setMappings(res.data.data)
-              setState({ ...state, visible: true })
+              setState({ ...state, visible: true, message: "" })
+            } else {
+              setState({ ...state, visible: false, message: "Data Tidak Ditemukan" })
             }
           })
         } else if (document.getElementById("filter_category").value == "interview"){
@@ -166,12 +168,14 @@ const Dashboard = () => {
           DashboardAPI.getPublic(query).then((res) => {
             if(res.data.data.length > 0){
               setMappings(res.data.data)
-              setState({ ...state, visible: true })
+              setState({ ...state, visible: true, message: "" })
+            } else {
+              setState({ ...state, visible: false, message: "Data Tidak Ditemukan" })
             }
           })
         }
       } else {
-        setMessage("Pilih Kategori!")
+        setState({ ...state, message: "Pilih Kategori!" })
       }
     }    
   }  
@@ -276,7 +280,7 @@ const Dashboard = () => {
           }
           <CRow>
             <CCol xs={12}>
-              { message && <CAlert color="danger" dismissible onClose={() => { setMessage("") }}> { message } </CAlert> }
+              { state?.message && <CAlert color="danger" dismissible onClose={() => { setState({ ...state, message: "" }) }}> { state?.message } </CAlert> }
             </CCol>             
           </CRow>
           <CRow>

@@ -84,7 +84,7 @@ const Field = () => {
 
   const deleteData = () => {
     FieldAPI.delete(chosenField.id).then((res) => {
-      setChosenField({ ...state, visible: false })
+      setChosenField({ ...chosenField, visible: false })
       setMessage("Bidang Telah Berhasil Dihapus!")         
       getData()
     })

@@ -23,16 +23,14 @@ const TambahPeserta = () => {
     namaKaryawan: "",
     idKaryawan: 0,
     errorMessage: "",
-    visibleSubmit: false,    
+    visibleSubmit: false,
   })
 
   useEffect(() => {
     if (nipValue.length > 1) {
       DataPesertaAPI.findEmployee(nipValue).then(
       (res) => {
-        console.log(res)
         if(res.data.data.length == 1){
-          console.log(res.data.data[0].attributes.Name)
           setState({
             namaKaryawan: res.data.data[0].attributes.Name,
             idKaryawan: res.data.data[0].id

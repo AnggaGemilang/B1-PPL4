@@ -104,7 +104,6 @@ const DataPenilaian = () => {
     FitAndProperAPI.editLineMapping(chosenLineMapping?.lineMapping.id, body).then(res => {
       FitAndProperAPI.findLineMappingAll(`&filters[mapping][id][$eq]=${chosenLineMapping?.lineMapping?.attributes?.mapping?.data?.id}`)
         .then(res => {
-          console.log(res.data.data)
           res.data.data.map(line_mapping => {
             if(line_mapping?.attributes?.is_interview == "true"){
               if(line_mapping?.attributes?.status_interview == false){
@@ -120,7 +119,6 @@ const DataPenilaian = () => {
           })
           if(sudah_finalisasi){
             res.data.data.map(line_mapping => {
-              console.log(line_mapping)
               if(line_mapping?.attributes?.is_interview == "true"){
                 if(line_mapping?.attributes?.passed_interview == "passed"){
                   lolos++
@@ -149,7 +147,6 @@ const DataPenilaian = () => {
                 }
                 DataPesertaAPI.edit(chosenLineMapping?.lineMapping?.attributes?.mapping?.data?.attributes?.registrant?.data?.id, body).then(
                   (res) => {
-                    console.log(res.data.data)
                     if(lolos > tidak_lolos){
                       body = {
                         data: {
@@ -159,7 +156,6 @@ const DataPenilaian = () => {
                       }
                       EmployeeAPI.edit(chosenLineMapping?.lineMapping?.attributes?.mapping?.data?.attributes?.registrant?.data?.attributes?.employee?.data?.attributes?.NIP, body).then(
                         (res) => {
-                          console.log(res.data.data)                          
                           setChosenLineMapping({ ...chosenLineMapping, visible_finalized: false })   
                           getData()                        
                         },
