@@ -38,7 +38,7 @@ const CetakRekapFitAndProper = () => {
   const [positions, setPositions] = useState([])
   const [mappings, setMappings] = useState([])
   const [message, setMessage] = useState("")
-
+ 
   useEffect(() => {
     setMessage(location?.state?.successMessage)
     getData()
@@ -76,82 +76,90 @@ const CetakRekapFitAndProper = () => {
   }
 
   const generatePDF = (e) => {
+    if(e.target.getAttribute("status") == "on_progress"){
+      setMessage("Penguji Belum Selesai Menilai!")
+    } else {
+      setMessage("")
 
-    const months = ['Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember']
+      const months = ['Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember']
 
-    const date = new Date()
-    const day = date.getDate()
-    const month = date.getMonth()
-    var yy = date.getYear()
-    var year = (yy < 1000) ? yy + 1900 : yy
+      const date = new Date()
+      const day = date.getDate()
+      const month = date.getMonth()
+      var yy = date.getYear()
+      var year = (yy < 1000) ? yy + 1900 : yy
 
-    FitAndProperAPI.getRekapManualFitProper(e.target.getAttribute("registrant_val"), e.target.getAttribute("projection_val")).then((res) => {
-      if(res.data.data.length != 0){
-        setLineMappings(res.data.data)
+      FitAndProperAPI.getRekapManualFitProper(e.target.getAttribute("registrant_val"), e.target.getAttribute("projection_val")).then((res) => {
+        if(res.data.data.length != 0){
+          setLineMappings(res.data.data)
 
-        var doc = new jsPDF({
-            orientation: 'l',
-            unit: 'pt',
-            format: 'a4'        
-        })
+          var doc = new jsPDF({
+              orientation: 'l',
+              unit: 'pt',
+              format: 'a4'        
+          })
 
-        doc.setFontSize("18")
-        doc.setFont('helvetica', 'bold')
-        doc.text(270, 50, "Laporan Hasil Penilaian Fit & Proper")
-        doc.setFontSize("12")
-        doc.text(40, 90, "Nama Peserta")
-        doc.text(40, 110, "NIP")
-        doc.text(40, 130, "Jabatan Proyeksi")
-        doc.text(40, 150, "Jenjang")
-        doc.setFont('helvetica', 'normal')
-        doc.text(150, 90, ": " + res.data.data[0].attributes?.mapping?.data?.attributes?.registrant?.data?.attributes?.employee?.data?.attributes?.Name)
-        doc.text(150, 110, ": " + res.data.data[0].attributes?.mapping?.data?.attributes?.registrant?.data?.attributes?.employee?.data?.attributes?.NIP)
-        doc.text(150, 130, ": " + res.data.data[0].attributes?.mapping?.data?.attributes?.position?.data?.attributes?.position_name)
-        doc.text(150, 150, ": " + res.data.data[0].attributes?.mapping?.data?.attributes?.level?.data?.attributes?.functional_name + " - " + res.data.data[0].attributes?.mapping?.data?.attributes?.level?.data?.attributes?.structural_name)
+          doc.setFontSize("18")
+          doc.setFont('helvetica', 'bold')
+          doc.text(270, 50, "Laporan Hasil Penilaian Fit & Proper")
+          doc.setFontSize("12")
+          doc.text(40, 90, "Nama Peserta")
+          doc.text(40, 110, "NIP")
+          doc.text(40, 130, "Jabatan Proyeksi")
+          doc.text(40, 150, "Jenjang")
+          doc.setFont('helvetica', 'normal')
+          doc.text(150, 90, ": " + res.data.data[0].attributes?.mapping?.data?.attributes?.registrant?.data?.attributes?.employee?.data?.attributes?.Name)
+          doc.text(150, 110, ": " + res.data.data[0].attributes?.mapping?.data?.attributes?.registrant?.data?.attributes?.employee?.data?.attributes?.NIP)
+          doc.text(150, 130, ": " + res.data.data[0].attributes?.mapping?.data?.attributes?.position?.data?.attributes?.position_name)
+          doc.text(150, 150, ": " + res.data.data[0].attributes?.mapping?.data?.attributes?.level?.data?.attributes?.functional_name + " - " + res.data.data[0].attributes?.mapping?.data?.attributes?.level?.data?.attributes?.structural_name)
 
-        doc.autoTable({
-          startY: 175,
-          html: '#my-table',
-        })
+          doc.autoTable({
+            startY: 175,
+            html: '#my-table',
+          })
 
-        let finalY = doc.lastAutoTable.finalY
+          let finalY = doc.lastAutoTable.finalY
 
-        doc.setFontSize("12")
-        doc.text(40, finalY+=30, "Dengan ini, anda dinyatakan . . .")        
-        doc.setFont('helvetica', 'bold')
-        doc.setFontSize("18")
+          doc.setFontSize("12")
+          doc.text(40, finalY+=30, "Dengan ini, anda dinyatakan . . .")        
+          doc.setFont('helvetica', 'bold')
+          doc.setFontSize("18")
 
-        let status = ""
-        if(res.data.data[0].attributes?.mapping?.data?.attributes?.status == "passed"){
-          status = "Lolos"
-        } else if(res.data.data[0].attributes?.mapping?.data?.attributes?.status == "not_passed"){
-          status = "Tidak Lolos"
+          let status = ""
+          if(res.data.data[0].attributes?.mapping?.data?.attributes?.status == "passed"){
+            status = "Lolos"
+          } else if(res.data.data[0].attributes?.mapping?.data?.attributes?.status == "not_passed"){
+            status = "Tidak Lolos"
+          } else {
+            status = "Penguji Belum Menilai Semua"
+          }
+
+          doc.text(40, finalY+=25, status)
+
+          doc.setFontSize("12")
+          doc.setFont('helvetica', 'normal')
+
+          doc.text(40, finalY+=38, "Bandung, " + day + ' ' + months[month] + ' ' + year)
+          doc.text(650, finalY, "Bandung, " + day + ' ' + months[month] + ' ' + year)
+
+          doc.text(40, finalY+=18, "Kepala Pusat Fit Proper")
+          doc.text(650, finalY, "Kepala Pusat Fit Proper")
+
+          doc.text(40, finalY+=70, "Bambang Wisnuadhi, S.Si., M.T.")
+          doc.text(650, finalY, "Angga Yunanda Gemilang")
+
+          doc.text(40, finalY+6, "_______________________")
+          doc.text(650, finalY+6, "_______________________")
+
+          doc.text(40, finalY+=24, "NIP. 197201061999031002")
+          doc.text(650, finalY, "NIP. 201511036")
+
+          doc.save(res.data.data[0].attributes?.mapping?.data?.attributes?.registrant?.data?.attributes?.employee?.data?.attributes?.Name+'_'+res.data.data[0].attributes?.mapping?.data?.attributes?.position?.data?.attributes?.position_name+'.pdf')    
         } else {
-          status = "Penguji Belum Menilai Semua"
+          setLineMappings([])        
         }
-
-        doc.text(40, finalY+=25, status)
-
-        doc.setFontSize("12")
-        doc.setFont('helvetica', 'normal')
-
-        doc.text(40, finalY+=38, "Bandung, " + day + ' ' + months[month] + ' ' + year)
-        doc.text(650, finalY, "Bandung, " + day + ' ' + months[month] + ' ' + year)
-
-        doc.text(40, finalY+=18, "Kepala Pusat Fit Proper")
-        doc.text(650, finalY, "Kepala Pusat Fit Proper")
-
-        doc.text(40, finalY+=60, "___________________")
-        doc.text(650, finalY, "___________________")
-
-        doc.text(40, finalY+=18, "NIP. 123123123123123")
-        doc.text(650, finalY, "NIP. 123123123123123")
-
-        doc.save(res.data.data[0].attributes?.mapping?.data?.attributes?.registrant?.data?.attributes?.employee?.data?.attributes?.Name+'_'+res.data.data[0].attributes?.mapping?.data?.attributes?.position?.data?.attributes?.position_name+'.pdf')    
-      } else {
-        setLineMappings([])        
-      }
-    })
+      })
+    }
   }
 
   return (
@@ -221,7 +229,7 @@ const CetakRekapFitAndProper = () => {
           </CAccordionItem>
         </CAccordion>   
         <CCol xs={12} className="mt-3">
-          { message && <CAlert color="success" dismissible onClose={() => { setMessage("") }}> { message } </CAlert> }
+          { message && <CAlert color="danger" dismissible onClose={() => { setMessage("") }}> { message } </CAlert> }
         </CCol>                 
         <CCard className="mb-4 mt-3">
           <CCardHeader>
@@ -263,6 +271,7 @@ const CetakRekapFitAndProper = () => {
                         <CButton
                           projection_val={mapping?.attributes?.position?.data?.id}
                           registrant_val={mapping?.attributes?.registrant?.data?.id}
+                          status={mapping?.attributes?.status}
                           color='success'
                           variant="outline"
                           onClick={generatePDF}
@@ -277,7 +286,6 @@ const CetakRekapFitAndProper = () => {
           </CCardBody>
         </CCard>
       </CCol>
-
       <CTable striped style={{ display:'none' }} id='my-table'>
         <CTableHead>
           <CTableRow>

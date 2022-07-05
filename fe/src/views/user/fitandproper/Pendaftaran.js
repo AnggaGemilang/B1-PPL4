@@ -55,7 +55,7 @@ const Pendaftaran = () => {
       setNipValue(state?.data?.attributes?.registrant?.data?.attributes?.employee?.data?.attributes?.NIP)      
     }
     if (nipValue.length > 1) {
-      DataPesertaAPI.findRegistrants(nipValue).then(
+      DataPesertaAPI.findRegistrants(`&filters[employee][NIP][$eq]=${nipValue}`).then(
       (res) => {
         if(res.data.data.length == 1){
           setState({

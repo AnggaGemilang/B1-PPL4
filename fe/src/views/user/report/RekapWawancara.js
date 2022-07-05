@@ -23,7 +23,7 @@ import {
   CFormSelect  
 } from '@coreui/react'
 import { useLocation, useNavigate } from "react-router-dom"
-import { cilSearch, cilPlus } from '@coreui/icons'
+import { cilSearch } from '@coreui/icons'
 import CIcon from '@coreui/icons-react'
 import MappingAPI from '../../../config/user/MappingAPI'
 import PositionAPI from '../../../config/admin/PositionAPI'

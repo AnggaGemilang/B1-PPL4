@@ -61,7 +61,7 @@ const RekapMFitAndProper = () => {
 
     FitAndProperAPI.getRekapManualFitProper(registrant, projection).then((res) => {
       if(res?.data?.data?.length != 0){
-        if(res?.data?.data?.attributes?.status == "on_progress"){
+        if(res?.data?.data[0]?.attributes?.mapping?.data?.attributes?.status == "on_progress"){
           setState({ ...state, visible: true, message: "", color: "" })
           setLineMappings(res.data.data)
         } else {
