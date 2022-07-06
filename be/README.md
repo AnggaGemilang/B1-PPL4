@@ -25,8 +25,8 @@ in line 59
 ```javascript
  const user = await strapi.query('plugin::users-permissions.user').findOne({ where: query });
 # change to
+```javascript
  const user = await strapi.query('plugin::users-permissions.user').findOne({ where: query, populate: ["role", "employee"]});
-```
 
 ### `develop`
 
