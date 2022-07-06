@@ -2,6 +2,8 @@
 
 Strapi comes with a full featured [Command Line Interface](https://docs.strapi.io/developer-docs/latest/developer-resources/cli/CLI.html) (CLI) which lets you scaffold and manage your project in seconds.
 
+### :warning: **RESTORE DATABASE FIRST, CHECK README.MD IN DATABASE FOLDER**
+
 ### `installation`
 
 Before start Strapi application use NPM (Node Package Manager) to install all dependencies
@@ -17,7 +19,8 @@ Before start Strapi application use NPM (Node Package Manager) to install all de
 
 ### `configuration`
 
-configuration is required after the node_modules in this folder appear for the application to run
+Configuration is required after installation for the application to run
+
 1.edit file __database.js__ on directory _/be/config/database.js
 ```javascript
  module.exports = ({ env }) => ({
