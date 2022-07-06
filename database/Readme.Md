@@ -20,5 +20,18 @@ PostgreSQL is a powerful, open source object-relational database system with ove
 
 ![image](https://user-images.githubusercontent.com/77891212/177575276-1790b56b-a497-48c8-8a59-18bf3ac3b9d1.png)
 
+### `Restore Postgresql Database using pgAdmin 4`
 
+1. Right Click Database (db_fit_proper) Then select Restore
 
+![image](https://user-images.githubusercontent.com/77891212/177576242-d064b074-74f3-4ec7-8155-54dd229f681e.png)
+
+2. __Dialog Box__ will appear to restore database, in the filename field click folder image
+
+![image](https://user-images.githubusercontent.com/77891212/177576750-add3e3f5-2b47-4506-83ca-5795d9ba988e.png)
+
+3. Browse your backup file (db_fit_proper), then click select
+
+![image](https://user-images.githubusercontent.com/77891212/177577914-2fe06a27-8bc9-400e-b28e-d50de3034e01.png)
+
+4. After clicking select, then look at the bottom right. db_fit_proper database has been successfully restored.
