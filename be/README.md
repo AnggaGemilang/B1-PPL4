@@ -29,6 +29,15 @@ change to
 ```javascript
  const user = await strapi.query('plugin::users-permissions.user').findOne({ where: query, populate: ["role", "employee"]});
 ```
+and comment line 322
+```javascript
+ params.role = role.id;
+```
+change to
+```javascript
+// params.role = role.id;
+```
+
 ### `develop`
 
 Start your Strapi application with autoReload enabled. [Learn more](https://docs.strapi.io/developer-docs/latest/developer-resources/cli/CLI.html#strapi-develop)
