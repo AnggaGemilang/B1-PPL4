@@ -2,6 +2,19 @@
 
 Strapi comes with a full featured [Command Line Interface](https://docs.strapi.io/developer-docs/latest/developer-resources/cli/CLI.html) (CLI) which lets you scaffold and manage your project in seconds.
 
+### `installation`
+
+Before run your application use NPM (Node Package Manager) to install all dependencies
+
+
+```
+1. npm install 
+2. npm install pg
+# or
+1.yarn install 
+2.yarn install pg
+```
+
 ### `develop`
 
 Start your Strapi application with autoReload enabled. [Learn more](https://docs.strapi.io/developer-docs/latest/developer-resources/cli/CLI.html#strapi-develop)
