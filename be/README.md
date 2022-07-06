@@ -22,7 +22,7 @@ configuration is required after the node_modules in this folder appear for the a
 edit file __auth.js__ on directory '_/be/node_modules/@strapi/plugin-users-permissions/server/controllers/auth.js
 
 in line 59
-```
+```javascript
  const user = await strapi.query('plugin::users-permissions.user').findOne({ where: query });
 # change to
  const user = await strapi.query('plugin::users-permissions.user').findOne({ where: query, populate: ["role", "employee"]});
