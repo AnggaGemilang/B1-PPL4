@@ -4,7 +4,7 @@ Strapi comes with a full featured [Command Line Interface](https://docs.strapi.i
 
 ### `installation`
 
-Before run your application use NPM (Node Package Manager) to install all dependencies
+Before start Strapi application use NPM (Node Package Manager) to install all dependencies
 
 
 ```
@@ -13,6 +13,19 @@ Before run your application use NPM (Node Package Manager) to install all depend
 # or
 1.yarn install 
 2.yarn install pg
+```
+
+### `configuration`
+
+configuration is required after the node_modules in this folder appear for the application to run
+
+edit file __auth.js__ on directory '_/be/node_modules/@strapi/plugin-users-permissions/server/controllers/auth.js
+
+in line 59
+```
+ const user = await strapi.query('plugin::users-permissions.user').findOne({ where: query });
+# change to
+ const user = await strapi.query('plugin::users-permissions.user').findOne({ where: query, populate: ["role", "employee"]});
 ```
 
 ### `develop`
