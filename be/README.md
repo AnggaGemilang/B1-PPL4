@@ -24,10 +24,11 @@ edit file __auth.js__ on directory '_/be/node_modules/@strapi/plugin-users-permi
 in line 59
 ```javascript
  const user = await strapi.query('plugin::users-permissions.user').findOne({ where: query });
+```
 # change to
 ```javascript
  const user = await strapi.query('plugin::users-permissions.user').findOne({ where: query, populate: ["role", "employee"]});
-
+```
 ### `develop`
 
 Start your Strapi application with autoReload enabled. [Learn more](https://docs.strapi.io/developer-docs/latest/developer-resources/cli/CLI.html#strapi-develop)
