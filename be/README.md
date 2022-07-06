@@ -18,8 +18,23 @@ Before start Strapi application use NPM (Node Package Manager) to install all de
 ### `configuration`
 
 configuration is required after the node_modules in this folder appear for the application to run
-
-edit file __auth.js__ on directory _/be/node_modules/@strapi/plugin-users-permissions/server/controllers/auth.js_
+1.edit file __database.js__ on directory _/be/config/database.js
+```javascript
+ module.exports = ({ env }) => ({
+  connection: {
+    client: 'postgres',
+    connection: {
+      host: env('DATABASE_HOST', 'localhost'), 
+      port: env.int('DATABASE_PORT', 5432),
+      database: env('DATABASE_NAME', 'db_fit_proper'),
+      user: env('DATABASE_USERNAME', 'postgres'), // change this according to the username of the owner of your postgresql database
+      password: env('DATABASE_PASSWORD', 'irfannoor123'), // change this according to the password of the owner of your postgresql database
+      ssl: env.bool('DATABASE_SSL', false),
+    },
+  },
+});
+```
+2.edit file __auth.js__ on directory _/be/node_modules/@strapi/plugin-users-permissions/server/controllers/auth.js_
 
 in line 59
 ```javascript
