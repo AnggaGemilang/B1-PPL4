@@ -20,9 +20,16 @@
       "type": "float",
       "required": true
     },
-    "usefor": {
-      "type": "string",
+    "defaultUsed": {
+      "type": "enumeration",
+      "enum": [
+        "fitproper",
+        "interview"
+      ],
       "required": true
+    },
+    "useFor": {
+      "type": "string"
     }
   }
 }

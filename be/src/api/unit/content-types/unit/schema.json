@@ -15,11 +15,8 @@
     "unit_name": {
       "type": "string"
     },
-    "directorates": {
-      "type": "relation",
-      "relation": "oneToMany",
-      "target": "api::directorate.directorate",
-      "mappedBy": "unit"
+    "address": {
+      "type": "text"
     }
   }
 }

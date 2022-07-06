@@ -61,47 +61,26 @@
         "audios"
       ]
     },
-    "examiner": {
+    "position": {
       "type": "relation",
       "relation": "oneToOne",
-      "target": "api::examiner.examiner",
-      "inversedBy": "employee"
+      "target": "api::position.position"
     },
-    "registrant": {
+    "sub_field": {
       "type": "relation",
       "relation": "oneToOne",
-      "target": "api::registrant.registrant",
-      "inversedBy": "employee"
+      "target": "api::sub-field.sub-field"
     },
-    "grade": {
+    "level": {
       "type": "relation",
-      "relation": "manyToOne",
-      "target": "api::grade.grade",
-      "inversedBy": "employees"
+      "relation": "oneToOne",
+      "target": "api::level.level"
     },
     "account": {
       "type": "relation",
       "relation": "oneToOne",
-      "target": "api::account.account",
-      "inversedBy": "employee"
-    },
-    "level": {
-      "type": "relation",
-      "relation": "manyToOne",
-      "target": "api::level.level",
-      "inversedBy": "employees"
-    },
-    "sub_field": {
-      "type": "relation",
-      "relation": "manyToOne",
-      "target": "api::sub-field.sub-field",
-      "inversedBy": "employees"
-    },
-    "position": {
-      "type": "relation",
-      "relation": "manyToOne",
-      "target": "api::position.position",
-      "inversedBy": "employees"
+      "target": "plugin::users-permissions.user",
+      "mappedBy": "employee"
     }
   }
 }

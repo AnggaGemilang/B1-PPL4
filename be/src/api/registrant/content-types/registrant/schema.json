@@ -15,44 +15,36 @@
     "employee": {
       "type": "relation",
       "relation": "oneToOne",
-      "target": "api::employee.employee",
-      "mappedBy": "registrant"
-    },
-    "examiners": {
-      "type": "relation",
-      "relation": "manyToMany",
-      "target": "api::examiner.examiner",
-      "inversedBy": "registrants"
+      "target": "api::employee.employee"
     },
     "ppt": {
-      "type": "string"
+      "type": "media",
+      "multiple": false,
+      "required": false,
+      "allowedTypes": [
+        "images",
+        "files",
+        "videos",
+        "audios"
+      ]
     },
     "cv": {
-      "type": "string"
+      "type": "media",
+      "multiple": false,
+      "required": false,
+      "allowedTypes": [
+        "images",
+        "files",
+        "videos",
+        "audios"
+      ]
     },
-    "urjab": {
-      "type": "string",
-      "required": false
-    },
-    "fitproper_type": {
-      "type": "string",
-      "required": false
-    },
-    "date": {
-      "type": "date",
-      "required": false
-    },
-    "level": {
-      "type": "relation",
-      "relation": "manyToOne",
-      "target": "api::level.level",
-      "inversedBy": "registrants"
-    },
-    "position": {
-      "type": "relation",
-      "relation": "manyToOne",
-      "target": "api::position.position",
-      "inversedBy": "registrants"
+    "status": {
+      "type": "enumeration",
+      "enum": [
+        "active",
+        "non_active"
+      ]
     }
   }
 }

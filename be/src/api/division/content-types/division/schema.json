@@ -15,17 +15,10 @@
     "division_name": {
       "type": "string"
     },
-    "fields": {
-      "type": "relation",
-      "relation": "oneToMany",
-      "target": "api::field.field",
-      "mappedBy": "division"
-    },
     "directorate": {
       "type": "relation",
-      "relation": "manyToOne",
-      "target": "api::directorate.directorate",
-      "inversedBy": "divisions"
+      "relation": "oneToOne",
+      "target": "api::directorate.directorate"
     }
   }
 }

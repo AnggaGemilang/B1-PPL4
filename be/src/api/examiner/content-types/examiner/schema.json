@@ -4,7 +4,8 @@
   "info": {
     "singularName": "examiner",
     "pluralName": "examiners",
-    "displayName": "Examiner"
+    "displayName": "Examiner",
+    "description": ""
   },
   "options": {
     "draftAndPublish": true
@@ -14,20 +15,13 @@
     "employee": {
       "type": "relation",
       "relation": "oneToOne",
-      "target": "api::employee.employee",
-      "mappedBy": "examiner"
+      "target": "api::employee.employee"
     },
-    "registrants": {
+    "mappings": {
       "type": "relation",
       "relation": "manyToMany",
-      "target": "api::registrant.registrant",
+      "target": "api::mapping.mapping",
       "mappedBy": "examiners"
-    },
-    "interviews": {
-      "type": "relation",
-      "relation": "oneToMany",
-      "target": "api::interview.interview",
-      "mappedBy": "examiner"
     }
   }
 }

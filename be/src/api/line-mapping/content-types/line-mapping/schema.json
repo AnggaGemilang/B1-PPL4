@@ -1,0 +1,76 @@
+{
+  "kind": "collectionType",
+  "collectionName": "line_mappings",
+  "info": {
+    "singularName": "line-mapping",
+    "pluralName": "line-mappings",
+    "displayName": "LineMapping",
+    "description": ""
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "mapping": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::mapping.mapping",
+      "inversedBy": "line_mappings"
+    },
+    "schedule_interview": {
+      "type": "date"
+    },
+    "status_fitproper": {
+      "type": "boolean"
+    },
+    "status_interview": {
+      "type": "boolean"
+    },
+    "examiner": {
+      "type": "relation",
+      "relation": "oneToOne",
+      "target": "api::examiner.examiner"
+    },
+    "scores_fitproper": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::score.score",
+      "mappedBy": "line_mapping_fitproper"
+    },
+    "scores_interview": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::score.score",
+      "mappedBy": "line_mapping_interview"
+    },
+    "passed_fitproper": {
+      "type": "enumeration",
+      "enum": [
+        "passed",
+        "not_passed"
+      ]
+    },
+    "passed_interview": {
+      "type": "enumeration",
+      "enum": [
+        "passed",
+        "not_passed"
+      ]
+    },
+    "fitproper_finalized": {
+      "type": "boolean"
+    },
+    "interview_finalized": {
+      "type": "boolean"
+    },
+    "is_interview": {
+      "type": "enumeration",
+      "enum": [
+        "not_decided",
+        "true",
+        "false"
+      ]
+    }
+  }
+}

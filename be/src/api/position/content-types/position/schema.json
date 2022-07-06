@@ -15,23 +15,10 @@
     "position_name": {
       "type": "string"
     },
-    "grades": {
+    "grade": {
       "type": "relation",
-      "relation": "manyToMany",
-      "target": "api::grade.grade",
-      "inversedBy": "positions"
-    },
-    "employees": {
-      "type": "relation",
-      "relation": "oneToMany",
-      "target": "api::employee.employee",
-      "mappedBy": "position"
-    },
-    "registrants": {
-      "type": "relation",
-      "relation": "oneToMany",
-      "target": "api::registrant.registrant",
-      "mappedBy": "position"
+      "relation": "oneToOne",
+      "target": "api::grade.grade"
     }
   }
 }

@@ -17,15 +17,8 @@
     },
     "field": {
       "type": "relation",
-      "relation": "manyToOne",
-      "target": "api::field.field",
-      "inversedBy": "sub_fields"
-    },
-    "employees": {
-      "type": "relation",
-      "relation": "oneToMany",
-      "target": "api::employee.employee",
-      "mappedBy": "sub_field"
+      "relation": "oneToOne",
+      "target": "api::field.field"
     }
   }
 }

@@ -12,11 +12,6 @@
   },
   "pluginOptions": {},
   "attributes": {
-    "type": {
-      "type": "string",
-      "required": true,
-      "maxLength": 255
-    },
     "score": {
       "type": "integer",
       "required": true,
@@ -29,20 +24,30 @@
       "relation": "oneToOne",
       "target": "api::criteria.criteria"
     },
+    "type": {
+      "type": "integer"
+    },
     "registrant": {
       "type": "relation",
       "relation": "oneToOne",
       "target": "api::registrant.registrant"
     },
-    "interview": {
-      "type": "relation",
-      "relation": "oneToOne",
-      "target": "api::interview.interview"
-    },
     "examiner": {
       "type": "relation",
       "relation": "oneToOne",
       "target": "api::examiner.examiner"
+    },
+    "line_mapping_fitproper": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::line-mapping.line-mapping",
+      "inversedBy": "scores_fitproper"
+    },
+    "line_mapping_interview": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::line-mapping.line-mapping",
+      "inversedBy": "scores_interview"
     }
   }
 }

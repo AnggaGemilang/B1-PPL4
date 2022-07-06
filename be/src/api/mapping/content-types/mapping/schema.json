@@ -1,0 +1,72 @@
+{
+  "kind": "collectionType",
+  "collectionName": "mappings",
+  "info": {
+    "singularName": "mapping",
+    "pluralName": "mappings",
+    "displayName": "Mapping",
+    "description": ""
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "examiners": {
+      "type": "relation",
+      "relation": "manyToMany",
+      "target": "api::examiner.examiner",
+      "inversedBy": "mappings"
+    },
+    "jobdesc": {
+      "type": "text"
+    },
+    "schedule": {
+      "type": "date"
+    },
+    "fitproper_type": {
+      "type": "enumeration",
+      "enum": [
+        "Offline",
+        "Vcon"
+      ]
+    },
+    "position": {
+      "type": "relation",
+      "relation": "oneToOne",
+      "target": "api::position.position"
+    },
+    "registrant": {
+      "type": "relation",
+      "relation": "oneToOne",
+      "target": "api::registrant.registrant"
+    },
+    "level": {
+      "type": "relation",
+      "relation": "oneToOne",
+      "target": "api::level.level"
+    },
+    "examiners_interview": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::examiner.examiner"
+    },
+    "is_interview": {
+      "type": "boolean"
+    },
+    "line_mappings": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::line-mapping.line-mapping",
+      "mappedBy": "mapping"
+    },
+    "status": {
+      "type": "enumeration",
+      "enum": [
+        "on_progress",
+        "passed",
+        "not_passed"
+      ]
+    }
+  }
+}
