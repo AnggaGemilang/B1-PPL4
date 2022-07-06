@@ -34,24 +34,12 @@ const TambahCriteria = () => {
     event.preventDefault()
     setState({ ...state, visibleSubmit: true })
 
-    let body = {}
-
-    if(document.getElementById("defaultused").value == "fitproper"){
-      body = {
-        data: {
-          criteria: document.getElementById("criteria").value,
-          value: document.getElementById("value").value,
-          defaultUsed: document.getElementById("defaultused").value,
-          useFor: document.getElementById("usefor").value,
-        }
-      }
-    } else {
-      body = {
-        data: {
-          criteria: document.getElementById("criteria").value,
-          value: document.getElementById("value").value,
-          defaultUsed: document.getElementById("defaultused").value,
-        }
+    const body = {
+      data: {
+        criteria: document.getElementById("criteria").value,
+        value: document.getElementById("value").value,
+        defaultUsed: document.getElementById("defaultused").value,
+        useFor: document.getElementById("usefor").value,
       }
     }
 
@@ -137,8 +125,8 @@ const TambahCriteria = () => {
                       name="defaultused" 
                       id="defaultused"
                       aria-label="Large select example" 
-                      onChange={(e) => (e.target.value == "fitproper") ? setState({ ...state, visiblePenggunaan: true, interviewValue: "" }) : setState({ ...state, visiblePenggunaan: false, interviewValue: "am/md" }) }>
-                        <option>Pilih Kategori</option>
+                      onChange={(e) => (e.target.value == "fitproper" || e.target.value == "") ? setState({ ...state, visiblePenggunaan: true, interviewValue: "" }) : setState({ ...state, visiblePenggunaan: false, interviewValue: "am/md" }) }>
+                        <option value="">Pilih Kategori</option>
                         <option selected={ state?.data?.attributes?.defaultUsed == "fitproper" } value="fitproper">Fit & Proper</option>
                         <option selected={ state?.data?.attributes?.defaultUsed == "interview" } value="interview">Wawancara</option>
                     </CFormSelect>

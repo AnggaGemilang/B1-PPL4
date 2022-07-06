@@ -287,7 +287,9 @@ const Administrasi = () => {
                           onChange={ (e) => {
                             if(e.target.value == 999){
                               AdministrasiUserAPI.find(employee?.attributes?.NIP).then(res => {
-                                if(res.length != 0){
+                                console.log(res.data.length)
+                                console.log(employee.attributes.account.data)
+                                if(res?.data?.data?.length != 0){
                                   AdministrasiUserAPI.delete(employee?.attributes?.account?.data?.id).then(res => {
                                     getData()
                                     setMessage("Peran Pegawai Berhasil Dihapus!")
@@ -296,7 +298,9 @@ const Administrasi = () => {
                               })
                             } else {
                               AdministrasiUserAPI.find(employee?.attributes?.NIP).then(res => {
-                                if(res.length != 0){
+                                console.log(res.data.length)
+                                console.log(employee.attributes.account.data)
+                                if(res?.data?.length != 0){
                                   const body = {
                                     role: e.target.value,
                                     cp_role: e.target.value,

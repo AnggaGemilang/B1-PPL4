@@ -270,7 +270,7 @@ const TambahEmployee = () => {
                   </CFormLabel>
                   <CCol sm={10}>
                     <CFormInput 
-                      type="number" 
+                      type="text" 
                       name="phone_number" 
                       id="phone_number" 
                       defaultValue={state.status == "edit" ? state?.data?.attributes?.PhoneNumber : ""}                      

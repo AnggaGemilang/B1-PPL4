@@ -44,7 +44,8 @@ const Penilaian = () => {
     visibleSubmit: false,
     visiblePenggunaan: false,
     nilaiMax: 0,
-    totalNilai: 0    
+    totalNilai: 0,
+    interviewValue: ""
   })
 
   useEffect(() => {
@@ -56,37 +57,33 @@ const Penilaian = () => {
   
   const tambahKriteria = (event) => {
     event.preventDefault()
-    setState({ ...state, visibleSubmit: true })
 
-    let body = {}    
-
-    if(document.getElementById("defaultused").value == "fitproper"){
-      body = {
-        data: {
-          criteria: document.getElementById("criteria").value,
-          value: document.getElementById("value").value,
-          defaultUsed: document.getElementById("defaultused").value,
-          useFor: document.getElementById("usefor").value,
-        }
-      }
-    } else {
-      body = {
-        data: {
-          criteria: document.getElementById("criteria").value,
-          value: document.getElementById("value").value,
-          defaultUsed: document.getElementById("defaultused").value,
-        }
+    const body = {
+      data: {
+        criteria: document.getElementById("criteria").value,
+        value: document.getElementById("value").value,
+        defaultUsed: document.getElementById("defaultused").value,
+        useFor: document.getElementById("usefor").value,
       }
     }
 
     CriteriaAPI.add(body).then(
       (res) => {
-        setMessage('Kriteria Telah Berhasil Ditambahkan!')
-        document.getElementById("criteria").value = "",
-        document.getElementById("value").value = "",
-        document.getElementById("usefor").value = "999"
-        document.getElementById("defaultused").value = "999"
-        getData() 
+        CriteriaAPI.findById(res.data.data.id).then((res) => {
+          setSelectedCriteria([...selectedCriteria, res.data.data[0]])
+          let temp = [...criterias]
+          const index = criterias.map( e => {
+            return e.id
+          }).indexOf(res.data.data[0].id)
+          temp.splice(index, 1)
+          setCriterias([...temp])
+          document.getElementById("criteria").value = "",
+          document.getElementById("value").value = "",
+          document.getElementById("usefor").value = "999"
+          document.getElementById("defaultused").value = "999"
+          setState({ ...state, interviewValue: "" })
+          setMessage('Kriteria Telah Berhasil Ditambahkan!')
+        })
       },
       (err) => {
         setMessage(err.message)
@@ -239,7 +236,7 @@ const Penilaian = () => {
                           id="defaultused" 
                           className="mb-3" 
                           aria-label="Large select example"
-                          onChange={(e) => (e.target.value == "fitproper") ? setState({ ...state, visiblePenggunaan: true }) : setState({ ...state, visiblePenggunaan: false }) } >
+                          onChange={(e) => (e.target.value == "fitproper" || e.target.value == "999") ? setState({ ...state, visiblePenggunaan: true, interviewValue: "" }) : setState({ ...state, visiblePenggunaan: false, interviewValue: "am/md" }) } >
                           <option value="999">Pilih Kategori</option>
                           <option value="fitproper">Fit & Proper</option>
                           <option value="interview">Wawancara</option>
@@ -251,6 +248,7 @@ const Penilaian = () => {
                           <option value="999">Pilih Penggunaan</option>
                           <option value="am">Manajemen Atas</option>
                           <option value="md">Manajemen Dasar</option>
+                          <option selected={ state.interviewValue == "am/md" } value="am/md">Manajemen Atas/Manajemen Dasar</option>
                         </CFormSelect>
                       </CCol>
                     </CRow>

@@ -63,7 +63,7 @@ const TambahPenguji = () => {
     event.preventDefault()
     setState({ ...state, visibleSubmit: true })
 
-    if(state.employee != null){
+    if(state?.employee?.attributes?.Name != ""){
       const body = {
         data: {
           employee: state?.employee?.id

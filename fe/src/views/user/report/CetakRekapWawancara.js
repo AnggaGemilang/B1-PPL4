@@ -143,7 +143,7 @@ const CetakRekapWawancara = () => {
           doc.text(650, finalY, "Bandung, " + day + ' ' + months[month] + ' ' + year)
   
           doc.text(40, finalY+=18, "Kepala Pusat Fit Proper")
-          doc.text(650, finalY, "Kepala Pusat Fit Proper")
+          doc.text(650, finalY, "Kepala Human Resource")
   
           doc.text(40, finalY+=70, "Bambang Wisnuadhi, S.Si., M.T.")
           doc.text(650, finalY, "Angga Yunanda Gemilang")

@@ -68,6 +68,8 @@ const Criteria = () => {
       query += `&filters[useFor][$eq]=${document.getElementById("filter_usefor").value}`
     }
 
+    console.log(query)
+
     CriteriaAPI.find(query).then(
       (res) => {
         if(res.data.data.length != 0){
@@ -130,7 +132,7 @@ const Criteria = () => {
                         id="filter_defaultused" 
                         className="mb-3" 
                         aria-label="Large select example"
-                        onChange={(e) => (e.target.value == "fitproper") ? setChosenCriteria({ ...chosenCriteria, visiblePenggunaan: true, interviewValue: "" }) : setChosenCriteria({ ...chosenCriteria, visiblePenggunaan: false, interviewValue: "am/md" }) }>
+                        onChange={(e) => (e.target.value == "fitproper" || e.target.value == "") ? setChosenCriteria({ ...chosenCriteria, visiblePenggunaan: true, interviewValue: "" }) : setChosenCriteria({ ...chosenCriteria, visiblePenggunaan: false, interviewValue: "am/md" }) }>
                           <option value="">Pilih Kategori</option>
                           <option value="fitproper">Fit & Proper</option>
                           <option value="interview">Wawancara</option>
