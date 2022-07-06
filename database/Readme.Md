@@ -34,4 +34,11 @@ PostgreSQL is a powerful, open source object-relational database system with ove
 
 ![image](https://user-images.githubusercontent.com/77891212/177577914-2fe06a27-8bc9-400e-b28e-d50de3034e01.png)
 
-4. After clicking select, then look at the bottom right. db_fit_proper database has been successfully restored.
+4. Click Data/Objects, make configuration like this, then click restore
+
+![image](https://user-images.githubusercontent.com/77891212/177579720-7778280c-172d-4402-8a9d-1a3b92879bbd.png)
+
+5. After clicking restore, then look at the bottom right. db_fit_proper database has been successfully restored.
+
+![image](https://user-images.githubusercontent.com/77891212/177579995-c3604829-b056-4173-ac21-20f3bc2d3990.png)
+
