@@ -41,7 +41,7 @@ const Login = () => {
       sessionStorage.setItem("auth", JSON.stringify(res.data))
       window.location.href = "/"
     }).catch((err) => {
-        setState({errorMessage:"Username atau Password Tidak Benar", visible: false})
+        setState({errorMessage:"Email atau Password Tidak Benar", visible: false})
     })
   }
 

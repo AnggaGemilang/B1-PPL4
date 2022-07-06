@@ -19,8 +19,6 @@ import { CNavGroup, CNavItem, CNavTitle } from '@coreui/react'
   // 5 = hr manager
   // 6 = hr specialist
 
-  console.log(JSON.parse(sessionStorage.getItem("auth"))?.jwt)
-
   if(JSON.parse(sessionStorage.getItem("auth"))?.user?.cp_role == 3){
     _nav = [
       {
