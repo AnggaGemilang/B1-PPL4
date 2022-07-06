@@ -14,7 +14,7 @@ PostgreSQL is a powerful, open source object-relational database system with ove
 
 4. Next, a __Dialog Box__ will appear to create a new database, enter a name (db_fit_proper) in the database field and then click save
 
-####:warning: **THE OWNER WILL BE IMPORTANT TO CONFIGURE BACKEND**
+#### :warning: **THE OWNER WILL BE IMPORTANT TO CONFIGURE BACKEND**
 
 ![image](https://user-images.githubusercontent.com/77891212/177574531-851006a2-507e-4e26-b50a-eb221bcd8a00.png)
 
