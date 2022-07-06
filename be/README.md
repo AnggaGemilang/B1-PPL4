@@ -11,8 +11,8 @@ Before start Strapi application use NPM (Node Package Manager) to install all de
 1. npm install 
 2. npm install pg
 # or
-1.yarn install 
-2.yarn install pg
+1. yarn install 
+2. yarn install pg
 ```
 
 ### `configuration`
