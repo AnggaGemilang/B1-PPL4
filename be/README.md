@@ -19,13 +19,13 @@ Before start Strapi application use NPM (Node Package Manager) to install all de
 
 configuration is required after the node_modules in this folder appear for the application to run
 
-edit file __auth.js__ on directory '_/be/node_modules/@strapi/plugin-users-permissions/server/controllers/auth.js
+edit file __auth.js__ on directory _/be/node_modules/@strapi/plugin-users-permissions/server/controllers/auth.js_
 
 in line 59
 ```javascript
  const user = await strapi.query('plugin::users-permissions.user').findOne({ where: query });
 ```
-# change to
+change to
 ```javascript
  const user = await strapi.query('plugin::users-permissions.user').findOne({ where: query, populate: ["role", "employee"]});
 ```
