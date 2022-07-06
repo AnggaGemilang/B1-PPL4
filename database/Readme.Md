@@ -5,5 +5,6 @@ PostgreSQL is a powerful, open source object-relational database system with ove
 ### `Creating a Database with pgAdmin 4`
 1. Open the pgAdmin 4 App
 2. In the server section, select the server that you will use
+
 ![image](https://user-images.githubusercontent.com/77891212/177570103-8690680a-b1e2-4457-92a4-290e68530b57.png)
 
