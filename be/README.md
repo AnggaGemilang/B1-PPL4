@@ -2,7 +2,7 @@
 
 Strapi comes with a full featured [Command Line Interface](https://docs.strapi.io/developer-docs/latest/developer-resources/cli/CLI.html) (CLI) which lets you scaffold and manage your project in seconds.
 
-### :warning: **RESTORE DATABASE FIRST, CHECK README.MD IN DATABASE FOLDER**
+### :warning: **CREATE AND RESTORE DATABASE FIRST, CHECK README.MD IN DATABASE FOLDER**
 
 ### `installation`
 
