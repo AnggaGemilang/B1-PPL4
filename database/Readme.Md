@@ -17,7 +17,7 @@ PostgreSQL is a powerful, open source object-relational database system with ove
 ![image](https://user-images.githubusercontent.com/77891212/177574531-851006a2-507e-4e26-b50a-eb221bcd8a00.png)
 
 5. After clicking Save, then look at the List section. db_fit_proper database has been successfully added.
-
+####:warning: **THE OWNER WILL BE IMPORTANT TO CONFIGURE BACKEND**
 ![image](https://user-images.githubusercontent.com/77891212/177575276-1790b56b-a497-48c8-8a59-18bf3ac3b9d1.png)
 
 ### `Restore Postgresql Database using pgAdmin 4`
