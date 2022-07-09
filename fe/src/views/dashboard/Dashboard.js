@@ -352,14 +352,17 @@ const Dashboard = () => {
                         <CTableHead>
                           <CTableRow>
                             <CTableHeaderCell scope="col">No</CTableHeaderCell>
+                            <CTableHeaderCell scope="col">Foto</CTableHeaderCell>
                             <CTableHeaderCell scope="col">Nama</CTableHeaderCell>
                             <CTableHeaderCell scope="col">NIP</CTableHeaderCell>
                             <CTableHeaderCell scope="col">Jabatan</CTableHeaderCell>
                             <CTableHeaderCell scope="col">Proyeksi</CTableHeaderCell>
+                            <CTableHeaderCell scope="col">Jenjang</CTableHeaderCell>
                             <CTableHeaderCell scope="col">Uraian Jabatan</CTableHeaderCell>
                             <CTableHeaderCell scope="col">Tanggal</CTableHeaderCell>
                             <CTableHeaderCell scope="col">Penguji</CTableHeaderCell>
                             <CTableHeaderCell scope="col">Lampiran File</CTableHeaderCell>
+                            <CTableHeaderCell scope="col">Status</CTableHeaderCell>
                             <CTableHeaderCell scope="col">Action</CTableHeaderCell>
                           </CTableRow>
                         </CTableHead>
@@ -367,10 +370,14 @@ const Dashboard = () => {
                           { mappings.map( (mapping, index) =>
                             <CTableRow key={mapping.id}>
                               <CTableHeaderCell scope="row">{ index+1 }</CTableHeaderCell>
+                              <CTableDataCell>
+                                <img className='foto_karyawan' src={url + mapping?.attributes?.registrant?.data?.attributes?.employee?.data?.attributes?.Photo?.data?.attributes?.formats?.thumbnail?.url} alt="Photo" />                      
+                              </CTableDataCell>
                               <CTableDataCell>{mapping?.attributes?.registrant?.data?.attributes?.employee?.data?.attributes.Name}</CTableDataCell>
                               <CTableDataCell>{mapping?.attributes?.registrant?.data?.attributes?.employee?.data?.attributes.NIP}</CTableDataCell>
                               <CTableDataCell>{mapping?.attributes?.registrant?.data?.attributes?.employee?.data?.attributes?.position?.data?.attributes?.position_name}</CTableDataCell>
                               <CTableDataCell>{mapping?.attributes?.position?.data?.attributes?.position_name}</CTableDataCell>
+                              <CTableDataCell>{mapping?.attributes?.level?.data?.attributes?.functional_name} - {mapping?.attributes?.level?.data?.attributes?.structural_name}</CTableDataCell>
                               <CTableDataCell>{mapping?.attributes?.jobdesc}</CTableDataCell>
                               <CTableDataCell>{mapping?.attributes?.schedule}</CTableDataCell>
                               <CTableDataCell>
@@ -393,6 +400,14 @@ const Dashboard = () => {
                                 </ul>
                               </CTableDataCell>
                               <CTableDataCell>
+                                {mapping?.attributes?.status == "on_progress" 
+                                  ? "Belum Finalisasi" 
+                                  : mapping?.attributes?.status == "passed" 
+                                    ? "Sudah Finalisasi" + '\n' + "(Lulus)"
+                                    : "Sudah Finalisasi" + '\n' + "(Tidak Lulus)" 
+                                }
+                              </CTableDataCell>
+                              <CTableDataCell>
                                 <CButton
                                   color='success'
                                   variant="outline"
@@ -413,10 +428,12 @@ const Dashboard = () => {
                         <CTableHead>
                           <CTableRow>
                             <CTableHeaderCell scope="col">No</CTableHeaderCell>
+                            <CTableHeaderCell scope="col">Foto</CTableHeaderCell>
                             <CTableHeaderCell scope="col">Nama</CTableHeaderCell>
                             <CTableHeaderCell scope="col">NIP</CTableHeaderCell>
                             <CTableHeaderCell scope="col">Jabatan</CTableHeaderCell>
                             <CTableHeaderCell scope="col">Proyeksi</CTableHeaderCell>
+                            <CTableHeaderCell scope="col">Jenjang</CTableHeaderCell>
                             <CTableHeaderCell scope="col">Uraian Jabatan</CTableHeaderCell>
                             <CTableHeaderCell scope="col">Penguji</CTableHeaderCell>
                             <CTableHeaderCell scope="col">Action</CTableHeaderCell>
@@ -426,10 +443,14 @@ const Dashboard = () => {
                           { mappings.map( (mapping, index) =>
                             <CTableRow key={mapping.id}>
                               <CTableHeaderCell scope="row">{ index+1 }</CTableHeaderCell>
+                              <CTableDataCell>
+                                <img className='foto_karyawan' src={url + mapping?.attributes?.registrant?.data?.attributes?.employee?.data?.attributes?.Photo?.data?.attributes?.formats?.thumbnail?.url} alt="Photo" />                      
+                              </CTableDataCell>
                               <CTableDataCell>{mapping?.attributes?.registrant?.data?.attributes?.employee?.data?.attributes.Name}</CTableDataCell>
                               <CTableDataCell>{mapping?.attributes?.registrant?.data?.attributes?.employee?.data?.attributes.NIP}</CTableDataCell>
                               <CTableDataCell>{mapping?.attributes?.registrant?.data?.attributes?.employee?.data?.attributes?.position?.data?.attributes?.position_name}</CTableDataCell>
                               <CTableDataCell>{mapping?.attributes?.position?.data?.attributes?.position_name}</CTableDataCell>
+                              <CTableDataCell>{mapping?.attributes?.level?.data?.attributes?.functional_name} - {mapping?.attributes?.level?.data?.attributes?.structural_name}</CTableDataCell>
                               <CTableDataCell>{mapping?.attributes?.jobdesc}</CTableDataCell>
                               <CTableDataCell>
                                 <ul>
@@ -466,13 +487,16 @@ const Dashboard = () => {
                         <CTableHead>
                           <CTableRow>
                             <CTableHeaderCell scope="col">No</CTableHeaderCell>
+                            <CTableHeaderCell scope="col">Foto</CTableHeaderCell>
                             <CTableHeaderCell scope="col">Nama</CTableHeaderCell>
                             <CTableHeaderCell scope="col">NIP</CTableHeaderCell>
                             <CTableHeaderCell scope="col">Jabatan</CTableHeaderCell>
                             <CTableHeaderCell scope="col">Proyeksi</CTableHeaderCell>
+                            <CTableHeaderCell scope="col">Jenjang</CTableHeaderCell>
+                            <CTableHeaderCell scope="col">Uraian Jabatan</CTableHeaderCell>
                             <CTableHeaderCell scope="col">Tanggal</CTableHeaderCell>
-                            <CTableHeaderCell scope="col">Status</CTableHeaderCell>
                             <CTableHeaderCell scope="col">Lampiran File</CTableHeaderCell>
+                            <CTableHeaderCell scope="col">Status</CTableHeaderCell>
                             <CTableHeaderCell scope="col">Action</CTableHeaderCell>
                           </CTableRow>
                         </CTableHead>
@@ -480,12 +504,16 @@ const Dashboard = () => {
                           { mappings.map( (linemapping, index) =>
                             <CTableRow key={linemapping.id}>
                               <CTableHeaderCell scope="row">{ index+1 }</CTableHeaderCell>
+                              <CTableDataCell>
+                                <img className='foto_karyawan' src={url + linemapping?.attributes?.mapping?.data?.attributes?.registrant?.data?.attributes?.employee?.data?.attributes?.Photo?.data?.attributes?.formats?.thumbnail?.url} alt="Photo" />                      
+                              </CTableDataCell>
                               <CTableDataCell>{linemapping?.attributes?.mapping?.data?.attributes?.registrant?.data?.attributes?.employee?.data?.attributes.Name}</CTableDataCell>
                               <CTableDataCell>{linemapping?.attributes?.mapping?.data?.attributes?.registrant?.data?.attributes?.employee?.data?.attributes.NIP}</CTableDataCell>
                               <CTableDataCell>{linemapping?.attributes?.mapping?.data?.attributes?.registrant?.data?.attributes?.employee?.data?.attributes?.position?.data?.attributes?.position_name}</CTableDataCell>
                               <CTableDataCell>{linemapping?.attributes?.mapping?.data?.attributes?.position?.data?.attributes?.position_name}</CTableDataCell>
+                              <CTableDataCell>{linemapping?.attributes?.mapping?.data?.attributes?.level?.data?.attributes?.functional_name} - {linemapping?.attributes?.mapping?.data?.attributes?.level?.data?.attributes?.structural_name}</CTableDataCell>
+                              <CTableDataCell>{linemapping?.attributes?.mapping?.data?.attributes?.jobdesc}</CTableDataCell>
                               <CTableDataCell>{linemapping?.attributes?.mapping?.data?.attributes?.schedule}</CTableDataCell>
-                              <CTableDataCell>{linemapping?.attributes?.status_fitproper ? "Sudah Dinilai" : "Belum Dinilai"}</CTableDataCell>
                               <CTableDataCell>
                                 <ul>
                                     <li style={{ textAlign: "left", marginBottom: "4px" }}>
@@ -499,62 +527,70 @@ const Dashboard = () => {
                                 </ul>
                               </CTableDataCell>
                               <CTableDataCell>
-                                { (linemapping?.attributes?.status_fitproper && !linemapping?.attributes?.is_interview) ? 
-                                  <CButton
-                                    color='primary'
-                                    variant="outline" 
-                                    onClick={() => setChosenLineMapping({ 
-                                      visible: true, 
-                                      lineMapping: linemapping
-                                    })}
-                                    style={{marginLeft: '10px', marginBottom: '10px'}} >
-                                      Ajukan
-                                  </CButton>
-                                  : null
-                                }
-                                { (linemapping?.attributes?.status_fitproper) ? 
+                                { linemapping?.attributes?.status_interview
+                                    ? linemapping?.attributes?.passed_interview == "passed" 
+                                      ? "Sudah Dinilai" + '\n' + "(Lulus)"
+                                      : "Sudah Dinilai" + '\n' + "(Tidak Lulus)"
+                                    : "Belum Dinilai"
+                                }                                            
+                              </CTableDataCell>                              
+                              <CTableDataCell>
+                                { (linemapping?.attributes?.status_interview) ? 
                                   <CButton
                                     color='success'
                                     variant="outline"
+                                    style={{width: '105px', margin: '5px 5px'}}
                                     onClick={() => navigate(
-                                      '/fitandproper/datapenilaian/datanilai', 
+                                      '/wawancara/datapenilaian/datanilai', 
                                       { state: { 
                                           position: linemapping?.attributes?.mapping?.data?.attributes?.position?.data?.id, 
                                           registrant: linemapping?.attributes?.mapping?.data?.attributes?.registrant?.data?.id,
                                           examiner: linemapping?.attributes?.examiner?.data?.id
                                       }}
-                                    )}
-                                    style={{marginLeft: '10px', marginBottom: '10px', width: "80px"}} >
+                                    )}>
                                       Lihat Nilai
                                   </CButton>
                                   : null
                                 }
-                                { (linemapping?.attributes?.status_fitproper) ? 
+                                { (linemapping?.attributes?.status_interview && !linemapping?.attributes?.interview_finalized) ? 
                                   <CButton
                                     color='warning'
                                     variant="outline"
+                                    style={{width: '105px', margin: '5px 5px'}}
                                     onClick={() => navigate(
-                                      '/fitandproper/datapenilaian/nilai/edit', 
-                                      { state: { data: linemapping }}
-                                    )}
-                                    style={{marginLeft: '10px', marginBottom: '10px', width: "80px"}} >
+                                      '/wawancara/datapenilaian/nilai/edit', 
+                                      { state: { data: linemapping, status: 'edit' }}
+                                    )}>
                                       Edit
                                   </CButton>
                                   : null
-                                }                      
-                                { (!linemapping?.attributes?.status_fitproper) ?
+                                }       
+                                { (linemapping?.attributes?.status_interview && !linemapping?.attributes?.interview_finalized) ? 
+                                  <CButton
+                                    color='primary'
+                                    variant="outline"
+                                    style={{width: '105px', margin: '5px 5px'}}                          
+                                    onClick={() => setChosenLineMapping({ 
+                                      visible_finalized: true, 
+                                      lineMapping: linemapping
+                                    })}  >
+                                      Finalisasi
+                                  </CButton>
+                                  : null
+                                }                                     
+                                { (!linemapping?.attributes?.status_interview) ?
                                   <CButton
                                     color='primary'
                                     variant="outline" 
+                                    style={{width: '105px', margin: '5px 5px'}}
                                     onClick={() => navigate(
-                                      '/fitandproper/datapenilaian/nilai', 
-                                      { state: { data: linemapping } }
-                                    )}
-                                    style={{marginLeft: '10px', marginBottom: '10px'}} >
+                                      '/wawancara/datapenilaian/nilai', 
+                                      { state: { data: linemapping, status: 'tambah' } }
+                                    )}>
                                       Nilai
                                   </CButton>
                                   : null
-                                }                              
+                                }    
                               </CTableDataCell>
                             </CTableRow>
                           )}
@@ -565,13 +601,16 @@ const Dashboard = () => {
                         <CTableHead>
                           <CTableRow>
                             <CTableHeaderCell scope="col">No</CTableHeaderCell>
+                            <CTableHeaderCell scope="col">Foto</CTableHeaderCell>
                             <CTableHeaderCell scope="col">Nama</CTableHeaderCell>
                             <CTableHeaderCell scope="col">NIP</CTableHeaderCell>
                             <CTableHeaderCell scope="col">Jabatan</CTableHeaderCell>
                             <CTableHeaderCell scope="col">Proyeksi</CTableHeaderCell>
+                            <CTableHeaderCell scope="col">Jenjang</CTableHeaderCell>
+                            <CTableHeaderCell scope="col">Uraian Jabatan</CTableHeaderCell>
                             <CTableHeaderCell scope="col">Tanggal</CTableHeaderCell>
-                            <CTableHeaderCell scope="col">Status</CTableHeaderCell>
                             <CTableHeaderCell scope="col">Lampiran File</CTableHeaderCell>
+                            <CTableHeaderCell scope="col">Status</CTableHeaderCell>
                             <CTableHeaderCell scope="col">Action</CTableHeaderCell>
                           </CTableRow>
                         </CTableHead>
@@ -579,12 +618,16 @@ const Dashboard = () => {
                           { mappings.map( (linemapping, index) =>
                             <CTableRow key={linemapping.id}>
                               <CTableHeaderCell scope="row">{ index+1 }</CTableHeaderCell>
+                              <CTableDataCell>
+                                <img className='foto_karyawan' src={url + linemapping?.attributes?.mapping?.data?.attributes?.registrant?.data?.attributes?.employee?.data?.attributes?.Photo?.data?.attributes?.formats?.thumbnail?.url} alt="Photo" />                      
+                              </CTableDataCell>
                               <CTableDataCell>{linemapping?.attributes?.mapping?.data?.attributes?.registrant?.data?.attributes?.employee?.data?.attributes.Name}</CTableDataCell>
                               <CTableDataCell>{linemapping?.attributes?.mapping?.data?.attributes?.registrant?.data?.attributes?.employee?.data?.attributes.NIP}</CTableDataCell>
                               <CTableDataCell>{linemapping?.attributes?.mapping?.data?.attributes?.registrant?.data?.attributes?.employee?.data?.attributes?.position?.data?.attributes?.position_name}</CTableDataCell>
                               <CTableDataCell>{linemapping?.attributes?.mapping?.data?.attributes?.position?.data?.attributes?.position_name}</CTableDataCell>
+                              <CTableDataCell>{linemapping?.attributes?.mapping?.data?.attributes?.level?.data?.attributes?.functional_name} - {linemapping?.attributes?.mapping?.data?.attributes?.level?.data?.attributes?.structural_name}</CTableDataCell>
+                              <CTableDataCell>{linemapping?.attributes?.mapping?.data?.attributes?.jobdesc}</CTableDataCell>
                               <CTableDataCell>{linemapping?.attributes?.mapping?.data?.attributes?.schedule}</CTableDataCell>
-                              <CTableDataCell>{linemapping?.attributes?.status_interview ? "Sudah Dinilai" : "Belum Dinilai"}</CTableDataCell>
                               <CTableDataCell>
                                 <ul>
                                     <li style={{ textAlign: "left", marginBottom: "4px" }}>
@@ -598,10 +641,19 @@ const Dashboard = () => {
                                 </ul>
                               </CTableDataCell>
                               <CTableDataCell>
+                                { linemapping?.attributes?.status_interview
+                                    ? linemapping?.attributes?.passed_interview == "passed" 
+                                      ? "Sudah Dinilai" + '\n' + "(Lulus)"
+                                      : "Sudah Dinilai" + '\n' + "(Tidak Lulus)"
+                                    : "Belum Dinilai"
+                                }                                            
+                              </CTableDataCell>
+                              <CTableDataCell>
                                 { (linemapping?.attributes?.status_interview) ? 
                                   <CButton
                                     color='success'
                                     variant="outline"
+                                    style={{width: '105px', margin: '5px 5px'}}
                                     onClick={() => navigate(
                                       '/wawancara/datapenilaian/datanilai', 
                                       { state: { 
@@ -609,38 +661,50 @@ const Dashboard = () => {
                                           registrant: linemapping?.attributes?.mapping?.data?.attributes?.registrant?.data?.id,
                                           examiner: linemapping?.attributes?.examiner?.data?.id
                                       }}
-                                    )}
-                                    style={{marginLeft: '10px', marginBottom: '10px', width: "80px"}} >
+                                    )}>
                                       Lihat Nilai
                                   </CButton>
                                   : null
                                 }
-                                { (linemapping?.attributes?.status_interview) ? 
+                                { (linemapping?.attributes?.status_interview && !linemapping?.attributes?.interview_finalized) ? 
                                   <CButton
                                     color='warning'
                                     variant="outline"
+                                    style={{width: '105px', margin: '5px 5px'}}
                                     onClick={() => navigate(
                                       '/wawancara/datapenilaian/nilai/edit', 
-                                      { state: { data: linemapping }}
-                                    )}
-                                    style={{marginLeft: '10px', marginBottom: '10px', width: "80px"}} >
+                                      { state: { data: linemapping, status: 'edit' }}
+                                    )}>
                                       Edit
                                   </CButton>
                                   : null
-                                }                      
+                                }       
+                                { (linemapping?.attributes?.status_interview && !linemapping?.attributes?.interview_finalized) ? 
+                                  <CButton
+                                    color='primary'
+                                    variant="outline"
+                                    style={{width: '105px', margin: '5px 5px'}}                          
+                                    onClick={() => setChosenLineMapping({ 
+                                      visible_finalized: true, 
+                                      lineMapping: linemapping
+                                    })}  >
+                                      Finalisasi
+                                  </CButton>
+                                  : null
+                                }                                     
                                 { (!linemapping?.attributes?.status_interview) ?
                                   <CButton
                                     color='primary'
                                     variant="outline" 
+                                    style={{width: '105px', margin: '5px 5px'}}
                                     onClick={() => navigate(
                                       '/wawancara/datapenilaian/nilai', 
-                                      { state: { data: linemapping } }
-                                    )}
-                                    style={{marginLeft: '10px', marginBottom: '10px'}} >
+                                      { state: { data: linemapping, status: 'tambah' } }
+                                    )}>
                                       Nilai
                                   </CButton>
                                   : null
-                                }                              
+                                }    
                               </CTableDataCell>
                             </CTableRow>
                           )}

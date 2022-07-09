@@ -57,15 +57,14 @@ const DataNilai = () => {
       <CCol>
         <CCol xs={12}>
           <CCallout color="info" className="bg-white">
-            <p style={{ fontSize: "18px", marginBottom: "0px" }}><b>Catatan</b></p>
-            <ul className='catatan' style={{ marginBottom: "0px" }}>
-              <li>Lorem Ipsum is simply dummy text of the printing and typesetting industry</li>
-              <li>Contrary to popular belief, Lorem Ipsum is not simply random text</li>
-              <li>It is a long established fact that a reader will be distracted by the</li>
-              <li>There are many variations of passages of Lorem Ipsum available</li>
+            <p style={{ fontSize: "18px", marginBottom: "4px" }}><b>Catatan</b></p>
+            <ul className='catatan'>
+              { state?.examiner == null ?  <li>Pilih terlebih dahulu penguji untuk menampilkan data nilai</li> : null }
+              <li>Sistem menampilkan no urut, kriteria penilaian, bobot, dan skor peserta</li>
+              <li>Nilai ditampilkan ke dalam bentuk tabel yang dilengkapi dengan total nilai</li>
             </ul>
           </CCallout>
-        </CCol>
+        </CCol>        
         <CCol xs={12}>
           { state.message && <CAlert color="danger" dismissible onClose={() => { setState({ ...state, message: "" }) }}> { state.message } </CAlert> }
         </CCol>

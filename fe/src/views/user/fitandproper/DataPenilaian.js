@@ -300,15 +300,18 @@ const DataPenilaian = () => {
           <CCardHeader>
             <strong>Data Penilaian Fit & Proper</strong>
           </CCardHeader>
-          <CCardBody>
-            <CTable striped className='mt-3 text-center'>
+          <CCardBody style={{ overflowX: "auto"}}>
+            <CTable striped className='text-center'>
               <CTableHead>
                  <CTableRow>
                   <CTableHeaderCell scope="col">No</CTableHeaderCell>
+                  <CTableHeaderCell scope="col">Foto</CTableHeaderCell>
                   <CTableHeaderCell scope="col">Nama</CTableHeaderCell>
                   <CTableHeaderCell scope="col">NIP</CTableHeaderCell>
                   <CTableHeaderCell scope="col">Jabatan</CTableHeaderCell>
                   <CTableHeaderCell scope="col">Proyeksi</CTableHeaderCell>
+                  <CTableHeaderCell scope="col">Jenjang</CTableHeaderCell>
+                  <CTableHeaderCell scope="col">Uraian Jabatan</CTableHeaderCell>
                   <CTableHeaderCell scope="col">Tanggal</CTableHeaderCell>
                   <CTableHeaderCell scope="col">Status</CTableHeaderCell>
                   <CTableHeaderCell scope="col">Lampiran File</CTableHeaderCell>
@@ -319,12 +322,24 @@ const DataPenilaian = () => {
                 { lineMappings.map( (linemapping, index) =>
                   <CTableRow key={linemapping.id}>
                     <CTableHeaderCell scope="row">{ index+1 }</CTableHeaderCell>
+                    <CTableDataCell>
+                      <img className='foto_karyawan' src={url + linemapping?.attributes?.mapping?.data?.attributes?.registrant?.data?.attributes?.employee?.data?.attributes?.Photo?.data?.attributes?.formats?.thumbnail?.url} alt="Photo" />                      
+                    </CTableDataCell>
                     <CTableDataCell>{linemapping?.attributes?.mapping?.data?.attributes?.registrant?.data?.attributes?.employee?.data?.attributes.Name}</CTableDataCell>
                     <CTableDataCell>{linemapping?.attributes?.mapping?.data?.attributes?.registrant?.data?.attributes?.employee?.data?.attributes.NIP}</CTableDataCell>
                     <CTableDataCell>{linemapping?.attributes?.mapping?.data?.attributes?.registrant?.data?.attributes?.employee?.data?.attributes?.position?.data?.attributes?.position_name}</CTableDataCell>
                     <CTableDataCell>{linemapping?.attributes?.mapping?.data?.attributes?.position?.data?.attributes?.position_name}</CTableDataCell>
+                    <CTableDataCell>{linemapping?.attributes?.mapping?.data?.attributes?.level?.data?.attributes?.functional_name} - {linemapping?.attributes?.mapping?.data?.attributes?.level?.data?.attributes?.structural_name}</CTableDataCell>
+                    <CTableDataCell>{linemapping?.attributes?.mapping?.data?.attributes?.jobdesc}</CTableDataCell>
                     <CTableDataCell>{linemapping?.attributes?.mapping?.data?.attributes?.schedule}</CTableDataCell>
-                    <CTableDataCell>{linemapping?.attributes?.status_fitproper ? "Sudah Dinilai" : "Belum Dinilai"}</CTableDataCell>
+                    <CTableDataCell>
+                      { linemapping?.attributes?.status_fitproper
+                          ? linemapping?.attributes?.passed_fitproper == "passed" 
+                            ? "Sudah Dinilai" + '\n' + "(Lulus)"
+                            : "Sudah Dinilai" + '\n' + "(Tidak Lulus)"
+                          : "Belum Dinilai"
+                      }                      
+                    </CTableDataCell>
                     <CTableDataCell>
                       <ul>
                           <li style={{ textAlign: "left", marginBottom: "4px" }}>
