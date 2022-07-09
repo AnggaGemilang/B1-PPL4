@@ -420,7 +420,7 @@ const Pendaftaran = () => {
                 </CRow>
                 <CRow className="mb-3">
                   <CInputGroup>
-                    <CFormLabel htmlFor="ppt" className="col-sm-2 col-form-label">Upload PPT *.ppt/.pptx</CFormLabel>
+                    <CFormLabel htmlFor="ppt" className="col-sm-2 col-form-label">Upload PPT *.pdf</CFormLabel>
                       <div className="col-sm-10">
                         { state.status == "edit" ? <a target="_blank" href={url + state?.data?.attributes?.registrant?.data?.attributes?.ppt?.data?.attributes?.url }><CImage style={{ marginTop: "-10px", marginLeft: "-5px", marginBottom: "10px", width: "70px", height: "70px" }} src={logoPDF} height={35} /></a> : null }                         
                         <CFormInput type="file" id="ppt" name="ppt" onChange={ (e) => setState({ ...state, ppt: e.target.files[0] }) } />
@@ -429,7 +429,7 @@ const Pendaftaran = () => {
                 </CRow>
                 <CRow className="mb-3">
                   <CInputGroup>
-                    <CFormLabel htmlFor="cv" className="col-sm-2 col-form-label">Upload CV *.doc/.docs</CFormLabel>
+                    <CFormLabel htmlFor="cv" className="col-sm-2 col-form-label">Upload CV *.pdf</CFormLabel>
                       <div className="col-sm-10">
                         { state.status == "edit" ? <a target="_blank" href={url + state?.data?.attributes?.registrant?.data?.attributes?.cv?.data?.attributes?.url }><CImage style={{ marginTop: "-10px", marginLeft: "-5px", marginBottom: "10px", width: "70px", height: "70px" }} src={logoPDF} height={35} /></a> : null }
                         <CFormInput type="file" id="cv" name="cv" onChange={ (e) => setState({ ...state, cv: e.target.files[0] }) } />

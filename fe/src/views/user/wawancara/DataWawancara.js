@@ -25,6 +25,7 @@ import {
 import { useLocation, useNavigate } from "react-router-dom"
 import { cilSearch  } from '@coreui/icons'
 import CIcon from '@coreui/icons-react'
+import url from "../../../config/setting"
 import MappingAPI from '../../../config/user/MappingAPI'
 import PositionAPI from '../../../config/admin/PositionAPI'
 
@@ -146,13 +147,15 @@ const DataWawancara = () => {
             <strong>Data Wawancara</strong>
           </CCardHeader>
           <CCardBody style={{ overflowX: "auto"}}>
-            <CTable striped className='mt-3 text-center'>
+            <CTable striped className='text-center'>
               <CTableHead>
                  <CTableRow>
                   <CTableHeaderCell scope="col">No</CTableHeaderCell>
+                  <CTableHeaderCell scope="col">Foto</CTableHeaderCell>
                   <CTableHeaderCell scope="col">Nama</CTableHeaderCell>
                   <CTableHeaderCell scope="col">NIP</CTableHeaderCell>
                   <CTableHeaderCell scope="col">Jabatan</CTableHeaderCell>
+                  <CTableHeaderCell scope="col">Jenjang</CTableHeaderCell>
                   <CTableHeaderCell scope="col">Proyeksi</CTableHeaderCell>
                   <CTableHeaderCell scope="col">Uraian Jabatan</CTableHeaderCell>
                   <CTableHeaderCell scope="col">Penguji</CTableHeaderCell>
@@ -163,10 +166,14 @@ const DataWawancara = () => {
                 { mappings.map( (mapping, index) =>
                   <CTableRow key={mapping.id}>
                     <CTableHeaderCell scope="row">{ index+1 }</CTableHeaderCell>
+                    <CTableDataCell>
+                      <img className='foto_karyawan' src={url + mapping?.attributes?.registrant?.data?.attributes?.employee?.data?.attributes?.Photo?.data?.attributes?.formats?.thumbnail?.url} alt="Photo" />                      
+                    </CTableDataCell>
                     <CTableDataCell>{mapping?.attributes?.registrant?.data?.attributes?.employee?.data?.attributes.Name}</CTableDataCell>
                     <CTableDataCell>{mapping?.attributes?.registrant?.data?.attributes?.employee?.data?.attributes.NIP}</CTableDataCell>
                     <CTableDataCell>{mapping?.attributes?.registrant?.data?.attributes?.employee?.data?.attributes?.position?.data?.attributes?.position_name}</CTableDataCell>
                     <CTableDataCell>{mapping?.attributes?.position?.data?.attributes?.position_name}</CTableDataCell>
+                    <CTableDataCell>{mapping?.attributes?.level?.data?.attributes?.functional_name} - {mapping?.attributes?.level?.data?.attributes?.structural_name}</CTableDataCell>
                     <CTableDataCell>{mapping?.attributes?.jobdesc}</CTableDataCell>
                     <CTableDataCell>
                       <ul>

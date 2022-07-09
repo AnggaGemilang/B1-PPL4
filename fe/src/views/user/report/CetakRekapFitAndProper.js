@@ -30,6 +30,7 @@ import MappingAPI from '../../../config/user/MappingAPI'
 import PositionAPI from '../../../config/admin/PositionAPI'
 import FitAndProperAPI from '../../../config/user/FitAndProperAPI'
 import 'jspdf-autotable'
+import url from "../../../config/setting"
 
 const CetakRekapFitAndProper = () => {
   const location = useLocation()
@@ -236,7 +237,7 @@ const CetakRekapFitAndProper = () => {
             <strong>Cetak Data Fit & Proper</strong>
           </CCardHeader>
           <CCardBody style={{ overflowX: "auto"}}>
-            <CTable striped className='mt-3 text-center'>
+            <CTable striped className='text-center'>
               <CTableHead>
                  <CTableRow>
                   <CTableHeaderCell scope="col">No</CTableHeaderCell>
@@ -247,6 +248,7 @@ const CetakRekapFitAndProper = () => {
                   <CTableHeaderCell scope="col">Uraian Jabatan</CTableHeaderCell>
                   <CTableHeaderCell scope="col">Tanggal</CTableHeaderCell>
                   <CTableHeaderCell scope="col">Penguji</CTableHeaderCell>
+                  <CTableHeaderCell scope="col">Status</CTableHeaderCell>
                   <CTableHeaderCell scope="col">Action</CTableHeaderCell>
                 </CTableRow>
               </CTableHead>
@@ -254,10 +256,14 @@ const CetakRekapFitAndProper = () => {
                 { mappings.map( (mapping, index) =>
                   <CTableRow key={mapping.id}>
                     <CTableHeaderCell scope="row">{ index+1 }</CTableHeaderCell>
+                    <CTableDataCell>
+                      <img className='foto_karyawan' src={url + mapping?.attributes?.registrant?.data?.attributes?.employee?.data?.attributes?.Photo?.data?.attributes?.formats?.thumbnail?.url} alt="Photo" />                      
+                    </CTableDataCell>
                     <CTableDataCell>{mapping?.attributes?.registrant?.data?.attributes?.employee?.data?.attributes.Name}</CTableDataCell>
                     <CTableDataCell>{mapping?.attributes?.registrant?.data?.attributes?.employee?.data?.attributes.NIP}</CTableDataCell>
                     <CTableDataCell>{mapping?.attributes?.registrant?.data?.attributes?.employee?.data?.attributes?.position?.data?.attributes?.position_name}</CTableDataCell>
                     <CTableDataCell>{mapping?.attributes?.position?.data?.attributes?.position_name}</CTableDataCell>
+                      <CTableDataCell>{mapping?.attributes?.level?.data?.attributes?.functional_name} - {mapping?.attributes?.level?.data?.attributes?.structural_name}</CTableDataCell>
                     <CTableDataCell>{mapping?.attributes?.jobdesc}</CTableDataCell>
                     <CTableDataCell>{mapping?.attributes?.schedule}</CTableDataCell>
                     <CTableDataCell>
@@ -267,6 +273,14 @@ const CetakRekapFitAndProper = () => {
                         ))}
                       </ul>
                     </CTableDataCell>
+                    <CTableDataCell>
+                      {mapping?.attributes?.status == "on_progress" 
+                        ? "Belum Finalisasi" 
+                        : mapping?.attributes?.status == "passed" 
+                          ? "Sudah Finalisasi" + '\n' + "(Lulus)"
+                          : "Sudah Finalisasi" + '\n' + "(Tidak Lulus)" 
+                      }
+                      </CTableDataCell>                                          
                     <CTableDataCell>
                         <CButton
                           projection_val={mapping?.attributes?.position?.data?.id}
