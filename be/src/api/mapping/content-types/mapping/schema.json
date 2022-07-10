@@ -67,6 +67,16 @@
         "passed",
         "not_passed"
       ]
+    },
+    "level_current": {
+      "type": "relation",
+      "relation": "oneToOne",
+      "target": "api::level.level"
+    },
+    "position_current": {
+      "type": "relation",
+      "relation": "oneToOne",
+      "target": "api::position.position"
     }
   }
 }
