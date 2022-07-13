@@ -68,8 +68,6 @@ const Criteria = () => {
       query += `&filters[useFor][$eq]=${document.getElementById("filter_usefor").value}`
     }
 
-    console.log(query)
-
     CriteriaAPI.find(query).then(
       (res) => {
         if(res.data.data.length != 0){

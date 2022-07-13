@@ -39,6 +39,8 @@ import url from "../../../config/setting"
 import logoPDF from 'src/assets/images/pdf-icon.png'
 import DataPesertaAPI from 'src/config/user/DataPesertaAPI'
 import EmployeeAPI from 'src/config/admin/EmployeeAPI'
+import axios from "axios"
+import LevelAPI from 'src/config/admin/LevelAPI'
 
 const DataPenilaian = () => {
   const location = useLocation()
@@ -46,6 +48,7 @@ const DataPenilaian = () => {
 
   const [lineMappings, setLineMappings] = useState([])
   const [positions, setPositions] = useState([])
+  const [levels, setLevels] = useState([])  
   const [message, setMessage] = useState("")
   const [chosenLineMapping, setChosenLineMapping] = useState({
     visible_finalized: false,
@@ -55,9 +58,13 @@ const DataPenilaian = () => {
   useEffect(() => {
     setMessage(location?.state?.successMessage)
     getData()
-    PositionAPI.get().then((res) => {
-      setPositions(res.data.data)
-    })    
+    axios.all([PositionAPI.get(), LevelAPI.get()]).then(
+      axios.spread((...res) => {
+        console.log(res)
+        setPositions(res[0].data.data),
+        setLevels(res[1].data.data)
+      })
+    )    
   }, [])  
 
   const filterSearch = (e) => {
@@ -70,11 +77,23 @@ const DataPenilaian = () => {
     if(document.getElementById("filter_nip").value.length != 0){
       query += `&filters[mapping][registrant][employee][NIP][$contains]=${document.getElementById("filter_nip").value}`
     }
-    if(document.getElementById("filter_position").value.length != 0){
-      query += `&filters[mapping][registrant][employee][position][id][$eq]=${document.getElementById("filter_position").value}`
+    if(document.getElementById("filter_position_before").value.length != 0){
+      query += `&filters[mapping][position_current][id][$eq]=${document.getElementById("filter_position_before").value}`
     }
     if(document.getElementById("filter_projection").value.length != 0){
       query += `&filters[mapping][position][id][$eq]=${document.getElementById("filter_projection").value}`
+    }
+    if(document.getElementById("filter_level_before").value.length != 0){
+      query += `&filters[mapping][level_current][id][$eq]=${document.getElementById("filter_level_before").value}`
+    }
+    if(document.getElementById("filter_level").value.length != 0){
+      query += `&filters[mapping][level][id][$eq]=${document.getElementById("filter_level").value}`
+    }
+    if(document.getElementById("filter_jobdesc").value.length != 0){
+      query += `&filters[mapping][jobdesc][$contains]=${document.getElementById("filter_jobdesc").value}`
+    }
+    if(document.getElementById("filter_schedule").value.length != 0){
+      query += `&filters[schedule_interview][$eq]=${document.getElementById("filter_schedule").value}`
     }
     if(document.getElementById("filter_status").value.length != 0){
       query += `&filters[status_interview][$eq]=${document.getElementById("filter_status").value}`
@@ -212,16 +231,16 @@ const DataPenilaian = () => {
                 </CRow>
                 <CRow className='mt-3'>
                   <CCol xs={6}>
-                    <CFormLabel htmlFor="filter_position">Jabatan</CFormLabel>
-                    <CFormSelect name="filter_position" id="filter_position" aria-label="Large select example">
-                      <option value="">Pilih Jabatan</option>
+                    <CFormLabel htmlFor="filter_position_before">Jabatan Sebelumnya</CFormLabel>
+                    <CFormSelect name="filter_position_before" id="filter_position_before" aria-label="Large select example">
+                      <option value="">Pilih Jabatan Sebelumnya</option>
                       { positions.map(position =>
                         <option key={ position.id } value={ position.id } >{ position.attributes.position_name }</option>
                       )}
                     </CFormSelect>
                   </CCol>
                   <CCol xs={6}>
-                    <CFormLabel htmlFor="filter_projection">Proyeksi</CFormLabel>
+                    <CFormLabel htmlFor="filter_projection">Proyeksi Jabatan</CFormLabel>
                     <CFormSelect name="filter_projection" id="filter_projection" aria-label="Large select example">
                       <option value="">Pilih Proyeksi</option>
                       { positions.map(position =>
@@ -229,7 +248,37 @@ const DataPenilaian = () => {
                       )}
                     </CFormSelect>
                   </CCol>                
-                </CRow>                
+                </CRow>
+                <CRow className='mt-3'>
+                  <CCol xs={6}>
+                    <CFormLabel htmlFor="filter_level_before">Jenjang Sebelumnya</CFormLabel>
+                    <CFormSelect name="filter_level_before" id="filter_level_before" aria-label="Large select example">
+                      <option value="">Pilih Jenjang Sebelumnya</option>
+                      { levels.map(level =>
+                        <option key={ level.id } value={ level.id }>{ level.attributes.functional_name } - { level.attributes.structural_name }</option>
+                      )}
+                    </CFormSelect>
+                  </CCol>
+                  <CCol xs={6}>
+                    <CFormLabel htmlFor="filter_level">Jenjang Jabatan</CFormLabel>
+                    <CFormSelect name="filter_level" id="filter_level" aria-label="Large select example">
+                      <option value="">Pilih Jenjang Jabatan</option>
+                      { levels.map(level =>
+                        <option key={ level.id } value={ level.id }>{ level.attributes.functional_name } - { level.attributes.structural_name }</option>
+                      )}
+                    </CFormSelect>
+                  </CCol>                
+                </CRow>
+                <CRow className='mt-3'>
+                  <CCol xs={6}>
+                    <CFormLabel htmlFor="filter_jobdesc">Uraian Jabatan</CFormLabel>
+                    <CFormInput type="text" name="filter_jobdesc" id="filter_jobdesc" placeholder='Masukkan Uraian Jabatan . . .' />
+                  </CCol>
+                  <CCol xs={6}>
+                    <CFormLabel htmlFor="filter_schedule">Tanggal Pelaksanaan</CFormLabel>
+                    <CFormInput type="date" name="filter_schedule" id="filter_schedule"/>
+                  </CCol>
+                </CRow>                              
                 <CRow className='mt-3'>
                   <CCol xs={12}>
                     <CFormLabel htmlFor="filter_status">Status</CFormLabel>
@@ -273,8 +322,9 @@ const DataPenilaian = () => {
                   <CTableHeaderCell scope="col">Foto</CTableHeaderCell>
                   <CTableHeaderCell scope="col">Nama</CTableHeaderCell>
                   <CTableHeaderCell scope="col">NIP</CTableHeaderCell>
-                  <CTableHeaderCell scope="col">Jabatan</CTableHeaderCell>
+                  <CTableHeaderCell scope="col">Jabatan Sebelumnya</CTableHeaderCell>
                   <CTableHeaderCell scope="col">Proyeksi</CTableHeaderCell>
+                  <CTableHeaderCell scope="col">Jenjang Sebelumnya</CTableHeaderCell>
                   <CTableHeaderCell scope="col">Jenjang</CTableHeaderCell>
                   <CTableHeaderCell scope="col">Uraian Jabatan</CTableHeaderCell>
                   <CTableHeaderCell scope="col">Tanggal</CTableHeaderCell>
@@ -292,11 +342,12 @@ const DataPenilaian = () => {
                     </CTableDataCell>
                     <CTableDataCell>{linemapping?.attributes?.mapping?.data?.attributes?.registrant?.data?.attributes?.employee?.data?.attributes.Name}</CTableDataCell>
                     <CTableDataCell>{linemapping?.attributes?.mapping?.data?.attributes?.registrant?.data?.attributes?.employee?.data?.attributes.NIP}</CTableDataCell>
-                    <CTableDataCell>{linemapping?.attributes?.mapping?.data?.attributes?.registrant?.data?.attributes?.employee?.data?.attributes?.position?.data?.attributes?.position_name}</CTableDataCell>
+                    <CTableDataCell>{linemapping?.attributes?.mapping?.data?.attributes?.position_current?.data?.attributes?.position_name}</CTableDataCell>
                     <CTableDataCell>{linemapping?.attributes?.mapping?.data?.attributes?.position?.data?.attributes?.position_name}</CTableDataCell>
+                    <CTableDataCell>{linemapping?.attributes?.mapping?.data?.attributes?.level_current?.data?.attributes?.functional_name} - {linemapping?.attributes?.mapping?.data?.attributes?.level_current?.data?.attributes?.structural_name}</CTableDataCell>
                     <CTableDataCell>{linemapping?.attributes?.mapping?.data?.attributes?.level?.data?.attributes?.functional_name} - {linemapping?.attributes?.mapping?.data?.attributes?.level?.data?.attributes?.structural_name}</CTableDataCell>
                     <CTableDataCell>{linemapping?.attributes?.mapping?.data?.attributes?.jobdesc}</CTableDataCell>
-                    <CTableDataCell>{linemapping?.attributes?.mapping?.data?.attributes?.schedule}</CTableDataCell>
+                    <CTableDataCell>{linemapping?.attributes?.schedule_interview}</CTableDataCell>
                     <CTableDataCell>
                       { linemapping?.attributes?.status_interview
                           ? linemapping?.attributes?.passed_interview == "passed" 

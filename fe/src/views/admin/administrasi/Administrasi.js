@@ -116,7 +116,7 @@ const Administrasi = () => {
           <ul className='catatan'>
             <li>Sebelum mengubah peran, pastikan terlebih dahulu peran dari seorang pegawai telah valid</li>
             <li>Pilih peran sesuai dengan opsi yang telah diberikan</li>
-            <li>Pilihann peran terdiri dari Administrator, HR Manager, HR Specialist, dan Penguji</li>
+            <li>Pilihan peran terdiri dari Administrator, HR Manager, HR Specialist, dan Penguji</li>
             <li>Sistem memungkinkan untuk mengubah dan menghapus peran pegawai</li>
             <li>Jika peran pegawai dikembalikan menjadi 'Pilih Penggunaan', sistem akan menghapus peran pegawai</li>
           </ul>
@@ -287,8 +287,6 @@ const Administrasi = () => {
                           onChange={ (e) => {
                             if(e.target.value == 999){
                               AdministrasiUserAPI.find(employee?.attributes?.NIP).then(res => {
-                                console.log(res.data.length)
-                                console.log(employee.attributes.account.data)
                                 if(res?.data?.data?.length != 0){
                                   AdministrasiUserAPI.delete(employee?.attributes?.account?.data?.id).then(res => {
                                     getData()
@@ -298,8 +296,6 @@ const Administrasi = () => {
                               })
                             } else {
                               AdministrasiUserAPI.find(employee?.attributes?.NIP).then(res => {
-                                console.log(res.data.length)
-                                console.log(employee.attributes.account.data)
                                 if(res?.data?.length != 0){
                                   const body = {
                                     role: e.target.value,

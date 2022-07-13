@@ -111,7 +111,7 @@ const routes = [
   { path: '/report/rekap/fitproper', exact: true, name: 'Rekap Fit And Proper', element: ReportFit },
   { path: '/report/rekap/manualfitproper', exact: true, name: 'Rekap Manual Fit And Proper', element: ReportMFit },
   { path: '/report/rekap/wawancara', exact: true, name: 'Rekap Wawancara', element: ReportWawancara},
-  { path: '/report/cetak/fitproper', exact: true, name: 'Cetak Report', element: CetakReport},
+  { path: '/report/cetak/fitproper', exact: true, name: 'Cetak Fit & Proper', element: CetakReport},
   { path: '/report/cetak/wawancara', exact: true, name: 'Cetak Wawancara', element: CetakWawancara},
 ]
 

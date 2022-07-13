@@ -85,6 +85,11 @@ const Pendaftaran = () => {
           })
         }
       })
+    } else {
+      setState({ 
+        ...state, 
+        registrant: {}
+      })
     }
     axios.all([PositionAPI.get(), LevelAPI.get()]).then(
       axios.spread((...res) => {
@@ -120,6 +125,8 @@ const Pendaftaran = () => {
         data: {
           examiners: examinersVal,
           registrant: state?.registrant?.id,
+          level_current: state?.registrant?.attributes?.employee?.data?.attributes?.level?.data?.id,
+          position_current: state?.registrant?.attributes?.employee?.data?.attributes?.position?.data?.id,
           jobdesc: document.getElementById("jobdesc").value,
           schedule: document.getElementById("schedule").value,
           fitproper_type: document.getElementById("fitproper_type").value,
