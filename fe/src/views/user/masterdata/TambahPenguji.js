@@ -47,6 +47,15 @@ const TambahPenguji = () => {
           })
         }
       })
+    } else {
+      setState({
+        ...state,
+        employee: {
+          attributes : {
+            Name : ""
+          }
+        }
+      })      
     }
   }, [nipValue])
 
@@ -76,7 +85,7 @@ const TambahPenguji = () => {
               (res) => {
                 let body = {}
                 AdministrasiUserAPI.find(state?.employee?.attributes?.NIP).then(res => {
-                  if(res.length != 0){
+                  if(res.data.length != 0){
                     body = {
                       role: 4,
                       cp_role: 4

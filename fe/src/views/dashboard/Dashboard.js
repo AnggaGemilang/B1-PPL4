@@ -355,8 +355,9 @@ const Dashboard = () => {
                             <CTableHeaderCell scope="col">Foto</CTableHeaderCell>
                             <CTableHeaderCell scope="col">Nama</CTableHeaderCell>
                             <CTableHeaderCell scope="col">NIP</CTableHeaderCell>
-                            <CTableHeaderCell scope="col">Jabatan</CTableHeaderCell>
+                            <CTableHeaderCell scope="col">Jabatan Sebelumnya</CTableHeaderCell>
                             <CTableHeaderCell scope="col">Proyeksi</CTableHeaderCell>
+                            <CTableHeaderCell scope="col">Jenjang Sebelumnya</CTableHeaderCell>
                             <CTableHeaderCell scope="col">Jenjang</CTableHeaderCell>
                             <CTableHeaderCell scope="col">Uraian Jabatan</CTableHeaderCell>
                             <CTableHeaderCell scope="col">Tanggal</CTableHeaderCell>
@@ -375,8 +376,9 @@ const Dashboard = () => {
                               </CTableDataCell>
                               <CTableDataCell>{mapping?.attributes?.registrant?.data?.attributes?.employee?.data?.attributes.Name}</CTableDataCell>
                               <CTableDataCell>{mapping?.attributes?.registrant?.data?.attributes?.employee?.data?.attributes.NIP}</CTableDataCell>
-                              <CTableDataCell>{mapping?.attributes?.registrant?.data?.attributes?.employee?.data?.attributes?.position?.data?.attributes?.position_name}</CTableDataCell>
+                              <CTableDataCell>{mapping?.attributes?.position_current?.data?.attributes?.position_name}</CTableDataCell>
                               <CTableDataCell>{mapping?.attributes?.position?.data?.attributes?.position_name}</CTableDataCell>
+                              <CTableDataCell>{mapping?.attributes?.level_current?.data?.attributes?.functional_name} - {mapping?.attributes?.level_current?.data?.attributes?.structural_name}</CTableDataCell>
                               <CTableDataCell>{mapping?.attributes?.level?.data?.attributes?.functional_name} - {mapping?.attributes?.level?.data?.attributes?.structural_name}</CTableDataCell>
                               <CTableDataCell>{mapping?.attributes?.jobdesc}</CTableDataCell>
                               <CTableDataCell>{mapping?.attributes?.schedule}</CTableDataCell>
@@ -431,8 +433,9 @@ const Dashboard = () => {
                             <CTableHeaderCell scope="col">Foto</CTableHeaderCell>
                             <CTableHeaderCell scope="col">Nama</CTableHeaderCell>
                             <CTableHeaderCell scope="col">NIP</CTableHeaderCell>
-                            <CTableHeaderCell scope="col">Jabatan</CTableHeaderCell>
+                            <CTableHeaderCell scope="col">Jabatan Sebelumnya</CTableHeaderCell>
                             <CTableHeaderCell scope="col">Proyeksi</CTableHeaderCell>
+                            <CTableHeaderCell scope="col">Jenjang Sebelumnya</CTableHeaderCell>
                             <CTableHeaderCell scope="col">Jenjang</CTableHeaderCell>
                             <CTableHeaderCell scope="col">Uraian Jabatan</CTableHeaderCell>
                             <CTableHeaderCell scope="col">Penguji</CTableHeaderCell>
@@ -448,8 +451,9 @@ const Dashboard = () => {
                               </CTableDataCell>
                               <CTableDataCell>{mapping?.attributes?.registrant?.data?.attributes?.employee?.data?.attributes.Name}</CTableDataCell>
                               <CTableDataCell>{mapping?.attributes?.registrant?.data?.attributes?.employee?.data?.attributes.NIP}</CTableDataCell>
-                              <CTableDataCell>{mapping?.attributes?.registrant?.data?.attributes?.employee?.data?.attributes?.position?.data?.attributes?.position_name}</CTableDataCell>
+                              <CTableDataCell>{mapping?.attributes?.position_current?.data?.attributes?.position_name}</CTableDataCell>
                               <CTableDataCell>{mapping?.attributes?.position?.data?.attributes?.position_name}</CTableDataCell>
+                              <CTableDataCell>{mapping?.attributes?.level_current?.data?.attributes?.functional_name} - {mapping?.attributes?.level_current?.data?.attributes?.structural_name}</CTableDataCell>
                               <CTableDataCell>{mapping?.attributes?.level?.data?.attributes?.functional_name} - {mapping?.attributes?.level?.data?.attributes?.structural_name}</CTableDataCell>
                               <CTableDataCell>{mapping?.attributes?.jobdesc}</CTableDataCell>
                               <CTableDataCell>
@@ -490,8 +494,9 @@ const Dashboard = () => {
                             <CTableHeaderCell scope="col">Foto</CTableHeaderCell>
                             <CTableHeaderCell scope="col">Nama</CTableHeaderCell>
                             <CTableHeaderCell scope="col">NIP</CTableHeaderCell>
-                            <CTableHeaderCell scope="col">Jabatan</CTableHeaderCell>
+                            <CTableHeaderCell scope="col">Jabatan Sebelumnya</CTableHeaderCell>
                             <CTableHeaderCell scope="col">Proyeksi</CTableHeaderCell>
+                            <CTableHeaderCell scope="col">Jenjang Sebelumnya</CTableHeaderCell>
                             <CTableHeaderCell scope="col">Jenjang</CTableHeaderCell>
                             <CTableHeaderCell scope="col">Uraian Jabatan</CTableHeaderCell>
                             <CTableHeaderCell scope="col">Tanggal</CTableHeaderCell>
@@ -509,8 +514,9 @@ const Dashboard = () => {
                               </CTableDataCell>
                               <CTableDataCell>{linemapping?.attributes?.mapping?.data?.attributes?.registrant?.data?.attributes?.employee?.data?.attributes.Name}</CTableDataCell>
                               <CTableDataCell>{linemapping?.attributes?.mapping?.data?.attributes?.registrant?.data?.attributes?.employee?.data?.attributes.NIP}</CTableDataCell>
-                              <CTableDataCell>{linemapping?.attributes?.mapping?.data?.attributes?.registrant?.data?.attributes?.employee?.data?.attributes?.position?.data?.attributes?.position_name}</CTableDataCell>
+                              <CTableDataCell>{linemapping?.attributes?.mapping?.data?.attributes?.position_current?.data?.attributes?.position_name}</CTableDataCell>
                               <CTableDataCell>{linemapping?.attributes?.mapping?.data?.attributes?.position?.data?.attributes?.position_name}</CTableDataCell>
+                              <CTableDataCell>{linemapping?.attributes?.mapping?.data?.attributes?.level_current?.data?.attributes?.functional_name} - {linemapping?.attributes?.mapping?.data?.attributes?.level_current?.data?.attributes?.structural_name}</CTableDataCell>
                               <CTableDataCell>{linemapping?.attributes?.mapping?.data?.attributes?.level?.data?.attributes?.functional_name} - {linemapping?.attributes?.mapping?.data?.attributes?.level?.data?.attributes?.structural_name}</CTableDataCell>
                               <CTableDataCell>{linemapping?.attributes?.mapping?.data?.attributes?.jobdesc}</CTableDataCell>
                               <CTableDataCell>{linemapping?.attributes?.mapping?.data?.attributes?.schedule}</CTableDataCell>
@@ -541,7 +547,7 @@ const Dashboard = () => {
                                     variant="outline"
                                     style={{width: '105px', margin: '5px 5px'}}
                                     onClick={() => navigate(
-                                      '/wawancara/datapenilaian/datanilai', 
+                                      '/fitandproper/datapenilaian/datanilai', 
                                       { state: { 
                                           position: linemapping?.attributes?.mapping?.data?.attributes?.position?.data?.id, 
                                           registrant: linemapping?.attributes?.mapping?.data?.attributes?.registrant?.data?.id,
@@ -604,8 +610,9 @@ const Dashboard = () => {
                             <CTableHeaderCell scope="col">Foto</CTableHeaderCell>
                             <CTableHeaderCell scope="col">Nama</CTableHeaderCell>
                             <CTableHeaderCell scope="col">NIP</CTableHeaderCell>
-                            <CTableHeaderCell scope="col">Jabatan</CTableHeaderCell>
+                            <CTableHeaderCell scope="col">Jabatan Sebelumnya</CTableHeaderCell>
                             <CTableHeaderCell scope="col">Proyeksi</CTableHeaderCell>
+                            <CTableHeaderCell scope="col">Jenjang Sebelumnya</CTableHeaderCell>
                             <CTableHeaderCell scope="col">Jenjang</CTableHeaderCell>
                             <CTableHeaderCell scope="col">Uraian Jabatan</CTableHeaderCell>
                             <CTableHeaderCell scope="col">Tanggal</CTableHeaderCell>
@@ -623,8 +630,9 @@ const Dashboard = () => {
                               </CTableDataCell>
                               <CTableDataCell>{linemapping?.attributes?.mapping?.data?.attributes?.registrant?.data?.attributes?.employee?.data?.attributes.Name}</CTableDataCell>
                               <CTableDataCell>{linemapping?.attributes?.mapping?.data?.attributes?.registrant?.data?.attributes?.employee?.data?.attributes.NIP}</CTableDataCell>
-                              <CTableDataCell>{linemapping?.attributes?.mapping?.data?.attributes?.registrant?.data?.attributes?.employee?.data?.attributes?.position?.data?.attributes?.position_name}</CTableDataCell>
+                              <CTableDataCell>{linemapping?.attributes?.mapping?.data?.attributes?.position_current?.data?.attributes?.position_name}</CTableDataCell>
                               <CTableDataCell>{linemapping?.attributes?.mapping?.data?.attributes?.position?.data?.attributes?.position_name}</CTableDataCell>
+                              <CTableDataCell>{linemapping?.attributes?.mapping?.data?.attributes?.level_current?.data?.attributes?.functional_name} - {linemapping?.attributes?.mapping?.data?.attributes?.level_current?.data?.attributes?.structural_name}</CTableDataCell>
                               <CTableDataCell>{linemapping?.attributes?.mapping?.data?.attributes?.level?.data?.attributes?.functional_name} - {linemapping?.attributes?.mapping?.data?.attributes?.level?.data?.attributes?.structural_name}</CTableDataCell>
                               <CTableDataCell>{linemapping?.attributes?.mapping?.data?.attributes?.jobdesc}</CTableDataCell>
                               <CTableDataCell>{linemapping?.attributes?.mapping?.data?.attributes?.schedule}</CTableDataCell>

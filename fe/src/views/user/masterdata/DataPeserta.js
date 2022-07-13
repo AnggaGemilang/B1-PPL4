@@ -56,9 +56,10 @@ const DataPeserta = () => {
       query += `&filters[employee][Name][$contains]=${document.getElementById("filter_nama").value}`
     }
     if(document.getElementById("filter_nip").value.length != 0){
-      query += `&filters[employee][NIP][$contains]=${document.getElementById("filter_nip").value}`
+      query += `&filters[employee][NIP][$eq]=${document.getElementById("filter_nip").value}`
     }
-
+    query += `&filters[status][$eq]=active`
+    
     DataPesertaAPI.findRegistrants(query).then(
       (res) => {
         if(res.data.data.length != 0){
@@ -78,7 +79,7 @@ const DataPeserta = () => {
 
   const deleteData = () => {
     DataPesertaAPI.delete(chosenRegistrant.id).then((res) => {
-      setMessage("Registrant has deleted successfully")
+      setMessage("Peserta Telah Berhasil Dihapus")
       setChosenRegistrant({ visible: false })
       getData()
     })

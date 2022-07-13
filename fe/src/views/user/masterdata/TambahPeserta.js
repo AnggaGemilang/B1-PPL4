@@ -43,6 +43,11 @@ const TambahPeserta = () => {
           })
         }
       })
+    } else {
+      setState({
+        namaKaryawan: '',
+        idKaryawan: 0,
+      })      
     }
   }, [nipValue])
 

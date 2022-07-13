@@ -12,9 +12,6 @@ import {
 } from '@coreui/react'
 
 const DataNilai = (props) => {
-
-  console.log(props.total)
-
   return (
     <CCard className="mb-4 mt-3">
       <CCardHeader>

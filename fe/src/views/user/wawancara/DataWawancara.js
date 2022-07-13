@@ -28,6 +28,8 @@ import CIcon from '@coreui/icons-react'
 import url from "../../../config/setting"
 import MappingAPI from '../../../config/user/MappingAPI'
 import PositionAPI from '../../../config/admin/PositionAPI'
+import axios from "axios"
+import LevelAPI from 'src/config/admin/LevelAPI'
 
 const DataWawancara = () => {
   const location = useLocation()
@@ -35,14 +37,19 @@ const DataWawancara = () => {
 
   const [mappings, setMappings] = useState([])
   const [positions, setPositions] = useState([])
+  const [levels, setLevels] = useState([])
   const [message, setMessage] = useState("")
 
   useEffect(() => {
     setMessage(location?.state?.successMessage)
-    PositionAPI.get().then((res) => {
-      setPositions(res.data.data)
-    })    
     getData()
+    axios.all([PositionAPI.get(), LevelAPI.get()]).then(
+      axios.spread((...res) => {
+        console.log(res)
+        setPositions(res[0].data.data),
+        setLevels(res[1].data.data)
+      })
+    )        
   }, [])  
 
   const filterSearch = (e) => {
@@ -55,11 +62,23 @@ const DataWawancara = () => {
     if(document.getElementById("filter_nip").value.length != 0){
       query += `&filters[registrant][employee][NIP][$contains]=${document.getElementById("filter_nip").value}`
     }
-    if(document.getElementById("filter_position").value.length != 0){
-      query += `&filters[registrant][employee][position][id][$eq]=${document.getElementById("filter_position").value}`
+    if(document.getElementById("filter_position_before").value.length != 0){
+      query += `&filters[position_current][id][$eq]=${document.getElementById("filter_position_before").value}`
     }
     if(document.getElementById("filter_projection").value.length != 0){
       query += `&filters[position][id][$eq]=${document.getElementById("filter_projection").value}`
+    }
+    if(document.getElementById("filter_level_before").value.length != 0){
+      query += `&filters[level_current][id][$eq]=${document.getElementById("filter_level_before").value}`
+    }
+    if(document.getElementById("filter_level").value.length != 0){
+      query += `&filters[level][id][$eq]=${document.getElementById("filter_level").value}`
+    }
+    if(document.getElementById("filter_jobdesc").value.length != 0){
+      query += `&filters[jobdesc][$contains]=${document.getElementById("filter_jobdesc").value}`
+    }
+    if(document.getElementById("filter_schedule").value.length != 0){
+      query += `&filters[schedule][$eq]=${document.getElementById("filter_schedule").value}`
     }
 
     MappingAPI.findWawancara(query).then((res) => {
@@ -103,17 +122,17 @@ const DataWawancara = () => {
                 </CRow>
                 <CRow className='mt-3'>
                   <CCol xs={6}>
-                    <CFormLabel htmlFor="filter_position">Jabatan</CFormLabel>
-                    <CFormSelect name="filter_position" id="filter_position" className="mb-3" aria-label="Large select example">
-                      <option value="">Pilih Jabatan</option>
+                    <CFormLabel htmlFor="filter_position_before">Jabatan Sebelumnya</CFormLabel>
+                    <CFormSelect name="filter_position_before" id="filter_position_before" aria-label="Large select example">
+                      <option value="">Pilih Jabatan Sebelumnya</option>
                       { positions.map(position =>
                         <option key={ position.id } value={ position.id } >{ position.attributes.position_name }</option>
                       )}
                     </CFormSelect>
                   </CCol>
                   <CCol xs={6}>
-                    <CFormLabel htmlFor="filter_projection">Proyeksi</CFormLabel>
-                    <CFormSelect name="filter_projection" id="filter_projection" className="mb-3" aria-label="Large select example">
+                    <CFormLabel htmlFor="filter_projection">Proyeksi Jabatan</CFormLabel>
+                    <CFormSelect name="filter_projection" id="filter_projection" aria-label="Large select example">
                       <option value="">Pilih Proyeksi</option>
                       { positions.map(position =>
                         <option key={ position.id } value={ position.id } >{ position.attributes.position_name }</option>
@@ -121,6 +140,32 @@ const DataWawancara = () => {
                     </CFormSelect>
                   </CCol>                
                 </CRow>
+                <CRow className='mt-3'>
+                  <CCol xs={6}>
+                    <CFormLabel htmlFor="filter_level_before">Jenjang Sebelumnya</CFormLabel>
+                    <CFormSelect name="filter_level_before" id="filter_level_before" aria-label="Large select example">
+                      <option value="">Pilih Jenjang Sebelumnya</option>
+                      { levels.map(level =>
+                        <option key={ level.id } value={ level.id }>{ level.attributes.functional_name } - { level.attributes.structural_name }</option>
+                      )}
+                    </CFormSelect>
+                  </CCol>
+                  <CCol xs={6}>
+                    <CFormLabel htmlFor="filter_level">Jenjang Jabatan</CFormLabel>
+                    <CFormSelect name="filter_level" id="filter_level" aria-label="Large select example">
+                      <option value="">Pilih Jenjang Jabatan</option>
+                      { levels.map(level =>
+                        <option key={ level.id } value={ level.id }>{ level.attributes.functional_name } - { level.attributes.structural_name }</option>
+                      )}
+                    </CFormSelect>
+                  </CCol>                
+                </CRow>
+                <CRow className='mt-3'>
+                  <CCol xs={12}>
+                    <CFormLabel htmlFor="filter_jobdesc">Uraian Jabatan</CFormLabel>
+                    <CFormInput type="text" name="filter_jobdesc" id="filter_jobdesc" placeholder='Masukkan Uraian Jabatan . . .' />
+                  </CCol>
+                </CRow> 
                 <CRow>
                   <hr className='mt-4' style={{ marginLeft: "12px", width: "97.6%" }} />
                 </CRow>
@@ -154,9 +199,10 @@ const DataWawancara = () => {
                   <CTableHeaderCell scope="col">Foto</CTableHeaderCell>
                   <CTableHeaderCell scope="col">Nama</CTableHeaderCell>
                   <CTableHeaderCell scope="col">NIP</CTableHeaderCell>
-                  <CTableHeaderCell scope="col">Jabatan</CTableHeaderCell>
-                  <CTableHeaderCell scope="col">Jenjang</CTableHeaderCell>
+                  <CTableHeaderCell scope="col">Jabatan Sebelumnya</CTableHeaderCell>
                   <CTableHeaderCell scope="col">Proyeksi</CTableHeaderCell>
+                  <CTableHeaderCell scope="col">Jenjang Sebelumnya</CTableHeaderCell>
+                  <CTableHeaderCell scope="col">Jenjang</CTableHeaderCell>
                   <CTableHeaderCell scope="col">Uraian Jabatan</CTableHeaderCell>
                   <CTableHeaderCell scope="col">Penguji</CTableHeaderCell>
                   <CTableHeaderCell scope="col">Action</CTableHeaderCell>
@@ -171,8 +217,9 @@ const DataWawancara = () => {
                     </CTableDataCell>
                     <CTableDataCell>{mapping?.attributes?.registrant?.data?.attributes?.employee?.data?.attributes.Name}</CTableDataCell>
                     <CTableDataCell>{mapping?.attributes?.registrant?.data?.attributes?.employee?.data?.attributes.NIP}</CTableDataCell>
-                    <CTableDataCell>{mapping?.attributes?.registrant?.data?.attributes?.employee?.data?.attributes?.position?.data?.attributes?.position_name}</CTableDataCell>
+                    <CTableDataCell>{mapping?.attributes?.position_current?.data?.attributes?.position_name}</CTableDataCell>
                     <CTableDataCell>{mapping?.attributes?.position?.data?.attributes?.position_name}</CTableDataCell>
+                    <CTableDataCell>{mapping?.attributes?.level_current?.data?.attributes?.functional_name} - {mapping?.attributes?.level_current?.data?.attributes?.structural_name}</CTableDataCell>
                     <CTableDataCell>{mapping?.attributes?.level?.data?.attributes?.functional_name} - {mapping?.attributes?.level?.data?.attributes?.structural_name}</CTableDataCell>
                     <CTableDataCell>{mapping?.attributes?.jobdesc}</CTableDataCell>
                     <CTableDataCell>
