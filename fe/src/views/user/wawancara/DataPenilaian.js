@@ -60,7 +60,6 @@ const DataPenilaian = () => {
     getData()
     axios.all([PositionAPI.get(), LevelAPI.get()]).then(
       axios.spread((...res) => {
-        console.log(res)
         setPositions(res[0].data.data),
         setLevels(res[1].data.data)
       })

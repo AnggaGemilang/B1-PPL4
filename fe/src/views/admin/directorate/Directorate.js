@@ -111,7 +111,7 @@ const Directorate = () => {
                     </CCol>
                     <CCol xs={6}>
                       <CFormLabel htmlFor="filter_unit">Unit</CFormLabel>
-                      <CFormSelect name="filter_unit" id="filter_unit" className="mb-3" aria-label="Large select example">
+                      <CFormSelect name="filter_unit" id="filter_unit" aria-label="Large select example">
                         <option value="">Pilih Unit</option>
                         { units.map(unit =>
                           <option key={ unit.id } value={ unit.id } >{ unit.attributes.unit_name }</option>

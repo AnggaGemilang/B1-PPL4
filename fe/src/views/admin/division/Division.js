@@ -111,7 +111,7 @@ const Division = () => {
                     </CCol>
                     <CCol xs={6}>
                       <CFormLabel htmlFor="filter_directorate">Direktorat</CFormLabel>
-                      <CFormSelect name="filter_directorate" id="filter_directorate" className="mb-3" aria-label="Large select example">
+                      <CFormSelect name="filter_directorate" id="filter_directorate" aria-label="Large select example">
                         <option value="">Pilih Direktorat</option>
                         { directorates.map(directorate =>
                           <option key={ directorate.id } value={ directorate.id } >{ directorate.attributes.directorate_name }</option>

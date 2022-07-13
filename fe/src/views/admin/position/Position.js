@@ -111,7 +111,7 @@ const Position = () => {
                     </CCol>
                     <CCol xs={6}>
                       <CFormLabel htmlFor="filter_grade">Grade</CFormLabel>
-                      <CFormSelect name="filter_grade" id="filter_grade" className="mb-3" aria-label="Large select example">
+                      <CFormSelect name="filter_grade" id="filter_grade" aria-label="Large select example">
                         <option value="">Pilih Grade</option>
                         { grades.map(grade =>
                           <option key={ grade.id } value={ grade.id } >{ grade.attributes.grade_name}</option>
