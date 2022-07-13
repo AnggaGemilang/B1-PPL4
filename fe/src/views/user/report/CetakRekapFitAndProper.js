@@ -109,7 +109,7 @@ const CetakRekapFitAndProper = () => {
       var yy = date.getYear()
       var year = (yy < 1000) ? yy + 1900 : yy
 
-      FitAndProperAPI.getRekapManualFitProper(e.target.getAttribute("registrant_val"), e.target.getAttribute("projection_val"), e.target.getAttribute("level_val")).then((res) => {
+      FitAndProperAPI.getRekapManualFitProper(e.target.getAttribute("registrant_val"), e.target.getAttribute("projection_val")).then((res) => {
         if(res.data.data.length != 0){
           setLineMappings(res.data.data)
 
