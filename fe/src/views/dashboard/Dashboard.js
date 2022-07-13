@@ -533,15 +533,15 @@ const Dashboard = () => {
                                 </ul>
                               </CTableDataCell>
                               <CTableDataCell>
-                                { linemapping?.attributes?.status_interview
-                                    ? linemapping?.attributes?.passed_interview == "passed" 
+                                { linemapping?.attributes?.status_fitproper
+                                    ? linemapping?.attributes?.passed_fitproper == "passed" 
                                       ? "Sudah Dinilai" + '\n' + "(Lulus)"
                                       : "Sudah Dinilai" + '\n' + "(Tidak Lulus)"
                                     : "Belum Dinilai"
                                 }                                            
                               </CTableDataCell>                              
                               <CTableDataCell>
-                                { (linemapping?.attributes?.status_interview) ? 
+                                { (linemapping?.attributes?.status_fitproper) ? 
                                   <CButton
                                     color='success'
                                     variant="outline"
@@ -558,39 +558,26 @@ const Dashboard = () => {
                                   </CButton>
                                   : null
                                 }
-                                { (linemapping?.attributes?.status_interview && !linemapping?.attributes?.interview_finalized) ? 
+                                { (linemapping?.attributes?.status_fitproper && !linemapping?.attributes?.fitproper_finalized) ? 
                                   <CButton
                                     color='warning'
                                     variant="outline"
                                     style={{width: '105px', margin: '5px 5px'}}
                                     onClick={() => navigate(
-                                      '/wawancara/datapenilaian/nilai/edit', 
+                                      '/fitandproper/datapenilaian/nilai/edit', 
                                       { state: { data: linemapping, status: 'edit' }}
                                     )}>
                                       Edit
                                   </CButton>
                                   : null
-                                }       
-                                { (linemapping?.attributes?.status_interview && !linemapping?.attributes?.interview_finalized) ? 
-                                  <CButton
-                                    color='primary'
-                                    variant="outline"
-                                    style={{width: '105px', margin: '5px 5px'}}                          
-                                    onClick={() => setChosenLineMapping({ 
-                                      visible_finalized: true, 
-                                      lineMapping: linemapping
-                                    })}  >
-                                      Finalisasi
-                                  </CButton>
-                                  : null
-                                }                                     
-                                { (!linemapping?.attributes?.status_interview) ?
+                                }                                  
+                                { (!linemapping?.attributes?.status_fitproper) ?
                                   <CButton
                                     color='primary'
                                     variant="outline" 
                                     style={{width: '105px', margin: '5px 5px'}}
                                     onClick={() => navigate(
-                                      '/wawancara/datapenilaian/nilai', 
+                                      '/fitandproper/datapenilaian/nilai', 
                                       { state: { data: linemapping, status: 'tambah' } }
                                     )}>
                                       Nilai
@@ -616,7 +603,6 @@ const Dashboard = () => {
                             <CTableHeaderCell scope="col">Jenjang</CTableHeaderCell>
                             <CTableHeaderCell scope="col">Uraian Jabatan</CTableHeaderCell>
                             <CTableHeaderCell scope="col">Tanggal</CTableHeaderCell>
-                            <CTableHeaderCell scope="col">Lampiran File</CTableHeaderCell>
                             <CTableHeaderCell scope="col">Status</CTableHeaderCell>
                             <CTableHeaderCell scope="col">Action</CTableHeaderCell>
                           </CTableRow>
@@ -635,19 +621,7 @@ const Dashboard = () => {
                               <CTableDataCell>{linemapping?.attributes?.mapping?.data?.attributes?.level_current?.data?.attributes?.functional_name} - {linemapping?.attributes?.mapping?.data?.attributes?.level_current?.data?.attributes?.structural_name}</CTableDataCell>
                               <CTableDataCell>{linemapping?.attributes?.mapping?.data?.attributes?.level?.data?.attributes?.functional_name} - {linemapping?.attributes?.mapping?.data?.attributes?.level?.data?.attributes?.structural_name}</CTableDataCell>
                               <CTableDataCell>{linemapping?.attributes?.mapping?.data?.attributes?.jobdesc}</CTableDataCell>
-                              <CTableDataCell>{linemapping?.attributes?.mapping?.data?.attributes?.schedule}</CTableDataCell>
-                              <CTableDataCell>
-                                <ul>
-                                    <li style={{ textAlign: "left", marginBottom: "4px" }}>
-                                      <p>CV</p>
-                                      <a target="_blank" href={url + linemapping?.attributes?.mapping?.data?.attributes?.registrant?.data?.attributes?.cv?.data?.attributes?.url }><CImage style={{ marginTop: "-10px", marginLeft: "-5px" }} src={logoPDF} height={35} /></a>
-                                    </li>
-                                    <li style={{ textAlign: "left" }}>
-                                      <p>PPT</p>
-                                      <a target="_blank" href={ url + linemapping?.attributes?.mapping?.data?.attributes?.registrant?.data?.attributes?.ppt?.data?.attributes?.url }><CImage style={{ marginTop: "-10px", marginLeft: "-5px" }} src={logoPDF} height={35} /></a>
-                                    </li>                            
-                                </ul>
-                              </CTableDataCell>
+                              <CTableDataCell>{linemapping?.attributes?.schedule_interview}</CTableDataCell>
                               <CTableDataCell>
                                 { linemapping?.attributes?.status_interview
                                     ? linemapping?.attributes?.passed_interview == "passed" 
@@ -686,20 +660,7 @@ const Dashboard = () => {
                                       Edit
                                   </CButton>
                                   : null
-                                }       
-                                { (linemapping?.attributes?.status_interview && !linemapping?.attributes?.interview_finalized) ? 
-                                  <CButton
-                                    color='primary'
-                                    variant="outline"
-                                    style={{width: '105px', margin: '5px 5px'}}                          
-                                    onClick={() => setChosenLineMapping({ 
-                                      visible_finalized: true, 
-                                      lineMapping: linemapping
-                                    })}  >
-                                      Finalisasi
-                                  </CButton>
-                                  : null
-                                }                                     
+                                }                     
                                 { (!linemapping?.attributes?.status_interview) ?
                                   <CButton
                                     color='primary'
