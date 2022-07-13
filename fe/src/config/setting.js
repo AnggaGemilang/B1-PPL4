@@ -1,3 +1,3 @@
-const url = "https://fda3-202-80-213-233.ap.ngrok.io"
+const url = "http://localhost:1337"
 
 export default url

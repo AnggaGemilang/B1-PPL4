@@ -329,7 +329,6 @@ const DataPenilaian = () => {
                   <CTableHeaderCell scope="col">Uraian Jabatan</CTableHeaderCell>
                   <CTableHeaderCell scope="col">Tanggal</CTableHeaderCell>
                   <CTableHeaderCell scope="col">Status</CTableHeaderCell>
-                  <CTableHeaderCell scope="col">Lampiran File</CTableHeaderCell>
                   <CTableHeaderCell scope="col">Action</CTableHeaderCell>
                 </CTableRow>
               </CTableHead>
@@ -355,18 +354,6 @@ const DataPenilaian = () => {
                             : "Sudah Dinilai" + '\n' + "(Tidak Lulus)"
                           : "Belum Dinilai"
                       }
-                    </CTableDataCell>
-                    <CTableDataCell>
-                      <ul>
-                          <li style={{ textAlign: "left", marginBottom: "4px" }}>
-                            <p>CV</p>
-                            <a target="_blank" href={url + linemapping?.attributes?.mapping?.data?.attributes?.registrant?.data?.attributes?.cv?.data?.attributes?.url }><CImage style={{ marginTop: "-10px", marginLeft: "-5px" }} src={logoPDF} height={35} /></a>
-                          </li>
-                          <li style={{ textAlign: "left" }}>
-                            <p>PPT</p>
-                            <a target="_blank" href={ url + linemapping?.attributes?.mapping?.data?.attributes?.registrant?.data?.attributes?.ppt?.data?.attributes?.url }><CImage style={{ marginTop: "-10px", marginLeft: "-5px" }} src={logoPDF} height={35} /></a>
-                          </li>                            
-                      </ul>
                     </CTableDataCell>
                     <CTableDataCell>
                       { (linemapping?.attributes?.status_interview) ? 

@@ -121,7 +121,7 @@ const Penilaian = () => {
                       <CTableDataCell id='criteria' id_val={ score?.id } bobot_val={score?.attributes?.criterion?.data?.attributes?.value}>{ score?.attributes?.criterion?.data?.attributes?.criteria }</CTableDataCell>
                       <CTableDataCell>{ score?.attributes?.criterion?.data?.attributes?.value + "%" }</CTableDataCell>
                       <CTableDataCell>
-                        <CFormInput type="number" min={0} max={100} id="nilai" name='nilai' defaultValue={ state.status == "edit" ? score?.attributes?.score : '' } />
+                        <CFormInput type="number" min={0} max={100} id="nilai" name='nilai' defaultValue={ state.status == "edit" || score?.attributes?.score != 0 ? score?.attributes?.score : '' } />
                       </CTableDataCell>
                     </CTableRow>
                   ))}  
