@@ -209,7 +209,7 @@ const Employee = () => {
                     </CCol>
                     <CCol xs={6}>
                       <CFormLabel htmlFor="filter_religion">Agama</CFormLabel>
-                      <CFormSelect name="filter_religion" id="filter_religion" className="mb-3" aria-label="Large select example">
+                      <CFormSelect name="filter_religion" id="filter_religion" aria-label="Large select example">
                         <option value="">Pilih Agama</option>
                         <option value="Islam">Islam</option>
                         <option value="Kristen">Kristen</option>
@@ -222,7 +222,7 @@ const Employee = () => {
                   <CRow className='mt-3'>
                     <CCol xs={6}>
                       <CFormLabel htmlFor="filter_position">Jabatan</CFormLabel>
-                      <CFormSelect name="filter_position" id="filter_position" className="mb-3" aria-label="Large select example">
+                      <CFormSelect name="filter_position" id="filter_position" aria-label="Large select example">
                         <option value="">Pilih Jabatan</option>
                         { positions.map(position =>
                           <option key={ position.id } value={ position.id } >{ position.attributes.position_name }</option>
@@ -231,7 +231,7 @@ const Employee = () => {
                     </CCol>
                     <CCol xs={6}>
                       <CFormLabel htmlFor="filter_level">Jenjang</CFormLabel>
-                      <CFormSelect name="filter_level" id="filter_level" className="mb-3" aria-label="Large select example">
+                      <CFormSelect name="filter_level" id="filter_level" aria-label="Large select example">
                         <option value="">Pilih Jenjang</option>
                         { levels.map(level =>
                           <option key={ level.id } value={ level.id } >{ level.attributes.functional_name } - { level.attributes.structural_name }</option>
@@ -242,7 +242,7 @@ const Employee = () => {
                   <CRow className='mt-3'>
                     <CCol xs={12}>
                       <CFormLabel htmlFor="filter_subfield">Sub Bidang</CFormLabel>
-                      <CFormSelect name="filter_subfield" id="filter_subfield" className="mb-3" aria-label="Large select example">
+                      <CFormSelect name="filter_subfield" id="filter_subfield" aria-label="Large select example">
                         <option value="">Pilih Sub Bidang</option>
                         { subfields.map(subfield =>
                           <option key={ subfield.id } value={ subfield.id } >{ subfield.attributes.subfield_name }</option>

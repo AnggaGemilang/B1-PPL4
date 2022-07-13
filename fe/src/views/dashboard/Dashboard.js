@@ -293,7 +293,7 @@ const Dashboard = () => {
                       <CRow className='mt-2'>
                         <CCol xs={6}>
                           <CFormLabel htmlFor="exampleFormControlInput1">Peserta</CFormLabel>
-                          <CFormSelect name="filter_registrant" id="filter_registrant" className="mb-3" aria-label="Large select example">
+                          <CFormSelect name="filter_registrant" id="filter_registrant" aria-label="Large select example">
                             <option value="">Pilih Peserta</option>
                             { registrants?.map(registrant =>
                               <option key={ registrant.id } value={ registrant.id } >{ registrant?.attributes?.employee?.data?.attributes?.Name }</option>
@@ -302,7 +302,7 @@ const Dashboard = () => {
                         </CCol>
                         <CCol xs={6}>
                           <CFormLabel htmlFor="filter_usefor">Proyeksi</CFormLabel>
-                          <CFormSelect name="filter_projection" id="filter_projection" className="mb-3" aria-label="Large select example">
+                          <CFormSelect name="filter_projection" id="filter_projection" aria-label="Large select example">
                             <option value="">Pilih Proyeksi</option>
                             { projections?.map(projection =>
                               <option value={ projection.id } key={ projection.id } >{ projection.attributes.position_name }</option>
@@ -313,7 +313,7 @@ const Dashboard = () => {
                       <CRow className='mt-2'>
                         <CCol xs={12}>
                           <CFormLabel htmlFor="exampleFormControlInput1">Kategori</CFormLabel>
-                          <CFormSelect name="filter_category" id="filter_category" className="mb-3" aria-label="Large select example">
+                          <CFormSelect name="filter_category" id="filter_category" aria-label="Large select example">
                             <option value="">Pilih Kategori</option>
                             <option value="fitproper">Fit & Proper</option>
                             <option value="interview">Wawancara</option>

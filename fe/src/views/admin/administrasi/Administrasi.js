@@ -186,7 +186,7 @@ const Administrasi = () => {
                 <CRow className='mt-3'>
                   <CCol xs={6}>
                     <CFormLabel htmlFor="filter_position">Jabatan</CFormLabel>
-                    <CFormSelect name="filter_position" id="filter_position" className="mb-3" aria-label="Large select example">
+                    <CFormSelect name="filter_position" id="filter_position" aria-label="Large select example">
                       <option value="">Pilih Jabatan</option>
                       { positions.map(position =>
                         <option key={ position.id } value={ position.id } >{ position.attributes.position_name }</option>
@@ -195,7 +195,7 @@ const Administrasi = () => {
                   </CCol>
                   <CCol xs={6}>
                     <CFormLabel htmlFor="filter_level">Jenjang</CFormLabel>
-                    <CFormSelect name="filter_level" id="filter_level" className="mb-3" aria-label="Large select example">
+                    <CFormSelect name="filter_level" id="filter_level" aria-label="Large select example">
                       <option value="">Pilih Jenjang</option>
                       { levels.map(level =>
                         <option key={ level.id } value={ level.id } >{ level.attributes.functional_name } - { level.attributes.structural_name }</option>

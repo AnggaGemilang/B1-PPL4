@@ -128,7 +128,6 @@ const Criteria = () => {
                       <CFormSelect 
                         name="filter_defaultused" 
                         id="filter_defaultused" 
-                        className="mb-3" 
                         aria-label="Large select example"
                         onChange={(e) => (e.target.value == "fitproper" || e.target.value == "") ? setChosenCriteria({ ...chosenCriteria, visiblePenggunaan: true, interviewValue: "" }) : setChosenCriteria({ ...chosenCriteria, visiblePenggunaan: false, interviewValue: "am/md" }) }>
                           <option value="">Pilih Kategori</option>
@@ -138,7 +137,7 @@ const Criteria = () => {
                     </CCol>
                     <CCol xs={6}>
                       <CFormLabel htmlFor="filter_usefor">Penggunaan</CFormLabel>
-                      <CFormSelect name="filter_usefor" id="filter_usefor" className="mb-3" aria-label="Large select example" disabled={ chosenCriteria.visiblePenggunaan == false }>
+                      <CFormSelect name="filter_usefor" id="filter_usefor" aria-label="Large select example" disabled={ chosenCriteria.visiblePenggunaan == false }>
                         <option value="">Pilih Penggunaan</option>
                         <option value="am">Manajemen Atas</option>
                         <option value="md">Manajemen Dasar</option>
